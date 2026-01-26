@@ -23,13 +23,22 @@ export default function LoginPage() {
                 body: JSON.stringify(form),
             });
 
-            const data = await res.json();
+            // Read raw text first to handle non-JSON responses (like 500 HTML errors)
+            const text = await res.text();
+            let data;
+
+            try {
+                data = JSON.parse(text);
+            } catch (e) {
+                console.error("Failed to parse JSON response:", text);
+                throw new Error("Server communication error. (Received non-JSON response)");
+            }
 
             if (data.success) {
                 router.push("/portfolio");
                 router.refresh();
             } else {
-                setError(data.details || data.error || "Login failed");
+                setError(data.details || data.error || data.message || "Login failed");
             }
         } catch (err: any) {
             setError(err?.message || "System Malfunction. Try again.");
