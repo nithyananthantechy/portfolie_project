@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  password      String
+  role          String   @default("VISITOR") // ADMIN, VISITOR
+  category      String   // PROFESSIONAL, STUDENT
+  jobRole       String?
+  degree        String?
+  createdAt     DateTime @default(now())
+  lastActive    DateTime @default(now())
+}
+
+model VisitLog {
+  id        String   @id @default(uuid())
+  ipHash    String?
+  userAgent String?
+  path      String
+  createdAt DateTime @default(now())
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  content   String
+  createdAt DateTime @default(now())
+}

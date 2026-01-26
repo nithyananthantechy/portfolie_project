@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 0 0% 0%; /* Matte Black */
+  --foreground: 0 0% 90%;
+  --neon-green: 120 100% 50%;
+  --neon-blue: 180 100% 50%;
+}
+
+body {
+  color: hsl(var(--foreground));
+  background: hsl(var(--background));
+  font-family: monospace;
+}
+
+@layer utilities {
+  .text-neon-green {
+    color: hsl(var(--neon-green));
+    text-shadow: 0 0 5px hsl(var(--neon-green)), 0 0 10px hsl(var(--neon-green));
+  }
+}
