@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-    title: "Nithyananthan | Cybersecurity & Linux",
-    description: "Portfolio of Nithyananthan Nagarajan - Linux Key & Cybersecurity Professional",
+    title: "Nithyananthan Nagarajan | Founder & CEO · NSK Groups",
+    description:
+        "Portfolio of Nithyananthan Nagarajan — Founder & CEO of NSK Groups. Builder of NITECHSPARK, NiteHire, and NiteOrbit. IT Infrastructure, AI Platforms, and Space Technology.",
 };
 
 export default function RootLayout({
@@ -12,8 +13,8 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
-            <body className="antialiased bg-black text-green-500 overflow-x-hidden">
+        <html lang="en" data-scroll-behavior="smooth">
+            <body className="antialiased bg-bg text-text-primary overflow-x-hidden font-rajdhani">
                 {children}
             </body>
         </html>

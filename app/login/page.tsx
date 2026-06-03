@@ -4,6 +4,17 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import MatrixBackground from "@/components/MatrixBackground";
+import { motion } from "framer-motion";
+
+const containerVariants = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.1 } },
+};
+
+const itemVariants = {
+    hidden: { opacity: 0, y: 15 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+};
 
 export default function LoginPage() {
     const router = useRouter();
@@ -48,60 +59,100 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center relative overflow-hidden font-mono">
-            {/* Background handled in RootLayout actually, but if we need specific override */}
+        <div className="min-h-screen flex items-center justify-center relative overflow-hidden p-4">
+            <MatrixBackground />
 
-            <div className="z-10 w-full max-w-md p-8 bg-black/80 border border-green-500/50 shadow-[0_0_20px_rgba(0,255,0,0.2)] backdrop-blur-sm">
-                <h2 className="text-3xl text-neon-green mb-6 text-center animate-pulse">
-                    &gt; AUTHENTICATE_USER
-                </h2>
+            <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="z-10 w-full max-w-md glass-panel p-8 md:p-10 rounded-lg corner-accents"
+            >
+                {/* Header */}
+                <motion.div variants={itemVariants} className="text-center mb-8">
+                    <h2 className="font-orbitron text-2xl md:text-3xl font-bold gradient-text mb-2">
+                        AUTHENTICATE
+                    </h2>
+                    <p className="font-mono text-xs text-accent/60 tracking-[0.2em]">
+                        [ AUTHORIZED PERSONNEL ONLY ]
+                    </p>
+                </motion.div>
 
+                {/* Error */}
                 {error && (
-                    <div className="bg-red-900/20 border border-red-500 text-red-400 p-3 mb-4 text-sm">
+                    <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="border rounded p-3 mb-5 text-sm font-mono"
+                        style={{
+                            background: "rgba(255,59,92,0.05)",
+                            borderColor: "rgba(255,59,92,0.3)",
+                            color: "#ff3b5c",
+                        }}
+                    >
                         [ERROR]: {error}
-                    </div>
+                    </motion.div>
                 )}
 
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                        <label className="block text-gray-400 text-sm mb-1">$ username / email</label>
+                {/* Form */}
+                <form onSubmit={handleSubmit} className="space-y-5">
+                    <motion.div variants={itemVariants}>
+                        <label className="block text-xs font-mono text-text-primary/40 mb-1.5 tracking-wider">
+                            $ EMAIL
+                        </label>
                         <input
                             type="email"
                             required
-                            className="w-full bg-black border border-gray-700 p-2 text-green-400 focus:border-neon-green focus:outline-none focus:ring-1 focus:ring-neon-green transition-all"
+                            className="w-full rounded border px-3 py-2.5 text-sm font-mono text-neon focus:outline-none focus:border-neon/50 transition-colors"
+                            style={{
+                                background: "rgba(0,20,40,0.4)",
+                                borderColor: "rgba(0,245,196,0.12)",
+                            }}
                             placeholder="user@system.local"
                             value={form.email}
                             onChange={(e) => setForm({ ...form, email: e.target.value })}
                         />
-                    </div>
+                    </motion.div>
 
-                    <div>
-                        <label className="block text-gray-400 text-sm mb-1">$ password</label>
+                    <motion.div variants={itemVariants}>
+                        <label className="block text-xs font-mono text-text-primary/40 mb-1.5 tracking-wider">
+                            $ PASSWORD
+                        </label>
                         <input
                             type="password"
                             required
-                            className="w-full bg-black border border-gray-700 p-2 text-green-400 focus:border-neon-green focus:outline-none focus:ring-1 focus:ring-neon-green transition-all"
-                            placeholder="********"
+                            className="w-full rounded border px-3 py-2.5 text-sm font-mono text-neon focus:outline-none focus:border-neon/50 transition-colors"
+                            style={{
+                                background: "rgba(0,20,40,0.4)",
+                                borderColor: "rgba(0,245,196,0.12)",
+                            }}
+                            placeholder="••••••••"
                             value={form.password}
                             onChange={(e) => setForm({ ...form, password: e.target.value })}
                         />
-                    </div>
+                    </motion.div>
 
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full bg-green-900/20 border border-green-500 text-neon-green py-2 hover:bg-green-500 hover:text-black transition-all font-bold tracking-wider mt-4"
-                    >
-                        {loading ? "Decrypting..." : "ACCESS GRANTED [LOGIN]"}
-                    </button>
+                    <motion.div variants={itemVariants}>
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full btn-cyber text-center py-3 disabled:opacity-50"
+                        >
+                            {loading ? "DECRYPTING..." : "ACCESS GRANTED [ LOGIN ]"}
+                        </button>
+                    </motion.div>
                 </form>
 
-                <div className="mt-6 text-center text-xs text-gray-500">
-                    <Link href="/register" className="hover:text-neon-green underline">
-                        &gt; New User? Initialize Registration
+                {/* Footer Link */}
+                <motion.div variants={itemVariants} className="mt-6 text-center">
+                    <Link
+                        href="/register"
+                        className="text-xs font-mono text-text-primary/30 hover:text-neon transition-colors"
+                    >
+                        {">"} New User? Initialize Registration
                     </Link>
-                </div>
-            </div>
+                </motion.div>
+            </motion.div>
         </div>
     );
 }

@@ -3,6 +3,18 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import MatrixBackground from "@/components/MatrixBackground";
+import { motion } from "framer-motion";
+
+const containerVariants = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.08 } },
+};
+
+const itemVariants = {
+    hidden: { opacity: 0, y: 15 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+};
 
 export default function RegisterPage() {
     const router = useRouter();
@@ -59,138 +71,210 @@ export default function RegisterPage() {
         }
     };
 
-    return (
-        <div className="min-h-screen flex items-center justify-center relative overflow-hidden font-mono p-4">
-            <div className="z-10 w-full max-w-lg p-8 bg-black/80 border border-green-500/50 shadow-[0_0_20px_rgba(0,255,0,0.2)] backdrop-blur-sm">
-                <h2 className="text-3xl text-neon-green mb-6 text-center animate-pulse">
-                    &gt; NEW_USER_REGISTRATION
-                </h2>
+    const inputClasses =
+        "w-full rounded border px-3 py-2.5 text-sm font-mono text-neon focus:outline-none focus:border-neon/50 transition-colors";
+    const inputStyle = {
+        background: "rgba(0,20,40,0.4)",
+        borderColor: "rgba(0,245,196,0.12)",
+    };
 
+    return (
+        <div className="min-h-screen flex items-center justify-center relative overflow-hidden p-4">
+            <MatrixBackground />
+
+            <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="z-10 w-full max-w-lg glass-panel p-8 md:p-10 rounded-lg corner-accents"
+            >
+                {/* Header */}
+                <motion.div variants={itemVariants} className="text-center mb-8">
+                    <h2 className="font-orbitron text-2xl md:text-3xl font-bold gradient-text mb-2">
+                        REQUEST ACCESS
+                    </h2>
+                    <p className="font-mono text-xs text-accent/60 tracking-[0.2em]">
+                        [ IDENTITY VERIFICATION REQUIRED ]
+                    </p>
+                </motion.div>
+
+                {/* Error */}
                 {error && (
-                    <div className="bg-red-900/20 border border-red-500 text-red-400 p-3 mb-4 text-sm">
+                    <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="border rounded p-3 mb-5 text-sm font-mono"
+                        style={{
+                            background: "rgba(255,59,92,0.05)",
+                            borderColor: "rgba(255,59,92,0.3)",
+                            color: "#ff3b5c",
+                        }}
+                    >
                         [ERROR]: {error}
-                    </div>
+                    </motion.div>
                 )}
 
+                {/* Form */}
                 <form onSubmit={handleSubmit} className="space-y-4">
                     {/* Identity */}
-                    <div className="grid grid-cols-2 gap-4">
+                    <motion.div variants={itemVariants} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-gray-400 text-sm mb-1">$ fullname</label>
+                            <label className="block text-xs font-mono text-text-primary/40 mb-1.5 tracking-wider">
+                                $ FULL NAME
+                            </label>
                             <input
                                 type="text"
                                 required
-                                className="w-full bg-black border border-gray-700 p-2 text-green-400 focus:border-neon-green focus:outline-none"
+                                className={inputClasses}
+                                style={inputStyle}
                                 value={form.name}
                                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                             />
                         </div>
                         <div>
-                            <label className="block text-gray-400 text-sm mb-1">$ email</label>
+                            <label className="block text-xs font-mono text-text-primary/40 mb-1.5 tracking-wider">
+                                $ EMAIL
+                            </label>
                             <input
                                 type="email"
                                 required
-                                className="w-full bg-black border border-gray-700 p-2 text-green-400 focus:border-neon-green focus:outline-none"
+                                className={inputClasses}
+                                style={inputStyle}
                                 value={form.email}
                                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                             />
                         </div>
-                    </div>
+                    </motion.div>
 
                     {/* Classification */}
-                    <div>
-                        <label className="block text-gray-400 text-sm mb-1">$ user_category</label>
+                    <motion.div variants={itemVariants}>
+                        <label className="block text-xs font-mono text-text-primary/40 mb-1.5 tracking-wider">
+                            $ USER CATEGORY
+                        </label>
                         <select
-                            className="w-full bg-black border border-gray-700 p-2 text-green-400 focus:border-neon-green focus:outline-none"
+                            className={inputClasses}
+                            style={inputStyle}
                             value={form.category}
                             onChange={(e) => setForm({ ...form, category: e.target.value })}
                         >
                             <option value="STUDENT">Student / Learner</option>
                             <option value="PROFESSIONAL">Working Professional</option>
                         </select>
-                    </div>
+                    </motion.div>
 
                     {/* Conditional Logic */}
                     {form.category === "PROFESSIONAL" && (
-                        <div className="animate-in fade-in slide-in-from-top-2">
-                            <label className="block text-gray-400 text-sm mb-1">$ job_role</label>
+                        <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                        >
+                            <label className="block text-xs font-mono text-text-primary/40 mb-1.5 tracking-wider">
+                                $ JOB ROLE
+                            </label>
                             <input
                                 type="text"
                                 required
-                                className="w-full bg-black border border-gray-700 p-2 text-green-400 focus:border-neon-green focus:outline-none"
-                                placeholder="e.g. System Admin"
+                                className={inputClasses}
+                                style={inputStyle}
+                                placeholder="e.g. DevOps Engineer"
                                 value={form.jobRole}
                                 onChange={(e) => setForm({ ...form, jobRole: e.target.value })}
                             />
-                        </div>
+                        </motion.div>
                     )}
 
                     {form.category === "STUDENT" && (
-                        <div className="animate-in fade-in slide-in-from-top-2">
-                            <label className="block text-gray-400 text-sm mb-1">$ degree / course</label>
+                        <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                        >
+                            <label className="block text-xs font-mono text-text-primary/40 mb-1.5 tracking-wider">
+                                $ DEGREE / COURSE
+                            </label>
                             <input
                                 type="text"
                                 required
-                                className="w-full bg-black border border-gray-700 p-2 text-green-400 focus:border-neon-green focus:outline-none"
+                                className={inputClasses}
+                                style={inputStyle}
                                 placeholder="e.g. B.Tech CS"
                                 value={form.degree}
                                 onChange={(e) => setForm({ ...form, degree: e.target.value })}
                             />
-                        </div>
+                        </motion.div>
                     )}
 
                     {/* Security */}
-                    <div className="grid grid-cols-2 gap-4">
+                    <motion.div variants={itemVariants} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-gray-400 text-sm mb-1">$ password</label>
+                            <label className="block text-xs font-mono text-text-primary/40 mb-1.5 tracking-wider">
+                                $ PASSWORD
+                            </label>
                             <input
                                 type="password"
                                 required
-                                className="w-full bg-black border border-gray-700 p-2 text-green-400 focus:border-neon-green focus:outline-none"
+                                className={inputClasses}
+                                style={inputStyle}
                                 value={form.password}
                                 onChange={(e) => setForm({ ...form, password: e.target.value })}
                             />
                         </div>
                         <div>
-                            <label className="block text-gray-400 text-sm mb-1">$ confirm</label>
+                            <label className="block text-xs font-mono text-text-primary/40 mb-1.5 tracking-wider">
+                                $ CONFIRM
+                            </label>
                             <input
                                 type="password"
                                 required
-                                className="w-full bg-black border border-gray-700 p-2 text-green-400 focus:border-neon-green focus:outline-none"
+                                className={inputClasses}
+                                style={inputStyle}
                                 value={form.confirmPassword}
                                 onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
                             />
                         </div>
-                    </div>
+                    </motion.div>
 
-                    {/* Admin Code - Optional hidden feature or explicit */}
-                    {/* Making it explicit but optional for "Admin Registration" */}
-                    <div>
-                        <label className="block text-gray-500 text-xs mb-1">$ admin_override_code (optional)</label>
+                    {/* Admin Code */}
+                    <motion.div variants={itemVariants}>
+                        <label className="block text-[10px] font-mono text-text-primary/20 mb-1.5 tracking-wider">
+                            $ FOUNDER OVERRIDE CODE (optional)
+                        </label>
                         <input
                             type="password"
-                            className="w-full bg-black/50 border border-gray-800 p-1 text-gray-500 text-sm focus:border-red-500 focus:outline-none"
+                            className="w-full rounded border px-3 py-2 text-xs font-mono text-danger/60 focus:outline-none focus:border-danger/40 transition-colors"
+                            style={{
+                                background: "rgba(0,20,40,0.2)",
+                                borderColor: "rgba(255,59,92,0.08)",
+                            }}
                             placeholder="Authorization Code"
                             value={form.adminCode}
                             onChange={(e) => setForm({ ...form, adminCode: e.target.value })}
                         />
-                    </div>
+                    </motion.div>
 
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full bg-neon-green/10 border border-neon-green text-neon-green py-2 hover:bg-neon-green hover:text-black transition-all font-bold tracking-wider mt-4"
-                    >
-                        {loading ? "Registering..." : "INITIATE_PROTOCOL [REGISTER]"}
-                    </button>
+                    {/* Submit */}
+                    <motion.div variants={itemVariants}>
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full btn-cyber text-center py-3 mt-2 disabled:opacity-50"
+                        >
+                            {loading ? "REGISTERING..." : "INITIATE PROTOCOL [ REGISTER ]"}
+                        </button>
+                    </motion.div>
                 </form>
 
-                <div className="mt-6 text-center text-xs text-gray-500">
-                    <Link href="/login" className="hover:text-neon-green underline">
-                        &gt; Already Authorized? Login
+                {/* Footer Link */}
+                <motion.div variants={itemVariants} className="mt-6 text-center">
+                    <Link
+                        href="/login"
+                        className="text-xs font-mono text-text-primary/30 hover:text-neon transition-colors"
+                    >
+                        {">"} Already Authorized? Login
                     </Link>
-                </div>
-            </div>
+                </motion.div>
+            </motion.div>
         </div>
     );
 }

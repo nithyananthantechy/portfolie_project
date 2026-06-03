@@ -11,7 +11,7 @@ export async function middleware(request: NextRequest) {
         // If user is already logged in and tries to access login/register, redirect to portfolio
         if (token && (pathname === "/login" || pathname === "/register" || pathname === "/")) {
             try {
-                const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+                const secret = new TextEncoder().encode(process.env.JWT_SECRET || "fallback_secret");
                 await jose.jwtVerify(token, secret);
                 // If valid, redirect to portfolio
                 return NextResponse.redirect(new URL("/portfolio", request.url));
@@ -28,7 +28,7 @@ export async function middleware(request: NextRequest) {
     }
 
     try {
-        const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+        const secret = new TextEncoder().encode(process.env.JWT_SECRET || "fallback_secret");
         const { payload } = await jose.jwtVerify(token, secret);
 
         // Admin Protection
