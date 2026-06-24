@@ -33,7 +33,7 @@ export async function POST(req: Request) {
         });
 
         // Create JWT
-        const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+        const secret = new TextEncoder().encode(process.env.JWT_SECRET || "fallback_secret");
         const token = await new jose.SignJWT({ userId: user.id, role: user.role, email: user.email })
             .setProtectedHeader({ alg: 'HS256' })
             .setExpirationTime('24h')

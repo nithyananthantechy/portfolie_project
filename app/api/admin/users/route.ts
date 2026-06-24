@@ -15,7 +15,7 @@ export async function GET(req: Request) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+        const secret = new TextEncoder().encode(process.env.JWT_SECRET || "fallback_secret");
         const { payload } = await jose.jwtVerify(token, secret);
 
         if (payload.role !== "ADMIN") {

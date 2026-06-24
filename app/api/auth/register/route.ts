@@ -59,7 +59,7 @@ export async function POST(req: Request) {
         console.log("User created:", user.id);
 
         // Create JWT using jose (Edge compatible)
-        const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+        const secret = new TextEncoder().encode(process.env.JWT_SECRET || "fallback_secret");
         const text = await new jose.SignJWT({ userId: user.id, role: user.role, email: user.email })
             .setProtectedHeader({ alg: 'HS256' })
             .setExpirationTime('24h')
