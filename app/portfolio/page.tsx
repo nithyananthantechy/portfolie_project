@@ -483,13 +483,13 @@ export default function PortfolioPage() {
                             </a>
 
                             <a
-                                href="mailto:nithyananthan@nitechsaprk.in"
+                                href="mailto:nithyananthan@nskgroups.website"
                                 className="flex items-center gap-3 text-text-primary/50 hover:text-neon transition-colors group"
                             >
                                 <div className="w-9 h-9 rounded border flex items-center justify-center group-hover:border-neon/40 group-hover:bg-neon/5 transition-all" style={{ borderColor: "rgba(0,245,196,0.12)" }}>
                                     <Mail size={16} className="text-neon/60" />
                                 </div>
-                                <span className="text-sm font-mono">nithyananthan@nitechsaprk.in</span>
+                                <span className="text-sm font-mono">nithyananthan@nskgroups.website</span>
                             </a>
 
                             <a

@@ -12,7 +12,7 @@ interface TimelineEntry {
 const entries: TimelineEntry[] = [
     {
         date: "2026 — NOW",
-        title: "Founder & CEO, NSK Groups",
+        title: "Founder & Chairman & Managing Director, NSK Groups",
         description:
             "Running three ventures simultaneously: NITECHSPARK (IT services, live), NiteHire (AI recruitment, live), NiteOrbit (space tech, stealth). Strategic partnership signed with Datenfarmen Centers for edge infrastructure managed services across India. Presenting at DEFCON Coimbatore.",
         highlight: true,

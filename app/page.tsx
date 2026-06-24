@@ -76,7 +76,7 @@ export default function Home() {
                     variants={itemVariants}
                     className="text-text-primary/50 mb-8 max-w-lg mx-auto leading-relaxed text-sm md:text-base"
                 >
-                    Founder of NSK Groups. Builder of infrastructure, AI platforms,
+                    Founder & Chairman & Managing Director of NSK Groups. Builder of infrastructure, AI platforms,
                     and space technology.
                 </motion.p>
 
