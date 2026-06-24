@@ -103,6 +103,7 @@ export default function LoginPage() {
                         <input
                             type="email"
                             required
+                            autoComplete="email"
                             className="w-full rounded border px-3 py-2.5 text-sm font-mono text-neon focus:outline-none focus:border-neon/50 transition-colors"
                             style={{
                                 background: "rgba(0,20,40,0.4)",
@@ -121,6 +122,7 @@ export default function LoginPage() {
                         <input
                             type="password"
                             required
+                            autoComplete="current-password"
                             className="w-full rounded border px-3 py-2.5 text-sm font-mono text-neon focus:outline-none focus:border-neon/50 transition-colors"
                             style={{
                                 background: "rgba(0,20,40,0.4)",
