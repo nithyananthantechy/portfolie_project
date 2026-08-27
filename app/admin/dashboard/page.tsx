@@ -128,16 +128,46 @@ export default function AdminDashboard() {
         );
     }
 
+    const handleInitDb = async () => {
+        setRefreshing(true);
+        try {
+            const res = await fetch("/api/admin/init-db");
+            const data = await res.json();
+            if (data.success) {
+                setError("");
+                await fetchData();
+            } else {
+                setError(data.error || "Failed to initialize database");
+            }
+        } catch {
+            setError("Failed to run database bootstrap");
+        } finally {
+            setRefreshing(false);
+        }
+    };
+
     if (error && users.length === 0) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center p-8 font-rajdhani" style={{ background: "var(--bg)" }}>
                 <MatrixBackground />
-                <div className="z-10 text-center max-w-md glass-panel p-8 rounded-xl border border-danger/30">
-                    <h1 className="font-orbitron text-2xl text-danger mb-3">ACCESS RESTRICTED</h1>
-                    <p className="text-text-primary/60 font-mono text-sm mb-6">{error}</p>
-                    <Link href="/login" className="btn-cyber inline-block">
-                        Authenticate as Administrator
-                    </Link>
+                <div className="z-10 text-center max-w-lg glass-panel p-8 rounded-2xl border border-danger/30 shadow-2xl backdrop-blur-xl">
+                    <h1 className="font-orbitron text-2xl text-danger mb-3">DATABASE INITIALIZATION REQUIRED</h1>
+                    <p className="text-text-primary/70 font-mono text-xs mb-6 leading-relaxed bg-black/40 p-3 rounded-lg border border-danger/20">
+                        {error}
+                    </p>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                        <button
+                            onClick={handleInitDb}
+                            disabled={refreshing}
+                            className="btn-cyber text-center py-2.5 px-5 text-xs font-mono font-bold flex items-center justify-center gap-2"
+                        >
+                            <RefreshCw size={14} className={refreshing ? "animate-spin" : ""} />
+                            <span>{refreshing ? "INITIALIZING TABLES..." : "AUTO-CREATE DATABASE TABLES"}</span>
+                        </button>
+                        <Link href="/login" className="btn-cyber-accent text-center py-2.5 px-5 text-xs font-mono">
+                            Re-Authenticate
+                        </Link>
+                    </div>
                 </div>
             </div>
         );
