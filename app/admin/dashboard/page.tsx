@@ -188,6 +188,26 @@ export default function AdminDashboard() {
                     </div>
                 </motion.div>
 
+                {/* Error Diagnostic Alert */}
+                {error && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="mb-6 p-4 rounded-xl border border-danger/40 bg-danger/10 text-danger text-xs font-mono flex items-center justify-between"
+                    >
+                        <div className="flex items-center gap-2">
+                            <span className="font-bold">[DATABASE DIAGNOSTIC]:</span>
+                            <span>{error}</span>
+                        </div>
+                        <button
+                            onClick={() => setError("")}
+                            className="text-danger/60 hover:text-danger text-xs"
+                        >
+                            Dismiss
+                        </button>
+                    </motion.div>
+                )}
+
                 {/* Header */}
                 <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 pb-5 border-b border-neon/15 gap-4">
                     <div>

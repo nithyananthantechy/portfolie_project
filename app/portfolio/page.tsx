@@ -302,6 +302,12 @@ export default function PortfolioPage() {
 
     useEffect(() => {
         const timer = setTimeout(() => setLoading(false), 900);
+        // Log real visit
+        fetch("/api/visit", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ path: "/portfolio" }),
+        }).catch(() => {});
         return () => clearTimeout(timer);
     }, []);
 

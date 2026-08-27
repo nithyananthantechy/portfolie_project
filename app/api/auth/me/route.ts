@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
-import { headers } from "next/headers";
+import { cookies } from "next/headers";
 import * as jose from "jose";
 
 export async function GET() {
     try {
-        const headersList = await headers();
-        const tokens = headersList.get("cookie")?.split("; ");
-        const token = tokens?.find((row: string) => row.startsWith("token="))?.split("=")[1];
+        const cookieStore = await cookies();
+        const token = cookieStore.get("token")?.value;
 
         if (!token) {
             return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
@@ -21,7 +20,7 @@ export async function GET() {
                 userId: payload.userId,
                 role: payload.role,
                 email: payload.email,
-            }
+            },
         });
     } catch (error) {
         return NextResponse.json({ success: false, error: "Invalid token" }, { status: 401 });
