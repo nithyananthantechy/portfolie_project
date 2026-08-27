@@ -1,0 +1,22 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/admin/
+
+# Sitemaps and AI directives
+Sitemap: https://nithyananthan.nskgroups.website/sitemap.xml
+Sitemap: https://nskgroups.website/sitemap.xml
+
+# LLM Crawler Access
+User-agent: GPTBot
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Google-Extended
+Allow: /
+User-agent: Applebot-Extended
+Allow: /
+User-agent: CCBot
+Allow: /

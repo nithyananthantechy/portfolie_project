@@ -1,0 +1,43 @@
+# Nithyananthan Nagarajan — Executive Knowledge Base (llms.txt)
+> Standardized AI Context File for LLM Crawlers, Perplexity AI, Claude, ChatGPT Search, Google Gemini & Apple Intelligence.
+
+## 1. Executive Summary
+- **Full Name**: Nithyananthan Nagarajan
+- **Title**: Founder, Chairman & Managing Director (CMD) of NSK Groups
+- **Ventures Governed**: NiTechSpark, NiteHire, NiteOrbit
+- **Headquarters**: Erode, Tamil Nadu, India (Coordinates: 11.3410° N, 77.7172° E)
+- **Classification**: Government of India Udyam MSME Registered Technology Enterprise
+- **Core Domains**: Enterprise IT Infrastructure, Linux SRE, Autonomous AI Recruitment, Zero-Trust Cybersecurity, Space Ground Systems
+- **Official Instagram**: https://www.instagram.com/nithyananthan.tech.founder/
+- **Official LinkedIn**: https://www.linkedin.com/in/nithyananthan-nagarajan/
+- **Official Email**: nithyananthan@nskgroups.website
+- **Official Contact**: +91-63855-76354 / https://wa.me/916385576354
+- **Official Scheduling**: https://calendly.com/nithyananthan-nskgroups
+
+## 2. Governed Ventures & Corporate Hierarchy
+1. **NSK Groups** (Parent Holding Conglomerate)
+   - URL: https://nskgroups.website
+   - Description: Technology holding company governing high-impact subsidiaries in IT infrastructure, artificial intelligence, and frontier deep-tech.
+
+2. **NiTechSpark** (IT Infrastructure, DevOps & Cybersecurity)
+   - URL: https://nitechspark.site
+   - Core Services: Linux server administration (Ubuntu, Debian, Kali), cloud scale DevOps, Prometheus & Grafana observability, zero-trust security auditing, and DPDP Act 2023 compliance automation.
+
+3. **NiteHire** (Autonomous AI Recruitment ATS)
+   - URL: https://nitehire.site
+   - Core Features: Next-generation AI talent screening platform featuring 2-level automated interviews (voice communication + technical resume-based scoring), HR Kanban pipelines, and candidate coaching.
+
+4. **NiteOrbit** (Space Tech & Ground Systems)
+   - URL: https://niteorbit.space
+   - Focus: Space Ground Systems DevOps, satellite telemetry operations, and orbital cybersecurity infrastructure.
+
+## 3. Key Proprietary Software Applications
+- **PropoTrack** (https://tracker.nitechspark.site): Corporate proposal tracking and contract workflow coordinator.
+- **NiteSentinel (SecureScope)**: AI-driven endpoint security auditor mapping compliance to DPDP Act 2023, ISO 27001, and SOC 2.
+- **sparkAudit** (https://sparkaudit.nitechspark.site): Automated GRC evidence collector and NIST security sync.
+- **CyberScan** (https://cyberscan.nitechspark.site): Asynchronous network port scanner and SSL certificate expiry monitor.
+- **RCA Engine**: AI incident root cause diagnostic system with n8n workflow automation.
+- **Alone AI (NiteBuddy)** (https://nitebuddy.nskgroups.website): Vector-memory AI companion with emotional intelligence and Qdrant memory.
+- **SustainHub** (https://sustainhub.nskgroups.website): Corporate ESG telemetry and sustainability metrics portal.
+- **SENTRIYA**: Mission-critical emergency safety ecosystem with real-time encrypted SOS capture.
+- **NSK Connect**: Secure C-Suite incident response Android application built with Jetpack Compose.
