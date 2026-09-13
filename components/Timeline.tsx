@@ -11,35 +11,35 @@ interface TimelineEntry {
 
 const entries: TimelineEntry[] = [
     {
-        date: "2026 — NOW",
-        title: "Founder & Chairman & Managing Director, NSK Groups",
+        date: "2026 — PRESENT",
+        title: "Founder, Chairman & Managing Director, NSK Groups",
         description:
-            "Running three ventures simultaneously: NITECHSPARK (IT services, live), NiteHire (AI recruitment, live), NiteOrbit (space tech, stealth). Strategic partnership signed with Datenfarmen Centers for edge infrastructure managed services across India. Presenting at DEFCON Coimbatore.",
+            "Directing three ventures concurrently: NiTechSpark (Enterprise IT & SRE, operational), NiteHire (AI candidate screening & ATS, live), NiteOrbit (space ground systems & telemetry, stealth). Strategic edge datacenter infrastructure partnerships established across India.",
         highlight: true,
     },
     {
         date: "MAY 2026",
-        title: "Launched NiteHire",
+        title: "Launched NiteHire ATS",
         description:
-            "Built and shipped an end-to-end AI recruitment platform solo — from database schema to AI screening logic to deployment. Live at nitehire.nitechsaprk.in.",
+            "Engineered and deployed an autonomous 2-level AI recruitment and talent assessment platform solo — from vector architecture and resume parsing to real-time communication assessment pipelines.",
     },
     {
         date: "APRIL 2026",
         title: "Presented at DEFCON Coimbatore",
         description:
-            "Presented NiteSentinel at DCG Kovai. Building the cybersecurity community network in Coimbatore for business development and technical collaboration.",
+            "Keynote architecture presentation on NiteSentinel zero-trust compliance scanner at DCG Kovai Chapter. Active technical contributor in Tamil Nadu's elite enterprise cybersecurity network.",
     },
     {
         date: "JANUARY 2026",
-        title: "Founded NITECHSPARK",
+        title: "Founded NiTechSpark",
         description:
-            "First company. Udyam MSME registered in Erode, Tamil Nadu. First products shipped within months: PropoTrack, CyberScan, NiteSentinel.",
+            "Initial enterprise venture incorporated. Udyam MSME registered in Erode, Tamil Nadu. Shipped production security tooling: PropoTrack, CyberScan, sparkAudit, and NiteSentinel.",
     },
     {
-        date: "BEFORE 2026",
-        title: "2+ Years as Systems Engineer & AIOps SME",
+        date: "FOUNDATIONAL YEARS",
+        title: "Systems Engineer & Linux SRE / AIOps Architect",
         description:
-            "The technical foundation everything else is built on — infrastructure management, application support, monitoring, KVM virtualization, Docker, enterprise cybersecurity. This is where the expertise came from.",
+            "Deep engineering foundation across distributed Linux clusters, KVM virtualization, automated CI/CD pipelines, Prometheus/Grafana observability telemetry, and zero-trust perimeter defense.",
     },
 ];
 
@@ -54,10 +54,10 @@ export default function Timeline() {
                     className="mb-12 text-center lg:text-left"
                 >
                     <h2 className="font-orbitron text-2xl md:text-3xl font-bold text-white section-heading">
-                        MY STORY
+                        EXECUTIVE JOURNEY
                     </h2>
-                    <p className="text-text-primary/40 text-sm font-mono mt-4">
-                        {">"} The journey from systems engineer to founder
+                    <p className="text-slate-400 text-sm font-mono mt-4">
+                        {">"} Trajectory from systems engineering architect to technology holding founder
                     </p>
                 </motion.div>
 
@@ -69,25 +69,19 @@ export default function Timeline() {
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.6 }}
-                            className="relative max-w-sm w-full rounded-lg border border-neon/20 p-2 bg-panel/30 backdrop-blur-md overflow-hidden group"
-                            style={{ boxShadow: "0 0 25px rgba(0,245,196,0.03)" }}
+                            className="relative max-w-sm w-full rounded-2xl border border-slate-800 p-2.5 bg-slate-900/40 backdrop-blur-md overflow-hidden group hover:border-sky-500/30 transition-all"
                         >
-                            <div className="relative aspect-[3/4] w-full rounded overflow-hidden border border-neon/30">
+                            <div className="relative aspect-[3/4] w-full rounded-xl overflow-hidden border border-slate-800">
                                 <img
                                     src="/nithyananthan_profile_full.png"
-                                    alt="Nithyananthan Nagarajan - Full Length"
+                                    alt="Nithyananthan Nagarajan - Founder & CMD"
                                     className="w-full h-full object-cover transition-all duration-700"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-bg/70 via-transparent to-transparent opacity-60" />
-                                <div className="absolute bottom-4 left-4 font-mono text-[10px] text-neon/60 tracking-wider">
+                                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-60" />
+                                <div className="absolute bottom-4 left-4 font-mono text-[10px] text-sky-400 tracking-wider">
                                     SYS_AUTH // FOUNDER_IDENTITY
                                 </div>
                             </div>
-                            {/* Diagnostic bracket overlays */}
-                            <div className="absolute top-4 right-4 w-6 h-[1px] bg-neon/30" />
-                            <div className="absolute top-4 right-4 w-[1px] h-6 bg-neon/30" />
-                            <div className="absolute bottom-4 left-4 w-6 h-[1px] bg-neon/30" />
-                            <div className="absolute bottom-4 left-4 w-[1px] h-6 bg-neon/30" />
                         </motion.div>
                     </div>
 
@@ -95,10 +89,10 @@ export default function Timeline() {
                     <div className="lg:col-span-7 relative w-full">
                         {/* Glowing vertical line */}
                         <div
-                            className="absolute left-[18px] md:left-[22px] top-0 bottom-0 w-[2px] animate-glow-line"
+                            className="absolute left-[18px] md:left-[22px] top-0 bottom-0 w-[2px]"
                             style={{
                                 background:
-                                    "linear-gradient(to bottom, transparent, rgba(0,245,196,0.3), rgba(0,245,196,0.3), transparent)",
+                                    "linear-gradient(to bottom, transparent, rgba(56,189,248,0.4), rgba(148,163,184,0.2), transparent)",
                             }}
                         />
 
@@ -116,24 +110,24 @@ export default function Timeline() {
                                     <div
                                         className="absolute left-[10px] md:left-[14px] top-1 w-4 h-4 rotate-45 border-2"
                                         style={{
-                                            borderColor: entry.highlight ? "#00f5c4" : "rgba(0,245,196,0.3)",
-                                            background: entry.highlight ? "rgba(0,245,196,0.2)" : "var(--bg)",
-                                            boxShadow: entry.highlight ? "0 0 12px rgba(0,245,196,0.4)" : "none",
+                                            borderColor: entry.highlight ? "#38bdf8" : "rgba(148,163,184,0.4)",
+                                            background: entry.highlight ? "rgba(56,189,248,0.2)" : "#030712",
+                                            boxShadow: entry.highlight ? "0 0 12px rgba(56,189,248,0.5)" : "none",
                                         }}
                                     />
 
                                     {/* Date badge */}
                                     <div className="inline-block mb-2">
                                         <span
-                                            className="text-[11px] font-mono px-2 py-0.5 rounded tracking-wider"
+                                            className="text-[11px] font-mono px-2.5 py-0.5 rounded tracking-wider font-semibold"
                                             style={{
                                                 background: entry.highlight
-                                                    ? "rgba(0,245,196,0.08)"
-                                                    : "rgba(0,245,196,0.04)",
-                                                color: entry.highlight ? "#00f5c4" : "rgba(0,245,196,0.5)",
+                                                    ? "rgba(56,189,248,0.12)"
+                                                    : "rgba(148,163,184,0.06)",
+                                                color: entry.highlight ? "#38bdf8" : "#94a3b8",
                                                 border: entry.highlight
-                                                    ? "1px solid rgba(0,245,196,0.2)"
-                                                    : "1px solid rgba(0,245,196,0.08)",
+                                                    ? "1px solid rgba(56,189,248,0.3)"
+                                                    : "1px solid rgba(148,163,184,0.15)",
                                             }}
                                         >
                                             {entry.date}
@@ -143,14 +137,14 @@ export default function Timeline() {
                                     {/* Title */}
                                     <h3
                                         className={`font-orbitron font-bold text-base md:text-lg mb-2 ${
-                                            entry.highlight ? "text-white" : "text-white/80"
+                                            entry.highlight ? "text-white" : "text-slate-200"
                                         }`}
                                     >
                                         {entry.title}
                                     </h3>
 
                                     {/* Description */}
-                                    <p className="text-sm text-text-primary/50 leading-relaxed">
+                                    <p className="text-sm text-slate-300 leading-relaxed font-sans">
                                         {entry.description}
                                     </p>
                                 </motion.div>

@@ -22,9 +22,13 @@ import {
     Instagram,
     ChevronDown,
     HelpCircle,
+    FileText,
+    BookOpen,
 } from "lucide-react";
 
 import MatrixBackground from "@/components/MatrixBackground";
+import InteractiveCyberCanvas from "@/components/InteractiveCyberCanvas";
+import DraggableAiWidget from "@/components/DraggableAiWidget";
 import OrbSphere from "@/components/OrbSphere";
 import Navbar from "@/components/Navbar";
 import TerminalBlock from "@/components/TerminalBlock";
@@ -32,6 +36,9 @@ import VentureCard from "@/components/VentureCard";
 import SkillsSection from "@/components/portfolio/SkillsSection";
 import ProductCard from "@/components/ProductCard";
 import Timeline from "@/components/Timeline";
+import PublicationsSection from "@/components/PublicationsSection";
+import BlogSection from "@/components/BlogSection";
+import DailyUpdatesSection from "@/components/DailyUpdatesSection";
 
 /* ─── Ventures Data ─── */
 const ventures = [
@@ -269,13 +276,13 @@ function StatCard({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: index * 0.08, duration: 0.45 }}
-            className="glass-card rounded-2xl p-5 text-center group border border-neon/15 hover:border-neon/30 transition-all backdrop-blur-md"
-            style={{ background: "rgba(3, 7, 18, 0.75)" }}
+            className="glass-card rounded-2xl p-5 text-center group border border-slate-800/80 hover:border-sky-500/40 transition-all backdrop-blur-md"
+            style={{ background: "rgba(15, 23, 42, 0.65)" }}
         >
             <div className="font-orbitron text-3xl md:text-4xl font-black gradient-text mb-1">
                 {isFlag ? "✓" : `${count}${suffix}`}
             </div>
-            <div className="text-xs font-mono text-text-primary/50 tracking-wider uppercase">
+            <div className="text-xs font-mono text-slate-400 tracking-wider uppercase">
                 {label}
             </div>
         </motion.div>
@@ -358,72 +365,75 @@ export default function PortfolioPage() {
     return (
         <div className="min-h-screen font-rajdhani selection:bg-neon/20 selection:text-white pb-20 relative" style={{ background: "var(--bg)" }}>
             <MatrixBackground />
+            <InteractiveCyberCanvas />
+            <DraggableAiWidget />
             <Navbar />
 
             {/* ═══════════ HERO SECTION ═══════════ */}
-            <section id="hero" className="min-h-[92vh] flex items-center justify-center pt-28 pb-16 relative overflow-hidden">
+            <section id="hero" className="min-h-[90vh] flex items-center justify-center pt-32 pb-20 relative overflow-hidden">
                 <OrbSphere />
 
                 <motion.div
                     variants={heroContainer}
                     initial="hidden"
                     animate="visible"
-                    className="z-10 px-4 sm:px-6 md:px-8 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center text-left"
+                    className="z-10 px-4 sm:px-6 md:px-8 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center text-left"
                 >
                     {/* Left Column — Text */}
                     <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left order-2 lg:order-1">
                         {/* Eyebrow */}
-                        <motion.div variants={heroItem} className="flex items-center gap-2 mb-3">
-                            <span className="w-2 h-2 rounded-full bg-neon animate-ping" />
-                            <span className="font-mono text-[11px] sm:text-xs text-neon tracking-[0.2em] uppercase font-bold">
-                                CLASSIFIED PERSONNEL FILE // CMD-001
+                        <motion.div variants={heroItem} className="flex items-center gap-2.5 mb-4">
+                            <span className="w-2 h-2 rounded-full bg-sky-400 animate-ping" />
+                            <span className="font-mono text-[11px] sm:text-xs text-sky-400 tracking-[0.25em] uppercase font-semibold">
+                                NSK GROUPS · EXECUTIVE COMMAND DIRECTORY
                             </span>
                         </motion.div>
 
                         {/* Name */}
                         <motion.h1
                             variants={heroItem}
-                            className="font-orbitron text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-black tracking-wide mb-3 gradient-text leading-[1.08] break-words"
+                            className="font-orbitron text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight mb-4 text-white leading-tight break-words"
                         >
-                            NITHYANANTHAN
+                            <span className="bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
+                                NITHYANANTHAN
+                            </span>
                             <br />
-                            <span className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl text-white font-extrabold">
+                            <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white font-extrabold tracking-wide">
                                 NAGARAJAN
                             </span>
                         </motion.h1>
 
                         {/* Title */}
-                        <motion.div variants={heroItem} className="mb-5 flex flex-wrap items-center justify-center lg:justify-start gap-2">
-                            <span className="font-rajdhani text-sm md:text-base text-accent font-bold tracking-[0.18em] uppercase">
-                                FOUNDER & CMD · NSK GROUPS
+                        <motion.div variants={heroItem} className="mb-6 flex flex-wrap items-center justify-center lg:justify-start gap-2.5">
+                            <span className="font-rajdhani text-sm md:text-base text-slate-100 font-bold tracking-[0.16em] uppercase">
+                                FOUNDER, CHAIRMAN & MANAGING DIRECTOR · NSK GROUPS
                             </span>
-                            <span className="text-text-primary/30 hidden sm:inline">|</span>
-                            <span className="text-xs font-mono text-text-primary/60">
-                                NiTechSpark · NiteHire · NiteOrbit
+                            <span className="text-slate-600 hidden sm:inline">|</span>
+                            <span className="text-xs font-mono text-sky-400 font-semibold tracking-wider">
+                                ENTERPRISE CYBERSECURITY & LINUX SRE ARCHITECT
                             </span>
                         </motion.div>
 
                         {/* Bio */}
                         <motion.p
                             variants={heroItem}
-                            className="text-xs sm:text-sm md:text-base text-text-primary/75 max-w-xl mx-auto lg:mx-0 leading-relaxed mb-6 font-sans"
+                            className="text-xs sm:text-sm md:text-base text-slate-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed mb-7 font-sans"
                         >
-                            Linux and network infrastructure engineer turned multi-venture founder.
-                            I design, build, and deploy enterprise DevOps stacks, zero-trust security audits,
-                            and production AI platforms. Governing <span className="text-neon font-semibold">NSK Groups</span> with
-                            subsidiaries across IT Infrastructure, Autonomous AI Recruitment, and Space Ground Systems.
+                            Sovereign technology founder and enterprise cybersecurity architect.
+                            I design zero-trust infrastructure, Linux SRE clusters, autonomous AI recruitment engines,
+                            and orbital ground telemetry stations. Governing the <span className="text-white font-semibold">NSK Groups</span> holding conglomerate
+                            comprising <span className="text-slate-100 font-semibold underline decoration-sky-400/50 underline-offset-4">NiTechSpark</span>, <span className="text-slate-100 font-semibold underline decoration-sky-400/50 underline-offset-4">NiteHire</span>, and <span className="text-slate-100 font-semibold underline decoration-sky-400/50 underline-offset-4">NiteOrbit</span>.
                         </motion.p>
 
                         {/* Meta Badges */}
                         <motion.div
                             variants={heroItem}
-                            className="flex flex-wrap justify-center lg:justify-start gap-2 mb-8"
+                            className="flex flex-wrap justify-center lg:justify-start gap-2.5 mb-9"
                         >
                             {metaBadges.map((badge) => (
                                 <span
                                     key={badge}
-                                    className="text-[10px] sm:text-xs font-mono px-3 py-1 rounded-md border text-text-primary/60 tracking-wider bg-panel/40"
-                                    style={{ borderColor: "rgba(0, 245, 196, 0.15)" }}
+                                    className="text-[10px] sm:text-xs font-mono px-3 py-1.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-300 tracking-wider shadow-sm"
                                 >
                                     {badge}
                                 </span>
@@ -433,55 +443,61 @@ export default function PortfolioPage() {
                         {/* CTAs */}
                         <motion.div
                             variants={heroItem}
-                            className="flex flex-wrap gap-4 justify-center lg:justify-start w-full"
+                            className="flex flex-wrap gap-3.5 justify-center lg:justify-start w-full"
                         >
                             <a
-                                href="https://calendly.com/nithyananthan-nskgroups"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="btn-cyber-accent text-center flex items-center justify-center gap-2 text-xs sm:text-sm py-3 px-5"
+                                href="#publications"
+                                className="px-5 py-3 rounded-xl bg-white text-slate-950 hover:bg-slate-200 text-xs sm:text-sm font-rajdhani font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-lg shadow-white/10"
                             >
-                                <Calendar size={16} />
-                                <span>SCHEDULE EXECUTIVE CALL</span>
+                                <FileText size={15} className="text-slate-950" />
+                                <span>RESEARCH PAPERS</span>
+                            </a>
+
+                            <a
+                                href="#blog"
+                                className="px-5 py-3 rounded-xl border border-slate-700 bg-slate-900/80 hover:bg-slate-800 hover:border-slate-500 text-slate-200 hover:text-white text-xs sm:text-sm font-rajdhani font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all"
+                            >
+                                <BookOpen size={15} />
+                                <span>EXECUTIVE BLOG</span>
                             </a>
 
                             <a
                                 href="https://wa.me/916385576354"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="btn-cyber text-center flex items-center justify-center gap-2 text-xs sm:text-sm py-3 px-5"
+                                className="px-5 py-3 rounded-xl border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-xs sm:text-sm font-rajdhani font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all"
                             >
-                                <Send size={15} />
+                                <Send size={14} />
                                 <span>DIRECT WHATSAPP</span>
                             </a>
                         </motion.div>
                     </div>
 
-                    {/* Right Column — Photo with Hologram Frame */}
+                    {/* Right Column — Photo with Refined Frame */}
                     <div className="lg:col-span-5 flex justify-center lg:justify-end order-1 lg:order-2">
                         <motion.div
                             variants={heroItem}
-                            className="relative w-64 h-80 sm:w-72 sm:h-92 md:w-80 md:h-[400px] rounded-3xl p-3 border border-neon/30 bg-panel/40 backdrop-blur-xl group hover:border-neon/60 transition-all duration-500"
-                            style={{ boxShadow: "0 0 50px rgba(0, 245, 196, 0.12)" }}
+                            className="relative w-64 h-80 sm:w-72 sm:h-92 md:w-80 md:h-[400px] rounded-3xl p-3 border border-slate-800 bg-slate-900/60 backdrop-blur-xl group hover:border-sky-500/40 transition-all duration-500"
+                            style={{ boxShadow: "0 20px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(56, 189, 248, 0.06)" }}
                         >
-                            {/* Rotating subtle neon ring */}
-                            <div className="absolute inset-0 rounded-3xl border border-dashed border-neon/20 animate-spin pointer-events-none" style={{ animationDuration: "28s" }} />
+                            {/* Rotating subtle ring */}
+                            <div className="absolute inset-0 rounded-3xl border border-dashed border-sky-500/20 animate-spin pointer-events-none" style={{ animationDuration: "36s" }} />
 
                             {/* Image wrapper */}
-                            <div className="w-full h-full rounded-2xl overflow-hidden border border-neon/40 relative bg-black/50">
+                            <div className="w-full h-full rounded-2xl overflow-hidden border border-slate-800 relative bg-black/50">
                                 <img
                                     src="/nithyananthan_executive.png"
                                     alt="Nithyananthan Nagarajan - Founder & CMD NSK Groups"
                                     className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-bg/90 via-transparent to-transparent opacity-50 pointer-events-none" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-50 pointer-events-none" />
                             </div>
 
                             {/* Corner bracket accents */}
-                            <div className="absolute -top-1.5 -left-1.5 w-4 h-4 border-t-2 border-l-2 border-neon" />
-                            <div className="absolute -top-1.5 -right-1.5 w-4 h-4 border-t-2 border-r-2 border-neon" />
-                            <div className="absolute -bottom-1.5 -left-1.5 w-4 h-4 border-b-2 border-l-2 border-neon" />
-                            <div className="absolute -bottom-1.5 -right-1.5 w-4 h-4 border-b-2 border-r-2 border-neon" />
+                            <div className="absolute -top-1.5 -left-1.5 w-4 h-4 border-t-2 border-l-2 border-sky-400/60" />
+                            <div className="absolute -top-1.5 -right-1.5 w-4 h-4 border-t-2 border-r-2 border-sky-400/60" />
+                            <div className="absolute -bottom-1.5 -left-1.5 w-4 h-4 border-b-2 border-l-2 border-sky-400/60" />
+                            <div className="absolute -bottom-1.5 -right-1.5 w-4 h-4 border-b-2 border-r-2 border-sky-400/60" />
                         </motion.div>
                     </div>
                 </motion.div>
@@ -506,15 +522,15 @@ export default function PortfolioPage() {
                         className="mb-12"
                     >
                         <div className="flex items-center gap-2 mb-2">
-                            <span className="w-2 h-2 rounded-full bg-neon animate-pulse" />
-                            <span className="text-xs font-mono text-neon tracking-widest uppercase">
+                            <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse" />
+                            <span className="text-xs font-mono text-sky-400 tracking-widest uppercase font-semibold">
                                 CONGLOMERATE STRUCTURE
                             </span>
                         </div>
                         <h2 className="font-orbitron text-2xl md:text-3xl font-bold text-white section-heading">
                             VENTURE ECOSYSTEM
                         </h2>
-                        <p className="text-text-primary/40 text-xs sm:text-sm font-mono mt-3">
+                        <p className="text-slate-400 text-xs sm:text-sm font-mono mt-3">
                             {">"} Independent subsidiaries operating under NSK Groups holding.
                         </p>
                     </motion.div>
@@ -543,15 +559,15 @@ export default function PortfolioPage() {
                     >
                         <div>
                             <div className="flex items-center gap-2 mb-2">
-                                <span className="w-2 h-2 rounded-full bg-neon animate-pulse" />
-                                <span className="text-xs font-mono text-neon tracking-widest uppercase">
+                                <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse" />
+                                <span className="text-xs font-mono text-sky-400 tracking-widest uppercase font-semibold">
                                     APPLICATIONS & PLATFORMS
                                 </span>
                             </div>
                             <h2 className="font-orbitron text-2xl md:text-3xl font-bold text-white section-heading">
                                 PRODUCT FLEET
                             </h2>
-                            <p className="text-text-primary/40 text-xs sm:text-sm font-mono mt-3">
+                            <p className="text-slate-400 text-xs sm:text-sm font-mono mt-3">
                                 {">"} 12 proprietary applications engineered across cybersecurity, AI, and enterprise.
                             </p>
                         </div>
@@ -564,8 +580,8 @@ export default function PortfolioPage() {
                                     onClick={() => setProductFilter(tab)}
                                     className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${
                                         productFilter === tab
-                                            ? "bg-neon text-black font-bold shadow-md shadow-neon/20"
-                                            : "border border-neon/15 bg-panel/30 text-text-primary/60 hover:text-white"
+                                            ? "bg-white text-slate-950 font-semibold shadow-sm"
+                                            : "border border-slate-800 bg-slate-900/60 text-slate-400 hover:text-white"
                                     }`}
                                 >
                                     {tab}
@@ -581,6 +597,15 @@ export default function PortfolioPage() {
                     </div>
                 </div>
             </section>
+
+            {/* ═══════════ RESEARCH & WHITEPAPERS ═══════════ */}
+            <PublicationsSection />
+
+            {/* ═══════════ EXECUTIVE BLOG & INSIGHTS ═══════════ */}
+            <BlogSection />
+
+            {/* ═══════════ DAILY DISPATCH & MARKET WIRE ═══════════ */}
+            <DailyUpdatesSection />
 
             {/* ═══════════ SKILLS SECTION ═══════════ */}
             <SkillsSection />
@@ -598,8 +623,8 @@ export default function PortfolioPage() {
                         className="mb-12"
                     >
                         <div className="flex items-center gap-2 mb-2">
-                            <span className="w-2 h-2 rounded-full bg-neon animate-pulse" />
-                            <span className="text-xs font-mono text-neon tracking-widest uppercase">
+                            <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse" />
+                            <span className="text-xs font-mono text-sky-400 tracking-widest uppercase font-semibold">
                                 DIRECT CHANNELS
                             </span>
                         </div>
@@ -612,8 +637,8 @@ export default function PortfolioPage() {
                         {/* Direct Contacts Info */}
                         <div className="lg:col-span-5 space-y-4">
                             <div
-                                className="glass-card rounded-2xl p-6 border border-neon/15 space-y-5 backdrop-blur-xl"
-                                style={{ background: "rgba(3, 7, 18, 0.75)" }}
+                                className="glass-card rounded-2xl p-6 border border-slate-800/80 space-y-5 backdrop-blur-xl"
+                                style={{ background: "rgba(15, 23, 42, 0.65)" }}
                             >
                                 <h3 className="font-orbitron text-sm font-bold text-white tracking-wider mb-2">
                                     EXECUTIVE CONTACT
@@ -623,27 +648,27 @@ export default function PortfolioPage() {
                                     href="https://www.instagram.com/nithyananthan.tech.founder/"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="flex items-center gap-3.5 text-text-primary/70 hover:text-pink-400 transition-colors group"
+                                    className="flex items-center gap-3.5 text-slate-300 hover:text-pink-400 transition-colors group"
                                 >
                                     <div className="w-10 h-10 rounded-xl border border-pink-500/20 bg-pink-500/5 flex items-center justify-center group-hover:border-pink-400">
                                         <Instagram size={16} className="text-pink-400" />
                                     </div>
                                     <div>
-                                        <div className="text-[10px] font-mono text-text-primary/40">OFFICIAL INSTAGRAM</div>
-                                        <div className="text-sm font-mono font-bold text-pink-400">@nithyananthan.tech.founder</div>
+                                        <div className="text-[10px] font-mono text-slate-500">OFFICIAL INSTAGRAM</div>
+                                        <div className="text-sm font-mono font-semibold text-pink-400">@nithyananthan.tech.founder</div>
                                     </div>
                                 </a>
 
                                 <a
                                     href="tel:+916385576354"
-                                    className="flex items-center gap-3.5 text-text-primary/70 hover:text-neon transition-colors group"
+                                    className="flex items-center gap-3.5 text-slate-300 hover:text-sky-400 transition-colors group"
                                 >
-                                    <div className="w-10 h-10 rounded-xl border border-neon/20 bg-neon/5 flex items-center justify-center group-hover:border-neon">
-                                        <Phone size={16} className="text-neon" />
+                                    <div className="w-10 h-10 rounded-xl border border-sky-500/20 bg-sky-500/5 flex items-center justify-center group-hover:border-sky-400">
+                                        <Phone size={16} className="text-sky-400" />
                                     </div>
                                     <div>
-                                        <div className="text-[10px] font-mono text-text-primary/40">PHONE / VOICE</div>
-                                        <div className="text-sm font-mono font-bold">+91 63855 76354</div>
+                                        <div className="text-[10px] font-mono text-slate-500">PHONE / VOICE</div>
+                                        <div className="text-sm font-mono font-semibold text-white">+91 63855 76354</div>
                                     </div>
                                 </a>
 
@@ -651,27 +676,27 @@ export default function PortfolioPage() {
                                     href="https://wa.me/916385576354"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="flex items-center gap-3.5 text-text-primary/70 hover:text-emerald-400 transition-colors group"
+                                    className="flex items-center gap-3.5 text-slate-300 hover:text-emerald-400 transition-colors group"
                                 >
                                     <div className="w-10 h-10 rounded-xl border border-emerald-500/20 bg-emerald-500/5 flex items-center justify-center group-hover:border-emerald-400">
                                         <Send size={16} className="text-emerald-400" />
                                     </div>
                                     <div>
-                                        <div className="text-[10px] font-mono text-text-primary/40">WHATSAPP DIRECT</div>
-                                        <div className="text-sm font-mono font-bold text-emerald-400">Chat Instantly</div>
+                                        <div className="text-[10px] font-mono text-slate-500">WHATSAPP DIRECT</div>
+                                        <div className="text-sm font-mono font-semibold text-emerald-400">Chat Instantly</div>
                                     </div>
                                 </a>
 
                                 <a
                                     href="mailto:nithyananthan@nskgroups.website"
-                                    className="flex items-center gap-3.5 text-text-primary/70 hover:text-neon transition-colors group"
+                                    className="flex items-center gap-3.5 text-slate-300 hover:text-sky-400 transition-colors group"
                                 >
-                                    <div className="w-10 h-10 rounded-xl border border-neon/20 bg-neon/5 flex items-center justify-center group-hover:border-neon">
-                                        <Mail size={16} className="text-neon" />
+                                    <div className="w-10 h-10 rounded-xl border border-sky-500/20 bg-sky-500/5 flex items-center justify-center group-hover:border-sky-400">
+                                        <Mail size={16} className="text-sky-400" />
                                     </div>
                                     <div>
-                                        <div className="text-[10px] font-mono text-text-primary/40">OFFICIAL EMAIL</div>
-                                        <div className="text-sm font-mono font-bold">nithyananthan@nskgroups.website</div>
+                                        <div className="text-[10px] font-mono text-slate-500">OFFICIAL EMAIL</div>
+                                        <div className="text-sm font-mono font-semibold text-white">nithyananthan@nskgroups.website</div>
                                     </div>
                                 </a>
 
@@ -679,14 +704,14 @@ export default function PortfolioPage() {
                                     href="https://calendly.com/nithyananthan-nskgroups"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="flex items-center gap-3.5 text-text-primary/70 hover:text-neon transition-colors group"
+                                    className="flex items-center gap-3.5 text-slate-300 hover:text-sky-400 transition-colors group"
                                 >
-                                    <div className="w-10 h-10 rounded-xl border border-neon/20 bg-neon/5 flex items-center justify-center group-hover:border-neon">
-                                        <Calendar size={16} className="text-neon" />
+                                    <div className="w-10 h-10 rounded-xl border border-sky-500/20 bg-sky-500/5 flex items-center justify-center group-hover:border-sky-400">
+                                        <Calendar size={16} className="text-sky-400" />
                                     </div>
                                     <div>
-                                        <div className="text-[10px] font-mono text-text-primary/40">CALENDLY</div>
-                                        <div className="text-sm font-mono font-bold">Book a 30-min Call</div>
+                                        <div className="text-[10px] font-mono text-slate-500">CALENDLY</div>
+                                        <div className="text-sm font-mono font-semibold text-white">Book a 30-min Call</div>
                                     </div>
                                 </a>
 
@@ -694,14 +719,14 @@ export default function PortfolioPage() {
                                     href="https://nskgroups.website"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="flex items-center gap-3.5 text-text-primary/70 hover:text-neon transition-colors group"
+                                    className="flex items-center gap-3.5 text-slate-300 hover:text-sky-400 transition-colors group"
                                 >
-                                    <div className="w-10 h-10 rounded-xl border border-neon/20 bg-neon/5 flex items-center justify-center group-hover:border-neon">
-                                        <Building2 size={16} className="text-neon" />
+                                    <div className="w-10 h-10 rounded-xl border border-sky-500/20 bg-sky-500/5 flex items-center justify-center group-hover:border-sky-400">
+                                        <Building2 size={16} className="text-sky-400" />
                                     </div>
                                     <div>
-                                        <div className="text-[10px] font-mono text-text-primary/40">HEADQUARTERS</div>
-                                        <div className="text-sm font-mono font-bold">nskgroups.website · Erode, TN</div>
+                                        <div className="text-[10px] font-mono text-slate-500">HEADQUARTERS</div>
+                                        <div className="text-sm font-mono font-semibold text-white">nskgroups.website · Erode, TN</div>
                                     </div>
                                 </a>
                             </div>
@@ -710,14 +735,14 @@ export default function PortfolioPage() {
                         {/* Interactive Message Transmission Form */}
                         <div className="lg:col-span-7">
                             <div
-                                className="glass-card rounded-2xl p-6 sm:p-8 border border-neon/20 backdrop-blur-xl"
-                                style={{ background: "rgba(3, 7, 18, 0.85)" }}
+                                className="glass-card rounded-2xl p-6 sm:p-8 border border-slate-800/80 backdrop-blur-xl"
+                                style={{ background: "rgba(15, 23, 42, 0.7)" }}
                             >
                                 <h3 className="font-orbitron text-base font-bold text-white mb-2 flex items-center gap-2">
-                                    <MessageSquare size={18} className="text-neon" />
+                                    <MessageSquare size={18} className="text-sky-400" />
                                     <span>TRANSMIT INQUIRY</span>
                                 </h3>
-                                <p className="text-xs text-text-primary/50 font-mono mb-6">
+                                <p className="text-xs text-slate-400 font-mono mb-6">
                                     Direct messages are securely logged into the Founder Command Center queue.
                                 </p>
 
@@ -726,7 +751,7 @@ export default function PortfolioPage() {
                                         className={`p-3.5 rounded-lg text-xs font-mono mb-5 flex items-start gap-2 ${
                                             contactStatus === "success"
                                                 ? "border border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
-                                                : "border border-danger/30 bg-danger/10 text-danger"
+                                                : "border border-rose-500/30 bg-rose-500/10 text-rose-400"
                                         }`}
                                     >
                                         <CheckCircle2 size={16} className="flex-shrink-0 mt-0.5" />
@@ -737,7 +762,7 @@ export default function PortfolioPage() {
                                 <form onSubmit={handleContactSubmit} className="space-y-4">
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div>
-                                            <label className="block text-xs font-mono text-text-primary/60 mb-1.5">
+                                            <label className="block text-xs font-mono text-slate-400 mb-1.5">
                                                 $ YOUR NAME
                                             </label>
                                             <input
@@ -746,11 +771,11 @@ export default function PortfolioPage() {
                                                 placeholder="Executive / Client"
                                                 value={contactForm.name}
                                                 onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
-                                                className="w-full rounded-lg border border-neon/20 bg-panel/50 px-3.5 py-2.5 text-xs font-mono text-neon focus:outline-none focus:border-neon"
+                                                className="w-full rounded-lg border border-slate-700/80 bg-slate-900/90 px-3.5 py-2.5 text-xs font-mono text-white placeholder:text-slate-500 focus:outline-none focus:border-sky-400 transition-colors"
                                             />
                                         </div>
                                         <div>
-                                            <label className="block text-xs font-mono text-text-primary/60 mb-1.5">
+                                            <label className="block text-xs font-mono text-slate-400 mb-1.5">
                                                 $ YOUR EMAIL
                                             </label>
                                             <input
@@ -759,13 +784,13 @@ export default function PortfolioPage() {
                                                 placeholder="client@organization.com"
                                                 value={contactForm.email}
                                                 onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
-                                                className="w-full rounded-lg border border-neon/20 bg-panel/50 px-3.5 py-2.5 text-xs font-mono text-neon focus:outline-none focus:border-neon"
+                                                className="w-full rounded-lg border border-slate-700/80 bg-slate-900/90 px-3.5 py-2.5 text-xs font-mono text-white placeholder:text-slate-500 focus:outline-none focus:border-sky-400 transition-colors"
                                             />
                                         </div>
                                     </div>
 
                                     <div>
-                                        <label className="block text-xs font-mono text-text-primary/60 mb-1.5">
+                                        <label className="block text-xs font-mono text-slate-400 mb-1.5">
                                             $ TRANSMISSION CONTENT
                                         </label>
                                         <textarea
@@ -774,14 +799,14 @@ export default function PortfolioPage() {
                                             placeholder="Discussing IT Infrastructure, NiteHire ATS trials, or cybersecurity audits..."
                                             value={contactForm.content}
                                             onChange={(e) => setContactForm({ ...contactForm, content: e.target.value })}
-                                            className="w-full rounded-lg border border-neon/20 bg-panel/50 px-3.5 py-2.5 text-xs font-mono text-neon focus:outline-none focus:border-neon resize-none font-sans"
+                                            className="w-full rounded-lg border border-slate-700/80 bg-slate-900/90 px-3.5 py-2.5 text-xs font-mono text-white placeholder:text-slate-500 focus:outline-none focus:border-sky-400 resize-none font-sans transition-colors"
                                         />
                                     </div>
 
                                     <button
                                         type="submit"
                                         disabled={contactStatus === "loading"}
-                                        className="w-full btn-cyber-accent py-3 font-bold tracking-wider flex items-center justify-center gap-2 disabled:opacity-50"
+                                        className="w-full py-3 rounded-xl bg-white text-slate-950 hover:bg-slate-100 font-bold tracking-wider flex items-center justify-center gap-2 disabled:opacity-50 shadow-md transition-all font-mono text-xs"
                                     >
                                         {contactStatus === "loading" ? (
                                             <span>TRANSMITTING TO NODE...</span>
@@ -803,7 +828,7 @@ export default function PortfolioPage() {
             <section id="faq" className="py-16 px-4">
                 <div className="max-w-4xl mx-auto">
                     <div className="text-center mb-10">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-neon/20 bg-neon/5 text-xs font-mono text-neon mb-3">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-sky-500/25 bg-sky-500/10 text-xs font-mono text-sky-400 mb-3">
                             <HelpCircle size={14} />
                             <span>AI OVERVIEW & EXECUTIVE INQUIRIES</span>
                         </div>
@@ -837,14 +862,14 @@ export default function PortfolioPage() {
                         ].map((faq, idx) => (
                             <details
                                 key={idx}
-                                className="glass-card rounded-xl p-5 border border-neon/15 group cursor-pointer"
-                                style={{ background: "rgba(3, 7, 18, 0.75)" }}
+                                className="glass-card rounded-xl p-5 border border-slate-800/80 group cursor-pointer"
+                                style={{ background: "rgba(15, 23, 42, 0.65)" }}
                             >
-                                <summary className="font-orbitron text-sm sm:text-base font-bold text-white flex items-center justify-between list-none select-none group-hover:text-neon transition-colors">
+                                <summary className="font-orbitron text-sm sm:text-base font-bold text-white flex items-center justify-between list-none select-none group-hover:text-sky-300 transition-colors">
                                     <span>{faq.q}</span>
-                                    <ChevronDown size={16} className="text-neon/60 group-open:rotate-180 transition-transform" />
+                                    <ChevronDown size={16} className="text-slate-500 group-open:rotate-180 transition-transform" />
                                 </summary>
-                                <p className="text-xs sm:text-sm text-text-primary/70 leading-relaxed mt-3.5 pt-3 border-t border-neon/10 font-sans">
+                                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mt-3.5 pt-3 border-t border-slate-800 font-sans">
                                     {faq.a}
                                 </p>
                             </details>
@@ -858,40 +883,39 @@ export default function PortfolioPage() {
                 href="https://wa.me/916385576354"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-emerald-500 flex items-center justify-center text-white shadow-2xl hover:scale-110 transition-transform duration-200 group"
-                style={{ boxShadow: "0 0 30px rgba(16, 185, 129, 0.5)" }}
+                className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-emerald-500 hover:bg-emerald-400 flex items-center justify-center text-white shadow-2xl hover:scale-105 transition-all duration-200 group"
+                style={{ boxShadow: "0 0 25px rgba(16, 185, 129, 0.4)" }}
                 aria-label="Direct WhatsApp Chat"
             >
                 <Send size={22} className="group-hover:rotate-12 transition-transform" />
-                <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-neon rounded-full animate-ping" />
             </a>
 
             {/* ═══════════ FOOTER ═══════════ */}
-            <footer className="py-8 px-4 border-t border-neon/10">
+            <footer className="py-8 px-4 border-t border-slate-800/80">
                 <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between text-center sm:text-left gap-4">
-                    <p className="text-xs font-mono text-text-primary/40 leading-relaxed">
+                    <p className="text-xs font-mono text-slate-500 leading-relaxed">
                         © {new Date().getFullYear()} NITHYANANTHAN NAGARAJAN · NSK GROUPS · ALL RIGHTS RESERVED
                         <br />
-                        <span className="text-[10px]">
+                        <span className="text-[10px] text-slate-600">
                             ERODE, TAMIL NADU, INDIA · MSME REGISTERED · ZERO-TRUST ARCHITECTURE
                         </span>
                     </p>
 
-                    <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-mono text-text-primary/50">
-                        <a href="https://www.instagram.com/nithyananthan.tech.founder/" target="_blank" rel="noopener noreferrer" className="hover:text-pink-400 flex items-center gap-1">
+                    <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-mono text-slate-400">
+                        <a href="https://www.instagram.com/nithyananthan.tech.founder/" target="_blank" rel="noopener noreferrer" className="hover:text-pink-400 flex items-center gap-1 transition-colors">
                             <Instagram size={13} />
                             <span>Instagram</span>
                         </a>
-                        <span>·</span>
-                        <a href="https://nskgroups.website" target="_blank" rel="noopener noreferrer" className="hover:text-neon">
+                        <span className="text-slate-700">·</span>
+                        <a href="https://nskgroups.website" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                             NSK Groups
                         </a>
-                        <span>·</span>
-                        <a href="https://nitechspark.site" target="_blank" rel="noopener noreferrer" className="hover:text-neon">
+                        <span className="text-slate-700">·</span>
+                        <a href="https://nitechspark.site" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                             NiTechSpark
                         </a>
-                        <span>·</span>
-                        <a href="https://nitehire.site" target="_blank" rel="noopener noreferrer" className="hover:text-neon">
+                        <span className="text-slate-700">·</span>
+                        <a href="https://nitehire.site" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                             NiteHire
                         </a>
                     </div>

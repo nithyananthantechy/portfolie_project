@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { Terminal, CornerDownLeft, Play, Sparkles } from "lucide-react";
+import { Terminal, CornerDownLeft } from "lucide-react";
 
 interface CommandLog {
     command: string;
@@ -45,11 +45,11 @@ export default function TerminalBlock() {
             {
                 command: "whoami",
                 response: (
-                    <div className="text-text-primary/80 space-y-1">
-                        <p className="text-neon font-bold">NITHYANANTHAN NAGARAJAN</p>
+                    <div className="text-slate-300 space-y-1">
+                        <p className="text-white font-bold tracking-wide">NITHYANANTHAN NAGARAJAN</p>
                         <p>Founder, Chairman & Managing Director of NSK Groups</p>
                         <p>Founder of NiTechSpark · NiteHire · NiteOrbit</p>
-                        <p className="text-xs text-text-primary/50">Location: Erode, Tamil Nadu, India · MSME Registered</p>
+                        <p className="text-xs text-slate-400">Location: Erode, Tamil Nadu, India · MSME Registered</p>
                     </div>
                 ),
             },
@@ -71,23 +71,23 @@ export default function TerminalBlock() {
         switch (cleanCmd) {
             case "help":
                 response = (
-                    <div className="text-text-primary/70 space-y-1">
-                        <p className="text-neon font-bold">AVAILABLE COMMANDS:</p>
-                        <p>• <span className="text-neon">whoami</span> — Identity and background</p>
-                        <p>• <span className="text-neon">ventures</span> — List 3 core ventures under NSK Groups</p>
-                        <p>• <span className="text-neon">products</span> — Catalog of 10+ live platforms</p>
-                        <p>• <span className="text-neon">skills</span> — Hard engineering & SRE competencies</p>
-                        <p>• <span className="text-neon">contact</span> — Direct comms channels & WhatsApp</p>
-                        <p>• <span className="text-neon">msme</span> — Official government registration status</p>
-                        <p>• <span className="text-neon">clear</span> — Purge terminal buffer</p>
+                    <div className="text-slate-300 space-y-1">
+                        <p className="text-sky-400 font-bold">AVAILABLE COMMANDS:</p>
+                        <p>• <span className="text-sky-400">whoami</span> — Identity and background</p>
+                        <p>• <span className="text-sky-400">ventures</span> — List 3 core ventures under NSK Groups</p>
+                        <p>• <span className="text-sky-400">products</span> — Catalog of 10+ live platforms</p>
+                        <p>• <span className="text-sky-400">skills</span> — Hard engineering & SRE competencies</p>
+                        <p>• <span className="text-sky-400">contact</span> — Direct comms channels & WhatsApp</p>
+                        <p>• <span className="text-sky-400">msme</span> — Official government registration status</p>
+                        <p>• <span className="text-sky-400">clear</span> — Purge terminal buffer</p>
                     </div>
                 );
                 break;
 
             case "whoami":
                 response = (
-                    <div className="text-text-primary/80 space-y-1">
-                        <p className="text-neon font-bold">NITHYANANTHAN NAGARAJAN</p>
+                    <div className="text-slate-300 space-y-1">
+                        <p className="text-white font-bold">NITHYANANTHAN NAGARAJAN</p>
                         <p>Founder & CMD at NSK Groups. Infrastructure engineer turned multi-venture builder.</p>
                         <p>Specializes in Linux Kernel DevOps, AI Recruitment ATS, and Zero-Trust Compliance.</p>
                     </div>
@@ -96,12 +96,12 @@ export default function TerminalBlock() {
 
             case "ventures":
                 response = (
-                    <div className="text-text-primary/70 space-y-2">
+                    <div className="text-slate-300 space-y-2">
                         <div>
-                            <span className="text-purple-400 font-bold">[ NSK GROUPS ]</span> — Parent Technology Holding Conglomerate (nskgroups.website)
+                            <span className="text-indigo-400 font-bold">[ NSK GROUPS ]</span> — Parent Technology Holding Conglomerate (nskgroups.website)
                         </div>
                         <div>
-                            <span className="text-neon font-bold">[ NITECHSPARK ]</span> — IT Infrastructure, Linux DevOps, Cybersecurity & SRE (nitechspark.site)
+                            <span className="text-sky-400 font-bold">[ NITECHSPARK ]</span> — IT Infrastructure, Linux DevOps, Cybersecurity & SRE (nitechspark.site)
                         </div>
                         <div>
                             <span className="text-cyan-400 font-bold">[ NITEHIRE ]</span> — Next-Gen AI Recruitment, 2-Level Screening & ATS (nitehire.site)
@@ -115,8 +115,8 @@ export default function TerminalBlock() {
 
             case "products":
                 response = (
-                    <div className="text-text-primary/70 space-y-1">
-                        <p className="text-neon font-bold">PRODUCTION PRODUCT FLEET:</p>
+                    <div className="text-slate-300 space-y-1">
+                        <p className="text-sky-400 font-bold">PRODUCTION PRODUCT FLEET:</p>
                         <p>1. <span className="text-white font-bold">PropoTrack</span> — Multi-vendor proposal tracker (tracker.nitechspark.site)</p>
                         <p>2. <span className="text-white font-bold">NiteSentinel</span> — Zero-trust endpoint security & DPDP compliance</p>
                         <p>3. <span className="text-white font-bold">sparkAudit</span> — GRC evidence automation & checklist sync</p>
@@ -131,8 +131,8 @@ export default function TerminalBlock() {
 
             case "skills":
                 response = (
-                    <div className="text-text-primary/70 space-y-1">
-                        <p className="text-neon font-bold">CORE TECHNICAL ARSENAL:</p>
+                    <div className="text-slate-300 space-y-1">
+                        <p className="text-sky-400 font-bold">CORE TECHNICAL ARSENAL:</p>
                         <p>• Linux (Ubuntu, Parrot, Kali), Docker, KVM, Nginx, PM2, Shell scripting</p>
                         <p>• Prometheus, Grafana, ELK, Loki, PRTG, Syslog telemetry pipelines</p>
                         <p>• DPDP Act 2023, ISO 27001, SOC 2, Vulnerability Auditing, SSL Hardening</p>
@@ -143,8 +143,8 @@ export default function TerminalBlock() {
 
             case "contact":
                 response = (
-                    <div className="text-text-primary/70 space-y-1">
-                        <p className="text-neon font-bold">COMMUNICATION CHANNELS:</p>
+                    <div className="text-slate-300 space-y-1">
+                        <p className="text-sky-400 font-bold">COMMUNICATION CHANNELS:</p>
                         <p>• Direct Email: <span className="text-white">nithyananthan@nskgroups.website</span></p>
                         <p>• Phone / WhatsApp: <span className="text-white">+91 63855 76354</span></p>
                         <p>• Calendly: <span className="text-white">calendly.com/nithyananthan-nskgroups</span></p>
@@ -156,8 +156,8 @@ export default function TerminalBlock() {
                 response = (
                     <div className="text-emerald-400 space-y-1">
                         <p className="font-bold">[ VERIFIED ] UDYAM MSME REGISTERED</p>
-                        <p className="text-text-primary/70">Category: Micro, Small and Medium Enterprises (Govt. of India)</p>
-                        <p className="text-text-primary/70">Location: Erode, Tamil Nadu, India</p>
+                        <p className="text-slate-300">Category: Micro, Small and Medium Enterprises (Govt. of India)</p>
+                        <p className="text-slate-300">Location: Erode, Tamil Nadu, India</p>
                     </div>
                 );
                 break;
@@ -170,8 +170,8 @@ export default function TerminalBlock() {
 
             default:
                 response = (
-                    <div className="text-danger/80">
-                        Command not recognized: &quot;{cleanCmd}&quot;. Type <span className="text-neon underline cursor-pointer" onClick={() => executeCommand("help")}>help</span> for diagnostic list.
+                    <div className="text-rose-400">
+                        Command not recognized: &quot;{cleanCmd}&quot;. Type <span className="text-sky-400 underline cursor-pointer" onClick={() => executeCommand("help")}>help</span> for diagnostic list.
                     </div>
                 );
         }
@@ -196,37 +196,37 @@ export default function TerminalBlock() {
             className="w-full max-w-5xl mx-auto"
         >
             {/* Terminal Container */}
-            <div className="glass-panel rounded-2xl overflow-hidden corner-accents border border-neon/20 shadow-2xl backdrop-blur-xl bg-[#020612]/90">
+            <div className="glass-panel rounded-2xl overflow-hidden border border-slate-800 shadow-2xl backdrop-blur-xl bg-slate-950/90">
                 {/* Title Bar */}
                 <div
-                    className="flex flex-wrap items-center justify-between px-5 py-3 border-b border-neon/15"
-                    style={{ background: "rgba(3, 7, 18, 0.85)" }}
+                    className="flex flex-wrap items-center justify-between px-5 py-3 border-b border-slate-800"
+                    style={{ background: "rgba(15, 23, 42, 0.85)" }}
                 >
                     <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-danger/80" />
-                        <div className="w-3 h-3 rounded-full bg-accent/80" />
-                        <div className="w-3 h-3 rounded-full bg-neon/80" />
-                        <span className="ml-3 text-xs font-mono text-text-primary/50 flex items-center gap-1.5">
-                            <Terminal size={13} className="text-neon" />
+                        <div className="w-3 h-3 rounded-full bg-rose-500/80" />
+                        <div className="w-3 h-3 rounded-full bg-amber-500/80" />
+                        <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
+                        <span className="ml-3 text-xs font-mono text-slate-400 flex items-center gap-1.5">
+                            <Terminal size={13} className="text-sky-400" />
                             <span>nsk-shell // nithyananthan@nsk-primary: ~</span>
                         </span>
                     </div>
 
                     <div className="flex items-center gap-1.5">
-                        <span className="text-[10px] font-mono text-neon/70 bg-neon/5 border border-neon/20 px-2 py-0.5 rounded">
+                        <span className="text-[10px] font-mono text-sky-400 bg-sky-500/10 border border-sky-500/25 px-2 py-0.5 rounded font-semibold">
                             INTERACTIVE SHELL
                         </span>
                     </div>
                 </div>
 
                 {/* Command Suggestions */}
-                <div className="px-5 py-2.5 border-b border-neon/10 bg-panel/30 flex flex-wrap items-center gap-2 text-xs font-mono">
-                    <span className="text-text-primary/40 text-[11px]">Quick Triggers:</span>
+                <div className="px-5 py-2.5 border-b border-slate-800 bg-slate-900/40 flex flex-wrap items-center gap-2 text-xs font-mono">
+                    <span className="text-slate-500 text-[11px]">Quick Triggers:</span>
                     {defaultCommands.map((cmd) => (
                         <button
                             key={cmd}
                             onClick={() => executeCommand(cmd)}
-                            className="px-2 py-0.5 rounded bg-neon/5 hover:bg-neon/20 text-neon border border-neon/20 text-[11px] transition-all hover:scale-105"
+                            className="px-2.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 text-[11px] transition-all font-medium"
                         >
                             ${cmd}
                         </button>
@@ -240,30 +240,30 @@ export default function TerminalBlock() {
                 >
                     {logs.map((log, i) => (
                         <div key={i} className="space-y-1">
-                            <div className="flex items-center gap-2 text-neon font-bold">
-                                <span className="text-text-primary/40">nithyananthan@nsk:~$</span>
+                            <div className="flex items-center gap-2 text-sky-400 font-semibold">
+                                <span className="text-slate-500">nithyananthan@nsk:~$</span>
                                 <span>{log.command}</span>
                             </div>
-                            <div className="pl-4 text-xs sm:text-sm border-l border-neon/15 py-0.5">
+                            <div className="pl-4 text-xs sm:text-sm border-l border-slate-800 py-0.5">
                                 {log.response}
                             </div>
                         </div>
                     ))}
 
                     {/* Interactive Input Line */}
-                    <form onSubmit={handleFormSubmit} className="flex items-center gap-2 pt-2 text-neon font-bold">
-                        <span className="text-text-primary/40 flex-shrink-0">nithyananthan@nsk:~$</span>
+                    <form onSubmit={handleFormSubmit} className="flex items-center gap-2 pt-2 text-sky-400 font-semibold">
+                        <span className="text-slate-500 flex-shrink-0">nithyananthan@nsk:~$</span>
                         <input
                             ref={inputRef}
                             type="text"
                             value={inputValue}
                             onChange={(e) => setInputValue(e.target.value)}
                             placeholder="Type command (e.g. 'ventures', 'products', 'help')..."
-                            className="w-full bg-transparent border-none outline-none text-neon text-xs sm:text-sm font-mono placeholder:text-text-primary/20"
+                            className="w-full bg-transparent border-none outline-none text-white text-xs sm:text-sm font-mono placeholder:text-slate-600"
                             autoComplete="off"
                             spellCheck="false"
                         />
-                        <button type="submit" className="text-text-primary/40 hover:text-neon p-1">
+                        <button type="submit" className="text-slate-500 hover:text-white p-1">
                             <CornerDownLeft size={14} />
                         </button>
                     </form>

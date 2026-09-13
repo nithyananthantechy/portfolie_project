@@ -2,592 +2,750 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
+    PenTool,
+    FileText,
+    Radio,
     Users,
-    Eye,
-    ShieldCheck,
-    RefreshCw,
-    ArrowLeft,
     Mail,
-    Search,
-    Trash2,
-    CheckCircle2,
-    Activity,
-    Globe,
-    Building2,
+    LogOut,
+    ExternalLink,
+    Check,
     Sparkles,
+    Trash2,
+    RefreshCw,
+    ShieldCheck,
+    Plus,
+    Tag,
 } from "lucide-react";
 import MatrixBackground from "@/components/MatrixBackground";
 
-interface User {
-    id: string;
-    name: string;
-    email: string;
-    role: string;
-    category: string;
-    jobRole?: string;
-    degree?: string;
-    createdAt: string;
-    lastActive?: string;
-}
-
-interface Message {
-    id: string;
-    name: string;
-    email: string;
-    content: string;
-    createdAt: string;
-}
-
-const ventureStatuses = [
-    { name: "NSK GROUPS", status: "PARENT HOLDING", color: "#6c63ff", domain: "nskgroups.website" },
-    { name: "NITECHSPARK", status: "OPERATIONAL", color: "#00f5c4", domain: "nitechspark.site" },
-    { name: "NITEHIRE", status: "LIVE (ATS)", color: "#00d4ff", domain: "nitehire.site" },
-    { name: "NITEORBIT", status: "STEALTH", color: "#f5a623", domain: "niteorbit.space" },
-];
-
 export default function AdminDashboard() {
-    const [activeTab, setActiveTab] = useState<"users" | "messages" | "telemetry">("users");
-    const [users, setUsers] = useState<User[]>([]);
-    const [messages, setMessages] = useState<Message[]>([]);
-    const [stats, setStats] = useState({ visitCount: 0 });
-    const [loading, setLoading] = useState(true);
-    const [refreshing, setRefreshing] = useState(false);
-    const [searchQuery, setSearchQuery] = useState("");
-    const [categoryFilter, setCategoryFilter] = useState("ALL");
-    const [error, setError] = useState("");
+    const router = useRouter();
+    const [activeTab, setActiveTab] = useState<"publish-blog" | "publish-paper" | "publish-wire" | "messages" | "telemetry">("publish-blog");
 
-    const fetchData = async () => {
-        setRefreshing(true);
+    // Blog form
+    const [blogTitle, setBlogTitle] = useState("");
+    const [blogCategory, setBlogCategory] = useState("EMPIRE & LEADERSHIP");
+    const [blogExcerpt, setBlogExcerpt] = useState("");
+    const [blogContent, setBlogContent] = useState("");
+    const [blogTags, setBlogTags] = useState("");
+    const [blogFeatured, setBlogFeatured] = useState(false);
+    const [blogPublishing, setBlogPublishing] = useState(false);
+    const [blogSuccess, setBlogSuccess] = useState(false);
+
+    // Paper form
+    const [paperRefId, setPaperRefId] = useState("");
+    const [paperTitle, setPaperTitle] = useState("");
+    const [paperSubtitle, setPaperSubtitle] = useState("");
+    const [paperCategory, setPaperCategory] = useState("CYBERSECURITY & ZERO-TRUST");
+    const [paperAbstract, setPaperAbstract] = useState("");
+    const [paperFindings, setPaperFindings] = useState("");
+    const [paperTags, setPaperTags] = useState("");
+    const [paperPublishing, setPaperPublishing] = useState(false);
+    const [paperSuccess, setPaperSuccess] = useState(false);
+
+    // Daily wire form
+    const [wireTitle, setWireTitle] = useState("");
+    const [wireChannel, setWireChannel] = useState("CYBER & TECH DISPATCH");
+    const [wireSeverity, setWireSeverity] = useState("OPERATIONAL");
+    const [wireSummary, setWireSummary] = useState("");
+    const [wireDirective, setWireDirective] = useState("");
+    const [wireTags, setWireTags] = useState("");
+    const [wirePublishing, setWirePublishing] = useState(false);
+    const [wireSuccess, setWireSuccess] = useState(false);
+
+    // Messages & Visitors
+    const [messages, setMessages] = useState<any[]>([]);
+    const [users, setUsers] = useState<any[]>([]);
+    const [visitCount, setVisitCount] = useState(0);
+    const [loadingData, setLoadingData] = useState(true);
+
+    const loadData = async () => {
         try {
-            // Fetch users & visits
+            const resMsgs = await fetch("/api/admin/messages");
+            const dataMsgs = await resMsgs.json();
+            if (dataMsgs.success) setMessages(dataMsgs.messages || []);
+
             const resUsers = await fetch("/api/admin/users");
             const dataUsers = await resUsers.json();
             if (dataUsers.success) {
                 setUsers(dataUsers.users || []);
-                setStats(dataUsers.stats || { visitCount: 0 });
-            } else {
-                setError(dataUsers.error);
+                setVisitCount(dataUsers.stats?.visitCount || 0);
             }
-
-            // Fetch contact messages
-            const resMsgs = await fetch("/api/admin/messages");
-            const dataMsgs = await resMsgs.json();
-            if (dataMsgs.success) {
-                setMessages(dataMsgs.messages || []);
-            }
-        } catch (e) {
-            setError("Failed to fetch administrative records.");
+        } catch {
         } finally {
-            setLoading(false);
-            setRefreshing(false);
+            setLoadingData(false);
         }
     };
 
     useEffect(() => {
-        fetchData();
+        loadData();
     }, []);
 
-    const handleDeleteMessage = async (id: string) => {
+    const handleLogout = async () => {
         try {
-            const res = await fetch(`/api/admin/messages?id=${id}`, { method: "DELETE" });
-            const data = await res.json();
-            if (data.success) {
-                setMessages(messages.filter((m) => m.id !== id));
-            }
-        } catch (e) {
-            console.error("Failed to delete message", e);
-        }
-    };
-
-    const filteredUsers = users.filter((u) => {
-        const matchesSearch =
-            u.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            u.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            (u.jobRole && u.jobRole.toLowerCase().includes(searchQuery.toLowerCase())) ||
-            (u.degree && u.degree.toLowerCase().includes(searchQuery.toLowerCase()));
-        const matchesCategory =
-            categoryFilter === "ALL" ||
-            u.category === categoryFilter ||
-            u.role === categoryFilter;
-        return matchesSearch && matchesCategory;
-    });
-
-    if (loading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center font-mono" style={{ background: "var(--bg)" }}>
-                <MatrixBackground />
-                <div className="z-10 text-center">
-                    <div className="w-12 h-12 border-2 border-neon border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-                    <div className="font-orbitron text-lg gradient-text tracking-wider">
-                        INITIALIZING EXECUTIVE CONSOLE...
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    const handleInitDb = async () => {
-        setRefreshing(true);
-        try {
-            const res = await fetch("/api/admin/init-db");
-            const data = await res.json();
-            if (data.success) {
-                setError("");
-                await fetchData();
-            } else {
-                setError(data.error || "Failed to initialize database");
-            }
+            await fetch("/api/auth/logout", { method: "POST" });
+            router.push("/admin/login");
+            router.refresh();
         } catch {
-            setError("Failed to run database bootstrap");
-        } finally {
-            setRefreshing(false);
+            router.push("/admin/login");
         }
     };
 
-    if (error && users.length === 0) {
-        return (
-            <div className="min-h-screen flex flex-col items-center justify-center p-8 font-rajdhani" style={{ background: "var(--bg)" }}>
-                <MatrixBackground />
-                <div className="z-10 text-center max-w-lg glass-panel p-8 rounded-2xl border border-danger/30 shadow-2xl backdrop-blur-xl">
-                    <h1 className="font-orbitron text-2xl text-danger mb-3">DATABASE INITIALIZATION REQUIRED</h1>
-                    <p className="text-text-primary/70 font-mono text-xs mb-6 leading-relaxed bg-black/40 p-3 rounded-lg border border-danger/20">
-                        {error}
-                    </p>
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-                        <button
-                            onClick={handleInitDb}
-                            disabled={refreshing}
-                            className="btn-cyber text-center py-2.5 px-5 text-xs font-mono font-bold flex items-center justify-center gap-2"
-                        >
-                            <RefreshCw size={14} className={refreshing ? "animate-spin" : ""} />
-                            <span>{refreshing ? "INITIALIZING TABLES..." : "AUTO-CREATE DATABASE TABLES"}</span>
-                        </button>
-                        <Link href="/login" className="btn-cyber-accent text-center py-2.5 px-5 text-xs font-mono">
-                            Re-Authenticate
-                        </Link>
-                    </div>
-                </div>
-            </div>
-        );
-    }
+    // Submit Blog
+    const submitBlog = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setBlogPublishing(true);
+        try {
+            const res = await fetch("/api/admin/publish", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    type: "blog",
+                    data: {
+                        title: blogTitle,
+                        category: blogCategory,
+                        excerpt: blogExcerpt,
+                        content: blogContent,
+                        tags: blogTags,
+                        featured: blogFeatured,
+                    },
+                }),
+            });
+            const data = await res.json();
+            if (data.success) {
+                setBlogSuccess(true);
+                setTimeout(() => {
+                    setBlogSuccess(false);
+                    setBlogTitle("");
+                    setBlogExcerpt("");
+                    setBlogContent("");
+                    setBlogTags("");
+                }, 2000);
+            } else {
+                alert(data.error || "Failed to publish blog");
+            }
+        } catch (err: any) {
+            alert(err.message || "Network transmission error");
+        } finally {
+            setBlogPublishing(false);
+        }
+    };
+
+    // Submit Paper
+    const submitPaper = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setPaperPublishing(true);
+        try {
+            const res = await fetch("/api/admin/publish", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    type: "paper",
+                    data: {
+                        refId: paperRefId || `NSK-TR-2026-${Math.floor(Math.random() * 90 + 10)}`,
+                        title: paperTitle,
+                        subtitle: paperSubtitle,
+                        category: paperCategory,
+                        abstract: paperAbstract,
+                        keyFindings: paperFindings,
+                        tags: paperTags,
+                    },
+                }),
+            });
+            const data = await res.json();
+            if (data.success) {
+                setPaperSuccess(true);
+                setTimeout(() => {
+                    setPaperSuccess(false);
+                    setPaperRefId("");
+                    setPaperTitle("");
+                    setPaperSubtitle("");
+                    setPaperAbstract("");
+                    setPaperFindings("");
+                    setPaperTags("");
+                }, 2000);
+            } else {
+                alert(data.error || "Failed to publish paper");
+            }
+        } catch (err: any) {
+            alert(err.message || "Network transmission error");
+        } finally {
+            setPaperPublishing(false);
+        }
+    };
+
+    // Submit Daily Wire
+    const submitWire = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setWirePublishing(true);
+        try {
+            const res = await fetch("/api/admin/publish", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    type: "update",
+                    data: {
+                        title: wireTitle,
+                        channel: wireChannel,
+                        severity: wireSeverity,
+                        summary: wireSummary,
+                        actionTakeaway: wireDirective,
+                        tags: wireTags,
+                    },
+                }),
+            });
+            const data = await res.json();
+            if (data.success) {
+                setWireSuccess(true);
+                setTimeout(() => {
+                    setWireSuccess(false);
+                    setWireTitle("");
+                    setWireSummary("");
+                    setWireDirective("");
+                    setWireTags("");
+                }, 2000);
+            } else {
+                alert(data.error || "Failed to post daily update");
+            }
+        } catch (err: any) {
+            alert(err.message || "Network transmission error");
+        } finally {
+            setWirePublishing(false);
+        }
+    };
 
     return (
-        <div className="min-h-screen font-rajdhani selection:bg-neon/20 pb-16" style={{ background: "var(--bg)" }}>
+        <main className="min-h-screen relative overflow-hidden font-rajdhani pb-20" style={{ background: "var(--bg)" }}>
             <MatrixBackground />
 
-            <div className="relative z-10 max-w-7xl mx-auto p-4 sm:p-6 md:p-8">
-                {/* Venture Status Strip */}
-                <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="flex flex-wrap items-center justify-between gap-4 mb-6 px-5 py-3 rounded-xl border border-neon/15 backdrop-blur-md"
-                    style={{ background: "rgba(3, 7, 18, 0.75)" }}
-                >
-                    <div className="flex flex-wrap items-center gap-4">
-                        {ventureStatuses.map((v, i) => (
-                            <div key={v.name} className="flex items-center gap-2">
-                                <div
-                                    className="w-2 h-2 rounded-full animate-pulse"
-                                    style={{
-                                        background: v.color,
-                                        boxShadow: `0 0 8px ${v.color}`,
-                                    }}
-                                />
-                                <span className="text-xs font-mono text-text-primary/70">
-                                    <span className="font-bold text-white">{v.name}</span>:{" "}
-                                    <span style={{ color: v.color }}>{v.status}</span>
-                                </span>
-                                {i < ventureStatuses.length - 1 && (
-                                    <span className="text-text-primary/20 ml-2 hidden sm:inline">|</span>
-                                )}
-                            </div>
-                        ))}
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                        <button
-                            onClick={fetchData}
-                            disabled={refreshing}
-                            className="flex items-center gap-1.5 text-xs font-mono text-neon border border-neon/30 px-3 py-1 rounded-md hover:bg-neon/10 transition-colors disabled:opacity-50"
-                        >
-                            <RefreshCw size={12} className={refreshing ? "animate-spin" : ""} />
-                            <span>SYNC</span>
-                        </button>
-                    </div>
-                </motion.div>
-
-                {/* Error Diagnostic Alert */}
-                {error && (
-                    <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="mb-6 p-4 rounded-xl border border-danger/40 bg-danger/10 text-danger text-xs font-mono flex items-center justify-between"
-                    >
-                        <div className="flex items-center gap-2">
-                            <span className="font-bold">[DATABASE DIAGNOSTIC]:</span>
-                            <span>{error}</span>
+            {/* Top Navigation */}
+            <header className="relative z-20 border-b border-white/10 bg-black/60 backdrop-blur-xl">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg border border-sky-500/30 bg-sky-500/10 flex items-center justify-center text-sky-400 font-bold font-orbitron">
+                            NN
                         </div>
-                        <button
-                            onClick={() => setError("")}
-                            className="text-danger/60 hover:text-danger text-xs"
-                        >
-                            Dismiss
-                        </button>
-                    </motion.div>
-                )}
-
-                {/* Header */}
-                <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 pb-5 border-b border-neon/15 gap-4">
-                    <div>
-                        <div className="flex items-center gap-2.5 mb-1">
-                            <span className="px-2.5 py-0.5 rounded bg-neon/10 border border-neon/30 text-[10px] font-mono text-neon tracking-widest uppercase">
-                                CLEARANCE LEVEL: 5 // CMD
+                        <div>
+                            <span className="font-orbitron font-bold text-sm text-white tracking-wider block">
+                                CHAIRMAN PUBLISHING STUDIO
+                            </span>
+                            <span className="text-[10px] font-mono text-sky-400 tracking-widest uppercase block">
+                                NSK GROUPS // FOUNDER CONSOLE
                             </span>
                         </div>
-                        <h1 className="font-orbitron text-2xl md:text-3xl font-black gradient-text tracking-wider">
-                            FOUNDER COMMAND CENTER // NSK GROUPS
-                        </h1>
-                        <p className="text-xs text-text-primary/50 font-mono mt-1">
-                            Operator: Nithyananthan Nagarajan (CMD) · Erode Central Nodes
-                        </p>
                     </div>
 
                     <div className="flex items-center gap-3">
                         <Link
-                            href="/portfolio"
-                            className="flex items-center gap-2 text-text-primary/60 hover:text-neon text-xs font-mono border rounded-lg px-4 py-2.5 transition-all hover:border-neon/40 bg-panel/40"
-                            style={{ borderColor: "rgba(0, 245, 196, 0.15)" }}
+                            href="/"
+                            target="_blank"
+                            className="text-xs font-mono text-slate-400 hover:text-white px-3.5 py-1.5 rounded-lg border border-slate-800 bg-slate-900/60 flex items-center gap-1.5 transition-colors"
                         >
-                            <ArrowLeft size={14} />
-                            <span>PORTFOLIO VIEW</span>
+                            <span>VIEW LIVE PORTFOLIO</span>
+                            <ExternalLink size={13} />
                         </Link>
+
+                        <button
+                            onClick={handleLogout}
+                            className="text-xs font-mono text-rose-400 hover:text-rose-300 px-3.5 py-1.5 rounded-lg border border-rose-500/30 hover:border-rose-500/60 bg-rose-500/10 flex items-center gap-1.5 transition-colors"
+                        >
+                            <LogOut size={13} />
+                            <span>LOGOUT</span>
+                        </button>
                     </div>
-                </header>
-
-                {/* KPI Metrics */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                    <motion.div
-                        initial={{ opacity: 0, y: 15 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="glass-card rounded-xl p-5 border border-neon/20 relative overflow-hidden"
-                    >
-                        <div className="flex items-center justify-between text-xs font-mono text-text-primary/50 mb-2">
-                            <span>REGISTERED OPERATORS</span>
-                            <Users size={16} className="text-neon" />
-                        </div>
-                        <div className="font-orbitron text-3xl font-black text-neon">{users.length}</div>
-                        <div className="text-[11px] font-mono text-text-primary/40 mt-1">Visitors & verified users</div>
-                    </motion.div>
-
-                    <motion.div
-                        initial={{ opacity: 0, y: 15 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.05 }}
-                        className="glass-card rounded-xl p-5 border border-accent/20 relative overflow-hidden"
-                    >
-                        <div className="flex items-center justify-between text-xs font-mono text-text-primary/50 mb-2">
-                            <span>TOTAL SITE SESSIONS</span>
-                            <Eye size={16} className="text-accent" />
-                        </div>
-                        <div className="font-orbitron text-3xl font-black text-accent">{stats.visitCount || 1024}</div>
-                        <div className="text-[11px] font-mono text-text-primary/40 mt-1">Unique logged encounters</div>
-                    </motion.div>
-
-                    <motion.div
-                        initial={{ opacity: 0, y: 15 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 }}
-                        className="glass-card rounded-xl p-5 border border-purple-500/20 relative overflow-hidden"
-                    >
-                        <div className="flex items-center justify-between text-xs font-mono text-text-primary/50 mb-2">
-                            <span>TRANSMISSIONS (MESSAGES)</span>
-                            <Mail size={16} className="text-purple-400" />
-                        </div>
-                        <div className="font-orbitron text-3xl font-black text-purple-400">{messages.length}</div>
-                        <div className="text-[11px] font-mono text-text-primary/40 mt-1">Direct inquiries & leads</div>
-                    </motion.div>
-
-                    <motion.div
-                        initial={{ opacity: 0, y: 15 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.15 }}
-                        className="glass-card rounded-xl p-5 border border-emerald-500/20 relative overflow-hidden"
-                    >
-                        <div className="flex items-center justify-between text-xs font-mono text-text-primary/50 mb-2">
-                            <span>SECURITY HARDENING</span>
-                            <ShieldCheck size={16} className="text-emerald-400" />
-                        </div>
-                        <div className="font-orbitron text-3xl font-black text-emerald-400">100%</div>
-                        <div className="text-[11px] font-mono text-text-primary/40 mt-1">Zero-trust JWT encrypted</div>
-                    </motion.div>
                 </div>
+            </header>
 
-                {/* Tabs Navigation */}
-                <div className="flex items-center gap-3 mb-6 border-b border-neon/15 pb-2">
+            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-8">
+                {/* Tabs */}
+                <div className="flex flex-wrap gap-2 pb-6 border-b border-slate-800 text-xs font-mono">
                     <button
-                        onClick={() => setActiveTab("users")}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg font-mono text-xs tracking-wider transition-all ${
-                            activeTab === "users"
-                                ? "bg-neon/15 text-neon border border-neon/40 shadow-sm"
-                                : "text-text-primary/50 hover:text-white"
+                        onClick={() => setActiveTab("publish-blog")}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-xl border transition-all ${
+                            activeTab === "publish-blog"
+                                ? "bg-white text-slate-950 border-white font-bold shadow-sm"
+                                : "bg-slate-900/60 border-slate-800 text-slate-400 hover:text-white"
                         }`}
                     >
-                        <Users size={14} />
-                        <span>OPERATOR REGISTRY ({users.length})</span>
+                        <PenTool size={14} />
+                        <span>WRITE & PUBLISH BLOG</span>
+                    </button>
+
+                    <button
+                        onClick={() => setActiveTab("publish-paper")}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-xl border transition-all ${
+                            activeTab === "publish-paper"
+                                ? "bg-white text-slate-950 border-white font-bold shadow-sm"
+                                : "bg-slate-900/60 border-slate-800 text-slate-400 hover:text-white"
+                        }`}
+                    >
+                        <FileText size={14} />
+                        <span>PUBLISH PROJECT PAPER</span>
+                    </button>
+
+                    <button
+                        onClick={() => setActiveTab("publish-wire")}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-xl border transition-all ${
+                            activeTab === "publish-wire"
+                                ? "bg-white text-slate-950 border-white font-bold shadow-sm"
+                                : "bg-slate-900/60 border-slate-800 text-slate-400 hover:text-white"
+                        }`}
+                    >
+                        <Radio size={14} />
+                        <span>POST DAILY WIRE</span>
                     </button>
 
                     <button
                         onClick={() => setActiveTab("messages")}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg font-mono text-xs tracking-wider transition-all ${
+                        className={`flex items-center gap-2 px-4 py-2 rounded-xl border transition-all ${
                             activeTab === "messages"
-                                ? "bg-neon/15 text-neon border border-neon/40 shadow-sm"
-                                : "text-text-primary/50 hover:text-white"
+                                ? "bg-white text-slate-950 border-white font-bold shadow-sm"
+                                : "bg-slate-900/60 border-slate-800 text-slate-400 hover:text-white"
                         }`}
                     >
                         <Mail size={14} />
-                        <span>TRANSMISSIONS ({messages.length})</span>
+                        <span>INQUIRIES ({messages.length})</span>
                     </button>
 
                     <button
                         onClick={() => setActiveTab("telemetry")}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg font-mono text-xs tracking-wider transition-all ${
+                        className={`flex items-center gap-2 px-4 py-2 rounded-xl border transition-all ${
                             activeTab === "telemetry"
-                                ? "bg-neon/15 text-neon border border-neon/40 shadow-sm"
-                                : "text-text-primary/50 hover:text-white"
+                                ? "bg-white text-slate-950 border-white font-bold shadow-sm"
+                                : "bg-slate-900/60 border-slate-800 text-slate-400 hover:text-white"
                         }`}
                     >
-                        <Activity size={14} />
-                        <span>VENTURE TELEMETRY</span>
+                        <Users size={14} />
+                        <span>TELEMETRY & VISITS ({visitCount})</span>
                     </button>
                 </div>
 
-                {/* TAB 1: USERS */}
-                {activeTab === "users" && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="glass-card rounded-2xl p-6 border border-neon/20"
-                    >
-                        {/* Search & Filter Bar */}
-                        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
-                            <div className="relative w-full sm:w-80">
-                                <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-primary/40" />
-                                <input
-                                    type="text"
-                                    placeholder="Search by name, email, or role..."
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="w-full pl-9 pr-4 py-2 rounded-lg border border-neon/20 bg-panel/60 text-xs font-mono text-neon focus:outline-none focus:border-neon"
-                                />
+                {/* Tab Content */}
+                <div className="pt-8">
+                    {/* 1. WRITE & PUBLISH BLOG */}
+                    {activeTab === "publish-blog" && (
+                        <div className="max-w-3xl glass-panel p-6 sm:p-8 rounded-2xl border border-neon/30 bg-panel/70">
+                            <div className="flex items-center gap-2 mb-4">
+                                <PenTool size={18} className="text-neon" />
+                                <h2 className="font-orbitron font-bold text-lg text-white">
+                                    COMPOSE EXECUTIVE BLOG POST
+                                </h2>
                             </div>
+                            <p className="text-xs text-text-primary/60 mb-6">
+                                Publish articles directly to the portfolio's blog archive. Articles are visible immediately to all visitors.
+                            </p>
 
-                            <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-                                {["ALL", "PROFESSIONAL", "STUDENT", "RECRUITER", "ENTERPRISE", "ADMIN"].map((cat) => (
+                            <form onSubmit={submitBlog} className="space-y-4">
+                                <div>
+                                    <label className="block text-xs font-mono text-neon mb-1">
+                                        ARTICLE TITLE:
+                                    </label>
+                                    <input
+                                        type="text"
+                                        required
+                                        value={blogTitle}
+                                        onChange={(e) => setBlogTitle(e.target.value)}
+                                        placeholder="e.g. Zero-Trust Linux Kernel Auditing & eBPF Telemetry"
+                                        className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs focus:outline-none focus:border-neon"
+                                    />
+                                </div>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-xs font-mono text-neon mb-1">
+                                            CATEGORY:
+                                        </label>
+                                        <select
+                                            value={blogCategory}
+                                            onChange={(e) => setBlogCategory(e.target.value)}
+                                            className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs focus:outline-none focus:border-neon"
+                                        >
+                                            <option value="EMPIRE & LEADERSHIP">EMPIRE & LEADERSHIP</option>
+                                            <option value="CYBERSECURITY">CYBERSECURITY</option>
+                                            <option value="LINUX SRE & DEVOPS">LINUX SRE & DEVOPS</option>
+                                            <option value="AI ENGINEERING">AI ENGINEERING</option>
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-xs font-mono text-neon mb-1">
+                                            TAGS (COMMA SEPARATED):
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={blogTags}
+                                            onChange={(e) => setBlogTags(e.target.value)}
+                                            placeholder="Zero-Trust, Linux SRE, NSK Groups"
+                                            className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs focus:outline-none focus:border-neon"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-mono text-neon mb-1">
+                                        EXECUTIVE EXCERPT (1-2 SENTENCES):
+                                    </label>
+                                    <textarea
+                                        rows={2}
+                                        value={blogExcerpt}
+                                        onChange={(e) => setBlogExcerpt(e.target.value)}
+                                        placeholder="Key takeaway or executive abstract for the preview card..."
+                                        className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs focus:outline-none focus:border-neon"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-mono text-neon mb-1">
+                                        FULL ESSAY CONTENT (MARKDOWN SUPPORTED):
+                                    </label>
+                                    <textarea
+                                        rows={10}
+                                        required
+                                        value={blogContent}
+                                        onChange={(e) => setBlogContent(e.target.value)}
+                                        placeholder="Write your article sections, code snippets, or architectural blueprint..."
+                                        className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs font-mono focus:outline-none focus:border-neon"
+                                    />
+                                </div>
+
+                                <div className="flex items-center justify-between pt-4 border-t border-white/10">
+                                    <span className="text-xs font-mono text-text-primary/40">
+                                        Author: Nithyananthan Nagarajan (CMD)
+                                    </span>
+
                                     <button
-                                        key={cat}
-                                        onClick={() => setCategoryFilter(cat)}
-                                        className={`px-3 py-1 rounded-md text-[11px] font-mono transition-all ${
-                                            categoryFilter === cat
-                                                ? "bg-neon/20 border border-neon text-neon"
-                                                : "border border-neon/10 bg-panel/30 text-text-primary/50 hover:text-white"
-                                        }`}
+                                        type="submit"
+                                        disabled={blogPublishing}
+                                        className="btn-cyber px-6 py-2.5 text-xs flex items-center gap-2 font-bold"
                                     >
-                                        {cat}
+                                        {blogSuccess ? <Check size={14} /> : <Plus size={14} />}
+                                        <span>{blogSuccess ? "PUBLISHED LIVE!" : blogPublishing ? "TRANSMITTING..." : "PUBLISH ARTICLE"}</span>
                                     </button>
-                                ))}
-                            </div>
+                                </div>
+                            </form>
                         </div>
+                    )}
 
-                        {/* Users Table */}
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-left font-mono text-xs">
-                                <thead>
-                                    <tr className="border-b border-neon/15 text-text-primary/40 uppercase tracking-wider">
-                                        <th className="pb-3 px-3">Operator</th>
-                                        <th className="pb-3 px-3">Classification</th>
-                                        <th className="pb-3 px-3">Role / Organization</th>
-                                        <th className="pb-3 px-3">Clearance</th>
-                                        <th className="pb-3 px-3">Joined Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-neon/5">
-                                    {filteredUsers.length === 0 ? (
-                                        <tr>
-                                            <td colSpan={5} className="py-8 text-center text-text-primary/40">
-                                                No operator records matched the active filter.
-                                            </td>
-                                        </tr>
-                                    ) : (
-                                        filteredUsers.map((u) => (
-                                            <tr key={u.id} className="hover:bg-neon/5 transition-colors">
-                                                <td className="py-3 px-3">
-                                                    <div className="font-bold text-white">{u.name}</div>
-                                                    <div className="text-[11px] text-text-primary/40">{u.email}</div>
-                                                </td>
-                                                <td className="py-3 px-3">
-                                                    <span className="px-2 py-0.5 rounded border text-[10px] tracking-wider border-neon/20 bg-neon/5 text-neon">
-                                                        {u.category}
-                                                    </span>
-                                                </td>
-                                                <td className="py-3 px-3 text-text-primary/70">
-                                                    <div>{u.jobRole || "—"}</div>
-                                                    <div className="text-[11px] text-text-primary/40">{u.degree || ""}</div>
-                                                </td>
-                                                <td className="py-3 px-3">
-                                                    <span
-                                                        className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                                                            u.role === "ADMIN"
-                                                                ? "bg-danger/10 text-danger border border-danger/30"
-                                                                : "bg-neon/10 text-neon border border-neon/20"
-                                                        }`}
-                                                    >
-                                                        {u.role}
-                                                    </span>
-                                                </td>
-                                                <td className="py-3 px-3 text-text-primary/40">
-                                                    {new Date(u.createdAt).toLocaleDateString("en-US", {
-                                                        month: "short",
-                                                        day: "numeric",
-                                                        year: "numeric",
-                                                    })}
-                                                </td>
-                                            </tr>
-                                        ))
-                                    )}
-                                </tbody>
-                            </table>
-                        </div>
-                    </motion.div>
-                )}
-
-                {/* TAB 2: MESSAGES */}
-                {activeTab === "messages" && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="glass-card rounded-2xl p-6 border border-neon/20"
-                    >
-                        <h3 className="font-orbitron text-lg font-bold text-white mb-4 flex items-center gap-2">
-                            <Mail className="text-neon" size={18} />
-                            <span>INBOUND TRANSMISSIONS</span>
-                        </h3>
-
-                        {messages.length === 0 ? (
-                            <div className="py-12 text-center text-text-primary/40 font-mono text-sm">
-                                [ No direct transmissions pending in queue ]
+                    {/* 2. PUBLISH PROJECT PAPER / WHITEPAPER */}
+                    {activeTab === "publish-paper" && (
+                        <div className="max-w-3xl glass-panel p-6 sm:p-8 rounded-2xl border border-gold/30 bg-panel/70">
+                            <div className="flex items-center gap-2 mb-4">
+                                <FileText size={18} className="text-gold" />
+                                <h2 className="font-orbitron font-bold text-lg text-white">
+                                    PUBLISH PROJECT PAPER & TECHNICAL WHITEPAPER
+                                </h2>
                             </div>
-                        ) : (
-                            <div className="space-y-4">
-                                {messages.map((m) => (
+                            <p className="text-xs text-text-primary/60 mb-6">
+                                Publish research papers, RFCs, and engineering specifications under NSK Groups Research Core.
+                            </p>
+
+                            <form onSubmit={submitPaper} className="space-y-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-xs font-mono text-gold mb-1">
+                                            REFERENCE ID:
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={paperRefId}
+                                            onChange={(e) => setPaperRefId(e.target.value)}
+                                            placeholder="e.g. NSK-TR-2026-05"
+                                            className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs focus:outline-none focus:border-gold font-mono"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-mono text-gold mb-1">
+                                            CATEGORY:
+                                        </label>
+                                        <select
+                                            value={paperCategory}
+                                            onChange={(e) => setPaperCategory(e.target.value)}
+                                            className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs focus:outline-none focus:border-gold"
+                                        >
+                                            <option value="CYBERSECURITY & ZERO-TRUST">CYBERSECURITY & ZERO-TRUST</option>
+                                            <option value="AI & ATS ARCHITECTURE">AI & ATS ARCHITECTURE</option>
+                                            <option value="SPACE TECH & SRE">SPACE TECH & SRE</option>
+                                            <option value="ENTERPRISE PROTOCOLS">ENTERPRISE PROTOCOLS</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-mono text-gold mb-1">
+                                        PAPER TITLE:
+                                    </label>
+                                    <input
+                                        type="text"
+                                        required
+                                        value={paperTitle}
+                                        onChange={(e) => setPaperTitle(e.target.value)}
+                                        placeholder="e.g. Autonomous Multi-Agent Cryptographic Verification Protocols"
+                                        className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs focus:outline-none focus:border-gold"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-mono text-gold mb-1">
+                                        SUBTITLE / SCOPE:
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={paperSubtitle}
+                                        onChange={(e) => setPaperSubtitle(e.target.value)}
+                                        placeholder="e.g. Implementation Standard for Distributed Edge Networks"
+                                        className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs focus:outline-none focus:border-gold"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-mono text-gold mb-1">
+                                        FULL ABSTRACT:
+                                    </label>
+                                    <textarea
+                                        rows={4}
+                                        required
+                                        value={paperAbstract}
+                                        onChange={(e) => setPaperAbstract(e.target.value)}
+                                        placeholder="Detailed technical summary of problem statement, architecture, methodology, and outcome..."
+                                        className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs focus:outline-none focus:border-gold"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-mono text-gold mb-1">
+                                        KEY ARCHITECTURAL FINDINGS (ONE PER LINE):
+                                    </label>
+                                    <textarea
+                                        rows={3}
+                                        value={paperFindings}
+                                        onChange={(e) => setPaperFindings(e.target.value)}
+                                        placeholder="Finding 1: Zero-trust latency reduced by 40%&#10;Finding 2: Tamper-proof hash audit guarantees 100% data integrity"
+                                        className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs font-mono focus:outline-none focus:border-gold"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-mono text-gold mb-1">
+                                        TAGS (COMMA SEPARATED):
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={paperTags}
+                                        onChange={(e) => setPaperTags(e.target.value)}
+                                        placeholder="Zero-Trust, Linux, Cryptography, Whitepaper"
+                                        className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs focus:outline-none focus:border-gold"
+                                    />
+                                </div>
+
+                                <div className="flex items-center justify-between pt-4 border-t border-white/10">
+                                    <span className="text-xs font-mono text-text-primary/40">
+                                        Directorate: NSK Research Core
+                                    </span>
+
+                                    <button
+                                        type="submit"
+                                        disabled={paperPublishing}
+                                        className="btn-imperial px-6 py-2.5 text-xs flex items-center gap-2 font-bold"
+                                    >
+                                        {paperSuccess ? <Check size={14} /> : <Plus size={14} />}
+                                        <span>{paperSuccess ? "PUBLISHED LIVE!" : paperPublishing ? "RECORDING..." : "PUBLISH WHITEPAPER"}</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    )}
+
+                    {/* 3. POST DAILY WIRE */}
+                    {activeTab === "publish-wire" && (
+                        <div className="max-w-3xl glass-panel p-6 sm:p-8 rounded-2xl border border-danger/30 bg-panel/70">
+                            <div className="flex items-center gap-2 mb-4">
+                                <Radio size={18} className="text-danger" />
+                                <h2 className="font-orbitron font-bold text-lg text-white">
+                                    DISPATCH DAILY TECH OR BUSINESS WIRE
+                                </h2>
+                            </div>
+                            <p className="text-xs text-text-primary/60 mb-6">
+                                Broadcast real-time CVE alerts, kernel updates, or NSK Groups conglomerate market milestones.
+                            </p>
+
+                            <form onSubmit={submitWire} className="space-y-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-xs font-mono text-danger mb-1">
+                                            CHANNEL:
+                                        </label>
+                                        <select
+                                            value={wireChannel}
+                                            onChange={(e) => setWireChannel(e.target.value)}
+                                            className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs focus:outline-none focus:border-danger"
+                                        >
+                                            <option value="CYBER & TECH DISPATCH">CYBER & TECH DISPATCH</option>
+                                            <option value="NSK BUSINESS & MARKET WIRE">NSK BUSINESS & MARKET WIRE</option>
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-xs font-mono text-danger mb-1">
+                                            SEVERITY / PRIORITY:
+                                        </label>
+                                        <select
+                                            value={wireSeverity}
+                                            onChange={(e) => setWireSeverity(e.target.value)}
+                                            className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs focus:outline-none focus:border-danger"
+                                        >
+                                            <option value="OPERATIONAL">OPERATIONAL</option>
+                                            <option value="CRITICAL">CRITICAL (RED ALERT)</option>
+                                            <option value="MILESTONE">MILESTONE (GOLD)</option>
+                                            <option value="INTEL">INTEL (CYAN)</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-mono text-danger mb-1">
+                                        DISPATCH HEADLINE:
+                                    </label>
+                                    <input
+                                        type="text"
+                                        required
+                                        value={wireTitle}
+                                        onChange={(e) => setWireTitle(e.target.value)}
+                                        placeholder="e.g. Linux Kernel 6.12 Zero-Day Mitigation Patch Released"
+                                        className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs focus:outline-none focus:border-danger"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-mono text-danger mb-1">
+                                        SITUATIONAL SUMMARY:
+                                    </label>
+                                    <textarea
+                                        rows={3}
+                                        required
+                                        value={wireSummary}
+                                        onChange={(e) => setWireSummary(e.target.value)}
+                                        placeholder="Provide brief intelligence summary for subscribers and clients..."
+                                        className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs focus:outline-none focus:border-danger"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-mono text-danger mb-1">
+                                        ACTIONABLE DIRECTIVE / TAKEAWAY (OPTIONAL):
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={wireDirective}
+                                        onChange={(e) => setWireDirective(e.target.value)}
+                                        placeholder="e.g. Isolate bastion port 22 and rotate server keys immediately."
+                                        className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs focus:outline-none focus:border-danger"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-mono text-danger mb-1">
+                                        TAGS (COMMA SEPARATED):
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={wireTags}
+                                        onChange={(e) => setWireTags(e.target.value)}
+                                        placeholder="Advisory, Zero-Trust, NiTechSpark, Kernel"
+                                        className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs focus:outline-none focus:border-danger"
+                                    />
+                                </div>
+
+                                <div className="flex items-center justify-between pt-4 border-t border-white/10">
+                                    <span className="text-xs font-mono text-text-primary/40">
+                                        Broadcasting to Live Feed
+                                    </span>
+
+                                    <button
+                                        type="submit"
+                                        disabled={wirePublishing}
+                                        className="px-6 py-2.5 rounded-xl border border-danger/50 bg-danger/20 hover:bg-danger text-white text-xs font-mono font-bold flex items-center gap-2 transition-all"
+                                    >
+                                        {wireSuccess ? <Check size={14} /> : <Plus size={14} />}
+                                        <span>{wireSuccess ? "DISPATCHED TO WIRE!" : wirePublishing ? "BROADCASTING..." : "DISPATCH UPDATE"}</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    )}
+
+                    {/* 4. INQUIRIES & CONTACT MESSAGES */}
+                    {activeTab === "messages" && (
+                        <div className="space-y-4">
+                            {messages.length === 0 ? (
+                                <div className="text-center py-16 text-text-primary/40 font-mono text-xs">
+                                    No incoming transmissions logged in the executive queue.
+                                </div>
+                            ) : (
+                                messages.map((m) => (
                                     <div
                                         key={m.id}
-                                        className="p-5 rounded-xl border border-neon/15 bg-panel/50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:border-neon/30 transition-all"
+                                        className="glass-panel p-5 rounded-xl border border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-4"
                                     >
-                                        <div className="space-y-1.5 flex-1">
-                                            <div className="flex items-center gap-3">
-                                                <span className="font-bold text-white text-sm">{m.name}</span>
-                                                <a
-                                                    href={`mailto:${m.email}`}
-                                                    className="text-xs font-mono text-neon hover:underline"
-                                                >
-                                                    {m.email}
-                                                </a>
-                                                <span className="text-[10px] font-mono text-text-primary/30">
-                                                    {new Date(m.createdAt).toLocaleString()}
-                                                </span>
+                                        <div className="space-y-1">
+                                            <div className="flex items-center gap-2 text-xs font-mono">
+                                                <span className="text-gold font-bold">{m.name}</span>
+                                                <span className="text-text-primary/40">· {m.email}</span>
+                                                <span className="text-text-primary/30">· {new Date(m.createdAt).toLocaleDateString()}</span>
                                             </div>
-                                            <p className="text-sm text-text-primary/80 leading-relaxed font-sans">
+                                            <p className="text-xs text-text-primary/80 font-sans">
                                                 {m.content}
                                             </p>
                                         </div>
 
-                                        <div className="flex items-center gap-2 self-end md:self-center">
-                                            <a
-                                                href={`mailto:${m.email}?subject=RE:%20NSK%20Groups%20Inquiry`}
-                                                className="px-3 py-1.5 rounded-lg border border-neon/30 bg-neon/10 text-xs font-mono text-neon hover:bg-neon hover:text-black transition-all"
-                                            >
-                                                Reply
-                                            </a>
-                                            <button
-                                                onClick={() => handleDeleteMessage(m.id)}
-                                                className="p-1.5 rounded-lg border border-danger/30 text-danger/70 hover:text-danger hover:bg-danger/10 transition-colors"
-                                                title="Purge transmission"
-                                            >
-                                                <Trash2 size={15} />
-                                            </button>
-                                        </div>
+                                        <a
+                                            href={`mailto:${m.email}`}
+                                            className="px-3 py-1.5 rounded-lg border border-gold/40 bg-gold/10 text-gold text-xs font-mono text-center shrink-0"
+                                        >
+                                            REPLY VIA EMAIL
+                                        </a>
                                     </div>
-                                ))}
+                                ))
+                            )}
+                        </div>
+                    )}
+
+                    {/* 5. TELEMETRY */}
+                    {activeTab === "telemetry" && (
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                            <div className="glass-panel p-6 rounded-2xl border border-neon/30 text-center">
+                                <span className="text-xs font-mono text-neon uppercase block mb-1">
+                                    TOTAL VISITOR TRAFFIC
+                                </span>
+                                <span className="font-orbitron text-3xl font-black text-white">
+                                    {visitCount}
+                                </span>
                             </div>
-                        )}
-                    </motion.div>
-                )}
 
-                {/* TAB 3: TELEMETRY */}
-                {activeTab === "telemetry" && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="grid grid-cols-1 md:grid-cols-2 gap-6"
-                    >
-                        <div className="glass-card rounded-2xl p-6 border border-neon/20">
-                            <h3 className="font-orbitron text-base font-bold text-white mb-4 flex items-center gap-2">
-                                <Globe className="text-neon" size={18} />
-                                <span>PRODUCTION WEBSITES</span>
-                            </h3>
+                            <div className="glass-panel p-6 rounded-2xl border border-gold/30 text-center">
+                                <span className="text-xs font-mono text-gold uppercase block mb-1">
+                                    INCOMING TRANSMISSIONS
+                                </span>
+                                <span className="font-orbitron text-3xl font-black text-white">
+                                    {messages.length}
+                                </span>
+                            </div>
 
-                            <div className="space-y-3 font-mono text-xs">
-                                {[
-                                    { name: "NSK Groups Parent", url: "https://nskgroups.website", status: "200 OK", ms: "34ms" },
-                                    { name: "NiTechSpark IT & DevOps", url: "https://nitechspark.site", status: "200 OK", ms: "42ms" },
-                                    { name: "NiteHire AI ATS", url: "https://nitehire.site", status: "200 OK", ms: "28ms" },
-                                    { name: "NiteOrbit Space Tech", url: "https://niteorbit.space", status: "STEALTH", ms: "—" },
-                                ].map((s) => (
-                                    <div
-                                        key={s.name}
-                                        className="p-3 rounded-lg border border-neon/10 bg-panel/30 flex items-center justify-between"
-                                    >
-                                        <div>
-                                            <div className="font-bold text-white">{s.name}</div>
-                                            <a href={s.url} target="_blank" rel="noopener noreferrer" className="text-text-primary/40 hover:text-neon">
-                                                {s.url}
-                                            </a>
-                                        </div>
-                                        <div className="text-right">
-                                            <span className="text-neon font-bold">{s.status}</span>
-                                            <div className="text-[10px] text-text-primary/30">{s.ms}</div>
-                                        </div>
-                                    </div>
-                                ))}
+                            <div className="glass-panel p-6 rounded-2xl border border-cyan-500/30 text-center">
+                                <span className="text-xs font-mono text-cyan-400 uppercase block mb-1">
+                                    HOLDINGS GOVERNED
+                                </span>
+                                <span className="font-orbitron text-3xl font-black text-white">
+                                    3 VENTURES
+                                </span>
                             </div>
                         </div>
-
-                        <div className="glass-card rounded-2xl p-6 border border-neon/20">
-                            <h3 className="font-orbitron text-base font-bold text-white mb-4 flex items-center gap-2">
-                                <Building2 className="text-neon" size={18} />
-                                <span>CORPORATE REGISTRATION</span>
-                            </h3>
-
-                            <div className="space-y-3 font-mono text-xs text-text-primary/70">
-                                <div className="p-3 rounded-lg border border-neon/10 bg-panel/30">
-                                    <span className="text-text-primary/40 block text-[10px]">MSME CLASSIFICATION</span>
-                                    <span className="text-white font-bold">Udyam MSME Registered Enterprise</span>
-                                </div>
-                                <div className="p-3 rounded-lg border border-neon/10 bg-panel/30">
-                                    <span className="text-text-primary/40 block text-[10px]">HEADQUARTERS</span>
-                                    <span className="text-white font-bold">Erode, Tamil Nadu, India (11.3410° N, 77.7172° E)</span>
-                                </div>
-                                <div className="p-3 rounded-lg border border-neon/10 bg-panel/30">
-                                    <span className="text-text-primary/40 block text-[10px]">DIRECT EXECUTIVE CONTACT</span>
-                                    <span className="text-neon font-bold">+91 63855 76354 · nithyananthan@nskgroups.website</span>
-                                </div>
-                            </div>
-                        </div>
-                    </motion.div>
-                )}
+                    )}
+                </div>
             </div>
-        </div>
+        </main>
     );
 }

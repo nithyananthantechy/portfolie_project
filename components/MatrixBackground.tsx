@@ -15,37 +15,32 @@ const MatrixBackground = () => {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
-        const katakana =
-            "アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン";
-        const latin = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        const nums = "0123456789";
-        const alphabet = katakana + latin + nums;
-
-        const fontSize = 14;
-        const columnSpacing = 18;
+        const chars = "01010101010101010101ABCDEF0123456789";
+        const fontSize = 13;
+        const columnSpacing = 28;
         const columns = Math.floor(canvas.width / columnSpacing);
 
         const rainDrops: number[] = [];
         for (let x = 0; x < columns; x++) {
-            rainDrops[x] = Math.floor(Math.random() * -50);
+            rainDrops[x] = Math.floor(Math.random() * -60);
         }
 
         const draw = () => {
-            ctx.fillStyle = "rgba(2, 9, 18, 0.05)";
+            ctx.fillStyle = "rgba(3, 7, 18, 0.08)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            ctx.fillStyle = "#00f5c4";
-            ctx.font = `${fontSize}px 'Share Tech Mono', monospace`;
+            ctx.fillStyle = "rgba(148, 163, 184, 0.35)";
+            ctx.font = `${fontSize}px 'JetBrains Mono', monospace`;
 
             for (let i = 0; i < rainDrops.length; i++) {
-                const text = alphabet.charAt(
-                    Math.floor(Math.random() * alphabet.length)
+                const text = chars.charAt(
+                    Math.floor(Math.random() * chars.length)
                 );
                 ctx.fillText(text, i * columnSpacing, rainDrops[i] * fontSize);
 
                 if (
                     rainDrops[i] * fontSize > canvas.height &&
-                    Math.random() > 0.975
+                    Math.random() > 0.985
                 ) {
                     rainDrops[i] = 0;
                 }
@@ -53,7 +48,7 @@ const MatrixBackground = () => {
             }
         };
 
-        const interval = setInterval(draw, 33);
+        const interval = setInterval(draw, 50);
 
         const handleResize = () => {
             canvas.width = window.innerWidth;
@@ -72,7 +67,7 @@ const MatrixBackground = () => {
         <canvas
             ref={canvasRef}
             className="fixed top-0 left-0 w-full h-full pointer-events-none"
-            style={{ zIndex: 0, opacity: 0.04 }}
+            style={{ zIndex: 0, opacity: 0.035 }}
         />
     );
 };

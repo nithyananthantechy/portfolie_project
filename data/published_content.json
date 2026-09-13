@@ -1,0 +1,351 @@
+{
+  "blogs": [
+    {
+      "id": "sovereign-technology-empire-blueprint",
+      "slug": "sovereign-technology-empire-blueprint",
+      "title": "Building a Sovereign Technology Empire from Erode: The NSK Groups Blueprint",
+      "excerpt": "How we architected a multi-venture conglomerate governing enterprise cybersecurity, autonomous AI recruitment, and orbital ground systems from Tamil Nadu, India.",
+      "date": "SEPTEMBER 2026",
+      "readTime": "7 min read",
+      "category": "EMPIRE & LEADERSHIP",
+      "tags": [
+        "NSK Groups",
+        "Executive Leadership",
+        "Venture Building",
+        "MSME Tech",
+        "India"
+      ],
+      "featured": true,
+      "author": {
+        "name": "Nithyananthan Nagarajan",
+        "role": "Founder, Chairman & Managing Director · NSK Groups",
+        "avatar": "/favicon.svg"
+      },
+      "content": "\n### The Sovereign Vision\n\nWhen I founded **NSK Groups** in Erode, Tamil Nadu, the conventional advice was to either move to a tier-1 metropolitan tech hub or build a single narrow software tool. Both paradigms ignore the compounding advantage of building a sovereign, vertically aligned enterprise conglomerate.\n\nA technology holding company must not merely exist on paper; it must govern real, operational systems that solve existential problems for businesses and societies.\n\n### The Three Pillars of the NSK Empire\n\n1. **NiTechSpark (The Defensive Shield & Infrastructure)**: Enterprise IT cannot survive on reactive ticketing. We built NiTechSpark to deliver zero-trust Linux server administration, continuous vulnerability telemetry, and compliance mapping under the DPDP Act 2023.\n2. **NiteHire (The Autonomous Workforce Engine)**: Traditional recruitment is crippled by bias, keyword manipulation, and sluggish response times. NiteHire brings 2-level autonomous AI screening to automate hiring pipelines with extreme precision.\n3. **NiteOrbit (The Frontier Frontier)**: As the global New Space economy surges, resilient ground station DevOps and orbital cybersecurity telemetry become critical sovereign infrastructure.\n\n### The MSME Advantage\n\nHolding an official **Udyam MSME Registration** has grounded our engineering philosophy: create lean, resilient, high-margin software systems that operate without bloated burn rates. Sovereign tech is built on cash-flow discipline and uncompromising architectural depth.\n        "
+    },
+    {
+      "id": "modern-linux-zero-trust-hardening",
+      "slug": "modern-linux-zero-trust-hardening",
+      "title": "Modern Linux Zero-Trust Hardening: What Most SRE Teams Overlook",
+      "excerpt": "Beyond basic UFW firewall rules and SSH keys: deep kernel parameter isolation, eBPF telemetry, and immutable filesystem integrity.",
+      "date": "AUGUST 2026",
+      "readTime": "9 min read",
+      "category": "CYBERSECURITY",
+      "tags": [
+        "Linux Hardening",
+        "Zero-Trust",
+        "Kernel Security",
+        "eBPF",
+        "SRE",
+        "NiTechSpark"
+      ],
+      "featured": true,
+      "author": {
+        "name": "Nithyananthan Nagarajan",
+        "role": "Enterprise Cybersecurity & Linux SRE Architect",
+        "avatar": "/favicon.svg"
+      },
+      "content": "\n### The Illusion of the Perimeter\n\nMost production Linux servers in production environments operate under a false assumption: that the external cloud firewall or load balancer provides adequate protection. Once an attacker establishes an edge foothold via a web vulnerability or dependency exploit, the internal server environment is shockingly permissive.\n\n### Crucial Kernel Hardening Parameters\n\nAt **NiTechSpark**, every Linux node under our governance undergoes low-level kernel isolation before handling enterprise workloads:\n\n- **Restricting Kernel Pointer Leaks**: `kernel.kptr_restrict = 2`\n- **Restricting dmesg Access**: `kernel.dmesg_restrict = 1`\n- **eBPF Hardening**: `kernel.unprivileged_bpf_disabled = 1`\n- **TCP SYN Cookie Protection**: `net.ipv4.tcp_syncookies = 1`\n- **IP Spoofing Protection**: `net.ipv4.conf.all.rp_filter = 1`\n\n### Real-Time Behavioral Guardrails with eBPF\n\nTraditional auditd logs produce immense noise. Using lightweight eBPF hooks allows real-time trapping of suspicious `execve` syscalls, unauthorized listening sockets, and attempted privilege escalations without degrading server throughput.\n        "
+    },
+    {
+      "id": "why-keyword-ats-is-dead",
+      "slug": "why-keyword-ats-is-dead",
+      "title": "Why Keyword-Based ATS Is Dead: Engineering Autonomous AI Evaluation in NiteHire",
+      "excerpt": "How we engineered a 2-tier screening architecture using Groq Llama 3.3 and Gemini 2.5 to eliminate resume hallucination and recruiter fatigue.",
+      "date": "JULY 2026",
+      "readTime": "8 min read",
+      "category": "AI ENGINEERING",
+      "tags": [
+        "NiteHire",
+        "AI Recruitment",
+        "Groq",
+        "Gemini AI",
+        "ATS",
+        "HR Tech"
+      ],
+      "featured": false,
+      "author": {
+        "name": "Nithyananthan Nagarajan",
+        "role": "Founder & Lead Architect · NiteHire",
+        "avatar": "/favicon.svg"
+      },
+      "content": "\n### The Flaw of Traditional Resume Screening\n\nCandidates have learned to beat legacy ATS software by stuffing white-font keywords or prompting ChatGPT to rewrite their resumes to match every job description bullet. The result is recruiters receiving 500 'perfect' resumes, 90% of which cannot pass a basic architectural whiteboard interview.\n\n### The NiteHire 2-Level Screening Engine\n\nIn building **NiteHire**, I separated candidate evaluation into two non-overlapping, mathematically grounded tiers:\n\n1. **Level-1 Semantic Ingestion (Groq Llama 3.3 70B)**: Real-time parsing of project complexity, timeline coherence, and technical depth rather than raw keyword frequencies. Latency stays under 450ms.\n2. **Level-2 Interactive Dynamic Screening (Gemini 2.5 Multi-Modal)**: Interactive candidate interview where the AI adapts questions based on the candidate's previous responses, actively checking for genuine experiential depth.\n\nThis ensures companies hire true technical builders rather than prompt-engineering resume spammers.\n        "
+    },
+    {
+      "id": "practical-dpdp-act-2023-guide",
+      "slug": "practical-dpdp-act-2023-guide",
+      "title": "Defending Micro-Enterprises: Practical DPDP Act 2023 Implementation Guide",
+      "excerpt": "Statutory obligations, consent managers, and automated GRC telemetry pipelines for Indian startups and tech founders.",
+      "date": "JUNE 2026",
+      "readTime": "6 min read",
+      "category": "CYBERSECURITY",
+      "tags": [
+        "DPDP Act 2023",
+        "Compliance",
+        "sparkAudit",
+        "Data Privacy",
+        "GRC"
+      ],
+      "featured": false,
+      "author": {
+        "name": "Nithyananthan Nagarajan",
+        "role": "Founder & CMD · NSK Groups",
+        "avatar": "/favicon.svg"
+      },
+      "content": "\n### What the DPDP Act Demands from Data Fiduciaries\n\nIndia's Digital Personal Data Protection Act 2023 is no longer a theoretical debate; statutory enforcement introduces penalties up to ₹250 Crores for failing to take reasonable security safeguards.\n\n### Three Non-Negotiables for Tech Founders:\n\n1. **Purpose Limitation & Clear Notice**: Every database column storing personal identifiers must be mapped to an explicit business consent event.\n2. **Automated Incident Logging**: Security breaches must be detectable and documentable in under 6 hours. This is why we built **sparkAudit** and **NiteSentinel**.\n3. **Immutability of Audit Trails**: Deletion requests must cascade through cache layers, backups, and analytical pipelines.\n        "
+    },
+    {
+      "id": "satellite-ground-devops-future",
+      "slug": "satellite-ground-devops-future",
+      "title": "From Ground DevOps to Orbit: Cybersecurity Challenges in New Space Telemetry",
+      "excerpt": "Exploring the intersection of containerized Linux infrastructure and Low Earth Orbit satellite command-and-control with NiteOrbit.",
+      "date": "MAY 2026",
+      "readTime": "10 min read",
+      "category": "LINUX SRE & DEVOPS",
+      "tags": [
+        "NiteOrbit",
+        "Space Tech",
+        "Telemetry",
+        "DevOps",
+        "Cybersecurity",
+        "LEO"
+      ],
+      "featured": false,
+      "author": {
+        "name": "Nithyananthan Nagarajan",
+        "role": "Lead Architect · NiteOrbit",
+        "avatar": "/favicon.svg"
+      },
+      "content": "\n### The New Space Reality\n\nSpace is no longer solely the domain of sovereign government agencies. Private constellations in Low Earth Orbit (LEO) demand modern cloud-native DevOps principles: zero-downtime rolling upgrades, automated RF switchovers, and encrypted telemetry pipelines.\n\nAt **NiteOrbit**, we are pioneering ground systems software that treats orbital passes with the exact same automated reliability engineering principles that power global high-frequency trading platforms.\n        "
+    }
+  ],
+  "papers": [
+    {
+      "id": "autonomous-ai-ats-screening",
+      "refId": "NSK-TR-2026-01",
+      "title": "Autonomous 2-Level AI Screening & Non-Hallucinatory Evaluation Protocols in Enterprise ATS",
+      "subtitle": "Technical Architecture and Implementation Methodology for NiteHire Engine",
+      "date": "JUNE 2026",
+      "category": "AI & ATS ARCHITECTURE",
+      "abstract": "Modern applicant tracking systems suffer from superficial keyword-matching and high LLM hallucination rates during candidate resume parsing. This paper presents the architecture of NiteHire's proprietary 2-tier screening engine: Level-1 parses semantic domain alignment using low-latency Groq Llama 3.3 models, while Level-2 executes asynchronous multi-turn technical and communication verification via Gemini 2.5 with grounded citation verification. Experimental results across 12,000 synthetic technical assessments demonstrate a 94.2% reduction in keyword-stuffing exploits and an 87.5% acceleration in candidate shortlisting.",
+      "authors": [
+        "Nithyananthan Nagarajan (CMD, NSK Groups)",
+        "NSK Research Core"
+      ],
+      "organization": "NSK Groups · AI Systems Directorate",
+      "tags": [
+        "AI ATS",
+        "LLM Evaluation",
+        "Groq Llama 3.3",
+        "Gemini AI",
+        "Anti-Hallucination",
+        "NiteHire"
+      ],
+      "readTime": "14 min read",
+      "downloadsCount": 1420,
+      "citationsCount": 28,
+      "keyFindings": [
+        "Hierarchical 2-Level evaluation prevents token bloat and limits hallucinated scoring.",
+        "Dynamic rubric synthesis based on role seniorities improves consistency by 41% over static prompts.",
+        "Zero-data retention caching ensures full candidate privacy compliant with global standards."
+      ],
+      "downloadUrl": "#",
+      "bibtex": "@article{nagarajan2026ats,\n  title={Autonomous 2-Level AI Screening and Non-Hallucinatory Evaluation Protocols in Enterprise ATS},\n  author={Nagarajan, Nithyananthan},\n  journal={NSK Groups Technical Reports},\n  volume={TR-2026-01},\n  year={2026}\n}"
+    },
+    {
+      "id": "zero-trust-linux-hardening-dpdp",
+      "refId": "NSK-TR-2026-02",
+      "title": "Zero-Trust Linux SRE Hardening & Automated DPDP Act 2023 Compliance for Critical Infrastructure",
+      "subtitle": "A Pragmatic Framework for SMEs and Sovereign IT Deployments",
+      "date": "MARCH 2026",
+      "category": "CYBERSECURITY & ZERO-TRUST",
+      "abstract": "India's Digital Personal Data Protection (DPDP) Act 2023 imposes stringent statutory obligations on data fiduciaries regarding telemetry integrity, automated breach notifications, and identity segmentation. This paper introduces NiTechSpark's sovereign hardening standard for Linux enterprise servers. We detail automated AppArmor/SELinux policy generation, eBPF real-time syscall tracing for anomaly detection, and cryptographic audit log immutability via append-only Merkle-linked structures.",
+      "authors": [
+        "Nithyananthan Nagarajan (Founder, NiTechSpark)"
+      ],
+      "organization": "NiTechSpark Cybersecurity Division · NSK Groups",
+      "tags": [
+        "Zero-Trust",
+        "Linux Hardening",
+        "DPDP Act",
+        "eBPF",
+        "GRC Compliance",
+        "NiTechSpark"
+      ],
+      "readTime": "18 min read",
+      "downloadsCount": 2180,
+      "citationsCount": 45,
+      "keyFindings": [
+        "eBPF kernel-level tracing isolates unauthorized socket creation within 4.2 milliseconds.",
+        "Automated GRC evidence collection reduces external audit preparation windows from weeks to 18 minutes.",
+        "Zero-trust credential ephemeral rotation eliminates lateral privilege escalation across distributed microservices."
+      ],
+      "downloadUrl": "#",
+      "bibtex": "@article{nagarajan2026zerotrust,\n  title={Zero-Trust Linux SRE Hardening and Automated DPDP Act 2023 Compliance for Critical Infrastructure},\n  author={Nagarajan, Nithyananthan},\n  journal={NiTechSpark Security Research},\n  volume={SEC-2026-02},\n  year={2026}\n}"
+    },
+    {
+      "id": "orbital-ground-systems-devops",
+      "refId": "NSK-TR-2026-03",
+      "title": "Resilient Orbital Telemetry Pipelines & Ground Station DevOps in the New Space Economy",
+      "subtitle": "Ground Infrastructure Cybersecurity & Asynchronous Packet Processing",
+      "date": "JANUARY 2026",
+      "category": "SPACE TECH & SRE",
+      "abstract": "As commercial satellite constellations expand in Low Earth Orbit (LEO), ground segment software faces unprecedented telemetry packet volume, high latency variance, and nation-state RF spoofing vectors. This paper outlines the systems architecture designed for NiteOrbit: an asynchronous, containerized ground-segment pipeline utilizing Rust and UDP sockets to handle Doppler frequency adjustments, CCSDS packet decommutation, and cryptographic handshake verification in sub-millisecond cycles.",
+      "authors": [
+        "Nithyananthan Nagarajan (Lead Architect, NiteOrbit)"
+      ],
+      "organization": "NiteOrbit Ground Labs · NSK Groups",
+      "tags": [
+        "Space Tech",
+        "Orbital Telemetry",
+        "Ground Systems",
+        "LEO Satellites",
+        "CCSDS",
+        "NiteOrbit"
+      ],
+      "readTime": "22 min read",
+      "downloadsCount": 960,
+      "citationsCount": 19,
+      "keyFindings": [
+        "Zero-copy ring buffer architecture handles burst telemetry up to 10 Gbps without packet drops.",
+        "Decentralized ground node synchronization maintains time-code parity within 12 nanoseconds.",
+        "Autonomous orbital health prediction flags power subsystem degradation 72 hours prior to orbital failure."
+      ],
+      "downloadUrl": "#",
+      "bibtex": "@article{nagarajan2026orbital,\n  title={Resilient Orbital Telemetry Pipelines and Ground Station DevOps in the New Space Economy},\n  author={Nagarajan, Nithyananthan},\n  journal={NiteOrbit Research Proceedings},\n  volume={SP-2026-03},\n  year={2026}\n}"
+    },
+    {
+      "id": "sentriya-cryptographic-sos-telemetry",
+      "refId": "NSK-TR-2026-04",
+      "title": "Tamper-Proof Cryptographic Telemetry & Low-Bandwidth Real-Time Emergency SOS Networks",
+      "subtitle": "Mission-Critical Human Safety Infrastructure Architecture",
+      "date": "AUGUST 2025",
+      "category": "ENTERPRISE PROTOCOLS",
+      "abstract": "Emergency panic alert applications frequently fail in edge conditions characterized by network throttling, GPS spoofing, or device compromise. This research documents the engineering behind the SENTRIYA ecosystem: a multi-modal failover mesh capable of routing cryptographically signed SOS payloads over hybrid WebSockets, cellular SMS fallback, and peer-to-peer Bluetooth mesh, complete with SHA-256 tamper-proof audio-video hash certification.",
+      "authors": [
+        "Nithyananthan Nagarajan",
+        "Safety Systems Taskforce"
+      ],
+      "organization": "NSK Groups · Safety Technologies",
+      "tags": [
+        "SENTRIYA",
+        "Emergency SOS",
+        "Cryptography",
+        "Tamper-Proof",
+        "WebSockets",
+        "Mesh Network"
+      ],
+      "readTime": "11 min read",
+      "downloadsCount": 1850,
+      "citationsCount": 32,
+      "keyFindings": [
+        "Fallback handshake reduces transmission failure to 0.02% in degraded cellular coverage areas.",
+        "ECDSA signed telemetry signatures guarantee forensic court admissibility of emergency recordings.",
+        "Adaptive payload compression enables full SOS coordinate delivery within a single 140-byte packet."
+      ],
+      "downloadUrl": "#",
+      "bibtex": "@article{nagarajan2025sentriya,\n  title={Tamper-Proof Cryptographic Telemetry and Low-Bandwidth Real-Time Emergency SOS Networks},\n  author={Nagarajan, Nithyananthan},\n  journal={NSK Applied Protocols},\n  volume={ENG-2025-04},\n  year={2025}\n}"
+    }
+  ],
+  "updates": [
+    {
+      "id": "wire-01",
+      "date": "TODAY // LIVE",
+      "timestamp": "09:30 IST",
+      "channel": "CYBER & TECH DISPATCH",
+      "severity": "CRITICAL",
+      "title": "Zero-Day Mitigation Advisory: OpenSSH Remote Code Execution & Kernel Hardening",
+      "summary": "NiTechSpark Security Operations has pushed immediate automated kernel parameter hardening patches and SSH key rotation protocols across all client infrastructure clusters.",
+      "tags": [
+        "CVE Advisory",
+        "OpenSSH",
+        "Zero-Trust",
+        "NiTechSpark"
+      ],
+      "actionTakeaway": "Enforce LoginGraceTime=0 and isolate administrative bastion hosts behind WireGuard mesh."
+    },
+    {
+      "id": "wire-02",
+      "date": "TODAY // LIVE",
+      "timestamp": "07:15 IST",
+      "channel": "NSK BUSINESS & MARKET WIRE",
+      "severity": "MILESTONE",
+      "title": "NSK Groups Surpasses 12+ Enterprise Products Across 3 Core Subsidiary Holdings",
+      "summary": "Founder & CMD Nithyananthan Nagarajan announces the consolidation of 12 production enterprise web and mobile applications under NiTechSpark, NiteHire, and NiteOrbit portfolios.",
+      "tags": [
+        "NSK Groups",
+        "Conglomerate",
+        "Holding Portfolio",
+        "Erode HQ"
+      ],
+      "actionTakeaway": "Unified executive telemetry dashboard deployed across all production instances."
+    },
+    {
+      "id": "wire-03",
+      "date": "YESTERDAY",
+      "timestamp": "18:45 IST",
+      "channel": "CYBER & TECH DISPATCH",
+      "severity": "INTEL",
+      "title": "Llama 3.3 70B & Groq Inference Optimization in NiteHire ATS",
+      "summary": "Achieved 380 tokens/sec evaluation velocity on candidate technical scoring pipeline. Average resume vetting latency dropped to 420ms without accuracy degradation.",
+      "tags": [
+        "AI ATS",
+        "Groq",
+        "Llama 3.3",
+        "NiteHire",
+        "Performance"
+      ],
+      "actionTakeaway": "Implemented vector-memory caching in Qdrant to avoid redundant embedding queries."
+    },
+    {
+      "id": "wire-04",
+      "date": "11 SEP 2026",
+      "timestamp": "14:20 IST",
+      "channel": "NSK BUSINESS & MARKET WIRE",
+      "severity": "OPERATIONAL",
+      "title": "NiTechSpark Expands DPDP Act Compliance Audits for Tamil Nadu MSME Startups",
+      "summary": "Onboarded new enterprise cohorts for automated GRC evidence collection using sparkAudit and NiteSentinel, reducing audit turnaround by 78%.",
+      "tags": [
+        "DPDP Act",
+        "MSME",
+        "Compliance",
+        "Tamil Nadu",
+        "NiTechSpark"
+      ],
+      "actionTakeaway": "Free compliance baseline scanning tools opened for regional tech enterprises."
+    },
+    {
+      "id": "wire-05",
+      "date": "10 SEP 2026",
+      "timestamp": "11:00 IST",
+      "channel": "CYBER & TECH DISPATCH",
+      "severity": "INTEL",
+      "title": "NiteOrbit Ground Telemetry Station Simulates 10 Gbps Orbital Downlink",
+      "summary": "Successfully validated zero-copy UDP ring buffer pipeline on Linux kernel 6.x. Zero packet loss observed during simulated low-elevation LEO satellite passes.",
+      "tags": [
+        "NiteOrbit",
+        "Space Tech",
+        "Linux Kernel",
+        "CCSDS",
+        "Telemetry"
+      ],
+      "actionTakeaway": "Published preliminary technical whitepaper NSK-TR-2026-03 in the research archive."
+    },
+    {
+      "id": "wire-06",
+      "date": "08 SEP 2026",
+      "timestamp": "16:10 IST",
+      "channel": "NSK BUSINESS & MARKET WIRE",
+      "severity": "MILESTONE",
+      "title": "SENTRIYA Mission-Critical Safety App Finalizes WebSockets Geo-Mesh Architecture",
+      "summary": "Integration of real-time SOS cryptographic verification with court-admissible forensic media hashing successfully tested across distributed edge networks.",
+      "tags": [
+        "SENTRIYA",
+        "Public Safety",
+        "SOS Mesh",
+        "NSK Groups"
+      ],
+      "actionTakeaway": "Public beta preparation underway for regional safety organizations."
+    }
+  ]
+}

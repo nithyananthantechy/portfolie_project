@@ -74,18 +74,18 @@ export default function SkillsSection() {
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true }}
-                    className="mb-12"
+                    className="mb-12 text-center md:text-left"
                 >
-                    <div className="flex items-center gap-2 mb-2">
-                        <span className="w-2 h-2 rounded-full bg-neon animate-pulse" />
-                        <span className="text-xs font-mono text-neon tracking-widest uppercase">
+                    <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
+                        <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse" />
+                        <span className="text-xs font-mono text-sky-400 tracking-widest uppercase font-semibold">
                             SYSTEM CAPABILITIES
                         </span>
                     </div>
                     <h2 className="font-orbitron text-2xl md:text-3xl font-bold text-white section-heading">
                         TECHNICAL ARSENAL
                     </h2>
-                    <p className="text-text-primary/40 text-xs sm:text-sm font-mono mt-3">
+                    <p className="text-slate-400 text-xs sm:text-sm font-mono mt-3">
                         {">"} Battle-tested infrastructure engineering, cybersecurity, and production AI architectures.
                     </p>
                 </motion.div>
@@ -97,28 +97,28 @@ export default function SkillsSection() {
                     viewport={{ once: true }}
                     className="grid grid-cols-1 lg:grid-cols-2 gap-6"
                 >
-                    {skillDomains.map((domain, index) => {
+                    {skillDomains.map((domain) => {
                         const Icon = domain.icon;
                         return (
                             <motion.div
                                 key={domain.title}
                                 variants={cardVariants}
-                                className="glass-card rounded-2xl p-6 sm:p-7 border border-neon/15 hover:border-neon/30 transition-all duration-300 backdrop-blur-xl relative overflow-hidden group"
-                                style={{ background: "rgba(3, 7, 18, 0.75)" }}
+                                className="glass-card rounded-2xl p-6 sm:p-7 border border-slate-800/80 hover:border-sky-500/40 transition-all duration-300 backdrop-blur-xl relative overflow-hidden group"
+                                style={{ background: "rgba(15, 23, 42, 0.65)" }}
                             >
                                 {/* Top Edge Glow */}
-                                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-neon to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-sky-400/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                                 <div className="flex items-center justify-between mb-5">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-xl border border-neon/30 bg-neon/5 flex items-center justify-center text-neon">
+                                        <div className="w-10 h-10 rounded-xl border border-sky-500/30 bg-sky-500/10 flex items-center justify-center text-sky-400">
                                             <Icon size={20} />
                                         </div>
                                         <div>
                                             <h3 className="font-orbitron font-bold text-lg text-white">
                                                 {domain.title}
                                             </h3>
-                                            <span className="text-[10px] font-mono text-neon/70 tracking-widest">
+                                            <span className="text-[10px] font-mono text-slate-400 tracking-widest uppercase">
                                                 {domain.category}
                                             </span>
                                         </div>
@@ -129,16 +129,16 @@ export default function SkillsSection() {
                                     {domain.skills.map((skill) => (
                                         <div key={skill.name}>
                                             <div className="flex justify-between text-xs font-mono mb-1.5">
-                                                <span className="text-text-primary/75">{skill.name}</span>
-                                                <span className="text-neon/70 font-semibold">{skill.level}%</span>
+                                                <span className="text-slate-300">{skill.name}</span>
+                                                <span className="text-sky-400 font-semibold">{skill.level}%</span>
                                             </div>
-                                            <div className="w-full h-1.5 rounded-full bg-panel/80 overflow-hidden border border-neon/10">
+                                            <div className="w-full h-1.5 rounded-full bg-slate-900 overflow-hidden border border-slate-800">
                                                 <motion.div
                                                     initial={{ width: 0 }}
                                                     whileInView={{ width: `${skill.level}%` }}
                                                     viewport={{ once: true }}
                                                     transition={{ duration: 1, ease: "easeOut" }}
-                                                    className="h-full rounded-full bg-gradient-to-r from-neon via-cyan-400 to-indigo-500"
+                                                    className="h-full rounded-full bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-500"
                                                 />
                                             </div>
                                         </div>
