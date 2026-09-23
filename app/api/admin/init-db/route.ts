@@ -41,8 +41,8 @@ export async function GET(req: Request) {
         `);
 
         // Check if admin user exists, create if not
-        const adminEmail = "nithyananthan@nskgroups.website";
-        const hashedPassword = await bcrypt.hash("nsk12345", 10);
+        const adminEmail = "nithyananthan@nitechspark.site";
+        const hashedPassword = await bcrypt.hash("nts12345", 10);
 
         await prisma.$executeRawUnsafe(`
             INSERT INTO "User" ("id", "name", "email", "password", "role", "category", "jobRole", "createdAt", "lastActive")
@@ -53,7 +53,7 @@ export async function GET(req: Request) {
                 '${hashedPassword}',
                 'ADMIN',
                 'PROFESSIONAL',
-                'Founder & CMD',
+                'Founder & CEO',
                 CURRENT_TIMESTAMP,
                 CURRENT_TIMESTAMP
             )

@@ -81,10 +81,10 @@ export default function AdminLoginPage() {
                 <div className="flex items-center justify-between pb-4 mb-6 border-b border-slate-800 text-xs font-mono">
                     <div className="flex items-center gap-2 text-sky-400 font-semibold">
                         <ShieldCheck size={16} />
-                        <span>FOUNDER & CMD ACCESS</span>
+                        <span>FOUNDER & CEO ACCESS</span>
                     </div>
                     <span className="text-slate-500 font-mono text-[10px]">
-                        NSK-SOVEREIGN-AUTH
+                        NITECHSPARK-AUTH
                     </span>
                 </div>
 
@@ -96,7 +96,7 @@ export default function AdminLoginPage() {
                     </div>
 
                     <h1 className="font-orbitron font-bold text-xl sm:text-2xl text-white tracking-wide">
-                        CHAIRMAN STUDIO
+                        FOUNDER STUDIO
                     </h1>
                     <p className="text-xs font-mono text-sky-400 mt-1 font-medium">
                         AUTHORIZATION GATEWAY // PUBLISHING PORTAL
@@ -155,7 +155,7 @@ export default function AdminLoginPage() {
                         <>
                             <div>
                                 <label className="block text-xs font-mono text-slate-300 mb-1.5 uppercase font-medium">
-                                    CHAIRMAN EMAIL:
+                                    FOUNDER EMAIL:
                                 </label>
                                 <input
                                     type="email"

@@ -23,7 +23,7 @@ export default function BlogSection() {
             .catch(() => {});
     }, []);
 
-    const categories = ["ALL", "EMPIRE & LEADERSHIP", "CYBERSECURITY", "LINUX SRE & DEVOPS", "AI ENGINEERING"];
+    const categories = ["ALL", "FOUNDER & LEADERSHIP", "CYBERSECURITY", "LINUX SRE & DEVOPS", "AI ENGINEERING"];
 
     const filtered = posts.filter((post) => {
         if (filter === "ALL") return true;
@@ -52,7 +52,7 @@ export default function BlogSection() {
                     <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-sky-500/30 bg-sky-500/10 mb-3">
                         <BookOpen size={12} className="text-sky-400" />
                         <span className="font-mono text-[11px] text-sky-400 tracking-[0.2em] uppercase font-semibold">
-                            CHAIRMAN & MD DISPATCHES // THOUGHT LEADERSHIP
+                            FOUNDER DISPATCHES // THOUGHT LEADERSHIP
                         </span>
                     </div>
 
@@ -61,7 +61,7 @@ export default function BlogSection() {
                     </h2>
 
                     <p className="mt-4 text-xs sm:text-sm text-slate-400 max-w-2xl mx-auto font-sans">
-                        In-depth treatises on building conglomerate technology holding structures, autonomous AI evaluation systems,
+                        In-depth treatises on cybersecurity and IT infrastructure, autonomous AI evaluation systems,
                         and zero-trust Linux kernel security.
                     </p>
 

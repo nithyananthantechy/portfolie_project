@@ -32,8 +32,8 @@ const config: Config = {
                 "border-gold": "rgba(245, 166, 35, 0.25)",
             },
             fontFamily: {
-                orbitron: ["'Plus Jakarta Sans'", "Inter", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
-                rajdhani: ["Inter", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
+                orbitron: ["Orbitron", "'Plus Jakarta Sans'", "Inter", "sans-serif"],
+                rajdhani: ["Rajdhani", "Inter", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
                 mono: ["'JetBrains Mono'", "ui-monospace", "monospace"],
             },
             keyframes: {

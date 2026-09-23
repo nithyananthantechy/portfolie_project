@@ -2,7 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, X, Send, Bot, User, ShieldCheck, Terminal, ArrowRight, CornerDownLeft } from "lucide-react";
+import { Sparkles, X, Send, Bot, User, Terminal, CornerDownLeft } from "lucide-react";
+import { productCount } from "@/lib/siteData";
 
 interface AiMessage {
     id: string;
@@ -17,12 +18,12 @@ interface AiCortexModalProps {
 }
 
 const quickPrompts = [
-    "What is NSK Groups & its ventures?",
+    "What is NITECHSPARK & its services?",
     "Explain NiteHire's 2-level AI screening",
     "Tell me about cybersecurity & zero-trust services",
-    "List the 12+ production products",
+    `List the ${productCount} production products`,
     "Summarize the latest research whitepaper",
-    "How do I partner or contact Chairman Nithyananthan?",
+    "How do I partner or contact founder Nithyananthan?",
 ];
 
 export default function AiCortexModal({ isOpen, onClose }: AiCortexModalProps) {
@@ -31,7 +32,7 @@ export default function AiCortexModal({ isOpen, onClose }: AiCortexModalProps) {
             id: "welcome",
             role: "assistant",
             content:
-                "Welcome to **NSK Executive Cortex**. I am the digital intelligence advisor representing **Nithyananthan Nagarajan**, Founder & CMD of **NSK Groups**. Ask me anything regarding our ventures (NiTechSpark, NiteHire, NiteOrbit), technical architecture, whitepapers, or enterprise cybersecurity engagements.",
+                "Welcome to **NITECHSPARK Cortex**. I am the digital intelligence advisor representing **Nithyananthan Nagarajan**, Founder & CEO of **NITECHSPARK**. Ask me anything regarding cybersecurity services, technical architecture, whitepapers, or IT infrastructure engagements.",
             time: "NOW",
         },
     ]);
@@ -81,7 +82,7 @@ export default function AiCortexModal({ isOpen, onClose }: AiCortexModalProps) {
                 {
                     id: (Date.now() + 1).toString(),
                     role: "assistant",
-                    content: "Secure transmission failed. For direct communication, please contact Chairman Nithyananthan on WhatsApp (+91 63855 76354).",
+                    content: "Secure transmission failed. For direct communication, please contact Nithyananthan on WhatsApp (+91 63855 76354).",
                     time: "NOW",
                 },
             ]);
@@ -132,14 +133,14 @@ export default function AiCortexModal({ isOpen, onClose }: AiCortexModalProps) {
                                 <div>
                                     <div className="flex items-center gap-2">
                                         <h3 className="font-orbitron font-bold text-sm sm:text-base text-white tracking-wider">
-                                            NSK CORTEX AI
+                                            NITECHSPARK CORTEX AI
                                         </h3>
                                         <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-sky-500/15 text-sky-300 border border-sky-500/30 font-semibold">
                                             EXECUTIVE ADVISOR
                                         </span>
                                     </div>
                                     <p className="text-[11px] font-mono text-slate-400">
-                                        REPRESENTING NITHYANANTHAN NAGARAJAN · CMD NSK GROUPS
+                                        REPRESENTING NITHYANANTHAN NAGARAJAN · CEO NITECHSPARK
                                     </p>
                                 </div>
                             </div>
@@ -216,7 +217,7 @@ export default function AiCortexModal({ isOpen, onClose }: AiCortexModalProps) {
                                     </div>
                                     <div className="bg-slate-900 border border-slate-800 rounded-xl px-4 py-2 flex items-center gap-2 text-xs font-mono text-sky-300">
                                         <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-ping" />
-                                        <span>Consulting NSK Executive Cortex datastream...</span>
+                                        <span>Consulting NITECHSPARK Cortex datastream...</span>
                                     </div>
                                 </div>
                             )}
@@ -234,7 +235,7 @@ export default function AiCortexModal({ isOpen, onClose }: AiCortexModalProps) {
                                 type="text"
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
-                                placeholder="Inquire about ventures, whitepapers, cybersecurity audits, or empire leadership..."
+                                placeholder="Inquire about services, whitepapers, cybersecurity audits, or partnerships..."
                                 className="flex-1 bg-slate-900/90 border border-slate-700/60 focus:border-sky-400 rounded-lg px-3.5 py-2.5 text-xs sm:text-sm text-white focus:outline-none transition-colors placeholder:text-slate-500"
                             />
                             <button

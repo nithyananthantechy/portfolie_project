@@ -89,7 +89,7 @@ export default function UpdatesPage() {
                 </div>
 
                 <div className="flex flex-wrap justify-center gap-2 mt-6">
-                    {["ALL", "CYBER & TECH DISPATCH", "NSK BUSINESS & MARKET WIRE"].map((ch) => (
+                    {["ALL", "CYBER & TECH DISPATCH", "NITECHSPARK BUSINESS & MARKET WIRE"].map((ch) => (
                         <button
                             key={ch}
                             onClick={() => setChannelFilter(ch)}

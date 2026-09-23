@@ -55,7 +55,7 @@ export default function DraggableAiWidget() {
                     <div className="flex flex-col text-left">
                         <div className="flex items-center gap-1.5">
                             <span className="font-orbitron font-bold text-xs text-white tracking-wider group-hover:text-sky-300 transition-colors">
-                                NSK CORTEX
+                                NITECHSPARK CORTEX
                             </span>
                             <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-sky-500/20 text-sky-300 font-semibold">
                                 AI

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { productCount, NITEORBIT_STATUS, LINKS, BOILERPLATE_100, offers, services, WORKFLOW, PRIMARY_MESSAGE } from "@/lib/siteData";
 
 interface Message {
     role: "user" | "assistant" | "system";
@@ -20,93 +21,110 @@ export async function POST(request: Request) {
         const lower = userPrompt.toLowerCase();
         let reply = "";
 
-        // Intelligent Domain-Specific Executive Synthesis
-        if (lower.includes("nsk") || lower.includes("empire") || lower.includes("company") || lower.includes("holding") || lower.includes("venture")) {
-            reply = `**NSK Groups** is a sovereign technology holding conglomerate founded by **Nithyananthan Nagarajan**, headquartered in Erode, Tamil Nadu, India (Udyam MSME Registered).
+        if (lower.includes("nitechspark") || lower.includes("company") || lower.includes("about") || lower.includes("who") || lower.includes("venture")) {
+            reply = `**NITECHSPARK** is a Udyam MSME-registered cybersecurity & IT infrastructure studio founded by **${"Nithyananthan Nagarajan"}** (Founder & CEO), headquartered in Erode, Tamil Nadu, India.
 
-Under the leadership of Chairman & MD Nithyananthan, NSK Groups governs three primary subsidiary ventures:
-1. 🛡️ **NiTechSpark**: Enterprise IT infrastructure, Linux SRE, and zero-trust cybersecurity audits (aligned with DPDP Act 2023 & ISO 27001). [nitechspark.site](https://nitechspark.site)
-2. 🤖 **NiteHire**: Autonomous AI recruitment ATS featuring proprietary 2-tier screening (Groq Llama 3.3 + Gemini 2.5) that reduces recruiter overhead by 87%. [nitehire.site](https://nitehire.site)
-3. 🛰️ **NiteOrbit**: Space Tech Ground Systems DevOps, satellite telemetry operations, and orbital cybersecurity infrastructure. [niteorbit.space](https://niteorbit.space)
+${BOILERPLATE_100}
 
-Would you like details on a specific venture or how to partner with the conglomerate?`;
+**Primary message:** ${PRIMARY_MESSAGE}
+
+**Workflow:** ${WORKFLOW.join(" → ")}
+
+Portfolio ventures:
+1. **NITECHSPARK**: Cybersecurity assessments, VAPT, hardening, monitoring and DPDP Act readiness. [nitechspark.site](${LINKS.nitechspark})
+2. **NiteHire**: AI recruitment ATS with 2-level candidate screening. [nitehire.site](${LINKS.nitehire})
+3. **NiteOrbit**: ${NITEORBIT_STATUS}. [niteorbit.space](${LINKS.niteorbit})
+
+Would you like details on a specific service or how to get in touch?`;
+        } else if (lower.includes("service") || lower.includes("vapt") || lower.includes("assessment") || lower.includes("penetration")) {
+            reply = `**NITECHSPARK services:**
+
+${services.map((s, i) => `${i + 1}. ${s}`).join("\n")}
+
+**Workflow:** ${WORKFLOW.join(" → ")}
+
+${PRIMARY_MESSAGE}
+
+**Price anchors:** ${offers.filter((o) => ["essential", "professional", "business"].includes(o.id)).map((o) => `${o.name.split("—").pop()?.trim()} ${o.price}`).join(" · ")}.
+
+Direct consultations: WhatsApp **${LINKS.phoneDisplay}** or the free intro call.`;
         } else if (lower.includes("nitehire") || lower.includes("ats") || lower.includes("recruitment") || lower.includes("hire") || lower.includes("resume")) {
-            reply = `**NiteHire** is NSK Groups' flagship AI recruitment and talent platform architected by Nithyananthan Nagarajan.
+            reply = `**NiteHire** is an AI recruitment and talent platform architected by Nithyananthan Nagarajan.
 
-**Key Technical Capabilities:**
-- **2-Level Autonomous Screening**:
-  - *Tier 1*: High-velocity semantic vetting via Groq Llama 3.3 70B (<450ms latency).
-  - *Tier 2*: Multi-turn interactive technical evaluation via Gemini 2.5.
-- **Anti-Hallucination Guardrails**: Eliminates keyword-stuffing exploits and false credentials.
-- **Craft Resume Integration**: Automated ATS resume optimizer for candidates.
-- **Production Status**: Live at [nitehire.site](https://nitehire.site).
+**Key capabilities:**
+- **2-level screening**: Level-1 semantic resume evaluation (Groq Llama 3.3); Level-2 multi-turn technical evaluation (Gemini 2.5).
+- **Recruiter override**: AI scores assist humans — they do not auto-reject.
+- **Craft Resume**: ATS resume helper under the same ecosystem.
+- **Production status**: Live at [nitehire.site](${LINKS.nitehire}).
 
-You can also read Nithyananthan's published research paper on this architecture: *NSK-TR-2026-01*.`;
-        } else if (lower.includes("cyber") || lower.includes("security") || lower.includes("nitechspark") || lower.includes("linux") || lower.includes("sre") || lower.includes("dpdp") || lower.includes("zero trust") || lower.includes("audit")) {
-            reply = `🛡️ **Enterprise Cybersecurity & Linux SRE Leadership**:
+Book a demo on your own open roles via the free 15-min intro call.`;
+        } else if (lower.includes("cyber") || lower.includes("security") || lower.includes("linux") || lower.includes("sre") || lower.includes("dpdp") || lower.includes("zero trust") || lower.includes("audit")) {
+            reply = `**Cybersecurity & Linux/DevOps via NITECHSPARK:**
 
-Nithyananthan Nagarajan architects sovereign, military-grade security systems through **NiTechSpark**:
-- **Zero-Trust Hardening**: Kernel-level parameter isolation, SELinux/AppArmor enforcement, and eBPF syscall telemetry.
-- **DPDP Act 2023 Compliance**: Automated GRC compliance mapping, audit trails, and data sovereignty using **sparkAudit** and **NiteSentinel**.
-- **Security Tools Built**:
-  - **CyberScan**: Asynchronous network port & SSL certificate vulnerability scanner.
-  - **NiteSentinel**: Endpoint security auditor and ISO 27001 compliance mapper.
-  - **RCA Engine**: AI-driven root cause incident diagnostics powered by n8n and Llama 3.3.
+- **Structured assessment**: assets, access control, network exposure, patching, backup, monitoring, incident response, privacy/DPDP, process.
+- **Hardening**: SSH/firewall/user hardening, kernel baselines, monitoring setup.
+- **Workflow:** ${WORKFLOW.join(" → ")}
+- **Tools built**: CyberScan (ports/SSL), sparkAudit (GRC evidence), NiteSentinel (endpoint auditor, beta), RCA Engine (incident triage, pilot).
+- **Price anchors**: ${offers.filter((o) => ["essential", "professional", "business"].includes(o.id)).map((o) => `${o.name.split("—").pop()?.trim()} ${o.price}`).join(" · ")}.
 
-Direct consultations can be initiated via WhatsApp at **+91 63855 76354**.`;
+${PRIMARY_MESSAGE}
+
+Direct consultations: WhatsApp **${LINKS.phoneDisplay}** or the free intro call.`;
         } else if (lower.includes("niteorbit") || lower.includes("space") || lower.includes("satellite") || lower.includes("ground") || lower.includes("orbit")) {
-            reply = `🛰️ **NiteOrbit (Space Tech & Ground Systems)**:
+            reply = `**NiteOrbit**:
 
-Founded under NSK Groups, NiteOrbit develops software infrastructure for the New Space economy:
-- **Ground Segment DevOps**: Containerized telemetry pipelines handling CCSDS decommutation and Doppler shift corrections in sub-millisecond loops.
-- **Orbital Cybersecurity**: Cryptographic verification protocols against RF spoofing and ground station unauthorized access.
-- **Technical Paper**: Published as *NSK-TR-2026-03: Resilient Orbital Telemetry Pipelines & Ground Station DevOps in the New Space Economy*.`;
+${NITEORBIT_STATUS}
+
+Ground-segment DevOps and satellite telemetry tooling is in early build. No services are sold from this venture yet. Design notes live under Research (NS-TR-2026-03).
+
+Site: [niteorbit.space](${LINKS.niteorbit})`;
         } else if (lower.includes("product") || lower.includes("fleet") || lower.includes("software") || lower.includes("app")) {
-            reply = `Nithyananthan Nagarajan has built and deployed a production fleet of **12+ enterprise platforms**:
+            reply = `Nithyananthan has built **${productCount} applications** across cybersecurity, AI and enterprise categories (count from the live product list on /work):
 
-1. **PropoTrack**: Sales proposal & corporate contract tracker.
-2. **NiteSentinel**: AI endpoint auditor & compliance mapper.
-3. **sparkAudit**: Automated GRC evidence hub (NIST / DPDP Act).
-4. **CyberScan**: Asynchronous vulnerability & SSL scanner.
-5. **NiteHire ATS**: 2-level autonomous AI screening ATS.
-6. **Alone AI (NiteBuddy)**: Vector-memory AI companion with Qdrant.
-7. **RCA Engine**: AI incident root cause analyzer.
-8. **PDF2Excel AI**: High-precision OCR financial pipeline.
-9. **SustainHub**: Corporate ESG & telemetry tracker.
-10. **SENTRIYA**: Mission-critical emergency SOS mesh.
-11. **NSK Connect**: Android C-Suite incident response app.
-12. **Craft Resume**: Intelligent ATS resume optimization engine.`;
+1. PropoTrack — proposal & contract pipeline
+2. NiteSentinel (SecureScope) — endpoint auditor (beta)
+3. sparkAudit — GRC evidence hub
+4. CyberScan — ports & SSL scanner
+5. NiteHire ATS — 2-level AI screening
+6. Alone AI (NiteBuddy) — vector-memory companion (beta)
+7. RCA Engine — incident root-cause helper (pilot)
+8. PDF2Excel AI — OCR document pipeline (pilot)
+9. SustainHub — ESG metrics tracker
+10. SENTRIYA — emergency safety concept (in development)
+11. NiteConnect — incident comms Android app (in development)
+12. Craft Resume — ATS resume engine (beta)
+
+Full problem → solution → status on **/work**.`;
         } else if (lower.includes("paper") || lower.includes("research") || lower.includes("whitepaper") || lower.includes("publication")) {
-            reply = `📚 **Research Publications & Technical Whitepapers**:
+            reply = `**Research & technical reports** (internal technical reports, not peer-reviewed journals):
 
-Nithyananthan has authored several groundbreaking technical papers under NSK Groups:
-- **NSK-TR-2026-01**: *Autonomous 2-Level AI Screening & Non-Hallucinatory ATS Architecture*
-- **NSK-TR-2026-02**: *Zero-Trust Linux SRE Hardening & DPDP Act 2023 Compliance Mapping*
-- **NSK-TR-2026-03**: *Resilient Orbital Telemetry Pipelines & Ground Station DevOps in New Space*
-- **NSK-TR-2026-04**: *Tamper-Proof Cryptographic Telemetry in Low-Bandwidth SOS Networks (SENTRIYA)*
+- NS-TR-2026-01: 2-Level AI Screening architecture (NiteHire)
+- NS-TR-2026-02: Zero-Trust Linux hardening & DPDP readiness
+- NS-TR-2026-03: Orbital telemetry & ground-station design note (pre-launch)
+- NS-TR-2026-04: Tamper-evident SOS messaging design note
 
-You can browse full abstracts, key findings, and citations in the **Research & Publications** section of this portfolio!`;
-        } else if (lower.includes("contact") || lower.includes("hire") || lower.includes("whatsapp") || lower.includes("email") || lower.includes("reach") || lower.includes("partner")) {
-            reply = `🤝 **Connect with Chairman & MD Nithyananthan Nagarajan**:
+Browse abstracts under **Research & Publications** on the portfolio.`;
+        } else if (lower.includes("contact") || lower.includes("whatsapp") || lower.includes("email") || lower.includes("reach") || lower.includes("partner") || lower.includes("hire")) {
+            reply = `**Connect with Nithyananthan Nagarajan:**
 
-- **Official Headquarters**: NSK Groups, Erode, Tamil Nadu, India
-- **Direct WhatsApp**: [+91 63855 76354](https://wa.me/916385576354)
-- **Executive Email**: [nithyananthank@gmail.com](mailto:nithyananthank@gmail.com)
-- **Official Portals**:
-  - Holding: [nskgroups.website](https://nskgroups.website)
-  - IT & Cyber: [nitechspark.site](https://nitechspark.site)
-  - AI ATS: [nitehire.site](https://nitehire.site)
+- **Headquarters**: NITECHSPARK, Erode, Tamil Nadu, India
+- **WhatsApp**: [${LINKS.phoneDisplay}](${LINKS.whatsapp})
+- **Email**: [${LINKS.email}](mailto:${LINKS.email})
+- **LinkedIn**: [profile](${LINKS.linkedin})
+- **Book a call**: [calendly](${LINKS.calendly})
 
-You can also submit an inquiry directly through the secure transmission portal in the **CONNECT** section below.`;
+Portals: [nitechspark.site](${LINKS.nitechspark}) · [nitehire.site](${LINKS.nitehire})`;
         } else {
-            reply = `Greetings from **NSK Executive Cortex**. I am the digital intelligence advisor representing **Nithyananthan Nagarajan** — Founder, Chairman & Managing Director of **NSK Groups**, and **Enterprise Cybersecurity & Linux SRE Architect**.
+            reply = `Greetings from **NITECHSPARK Cortex** — the portfolio assistant for **Nithyananthan Nagarajan**, Founder & CEO of **NITECHSPARK**.
 
-How may I assist your inquiry today?
-- **[1] Explore the NSK Groups Empire & 3 Core Subsidiaries** (NiTechSpark, NiteHire, NiteOrbit)
-- **[2] Cybersecurity, Linux SRE & DPDP Act Compliance Audits**
-- **[3] Deep-Dive into the 12+ Production Products Fleet**
-- **[4] Research Publications & Whitepapers**
-- **[5] Executive Partnership & Direct WhatsApp Channel**`;
+${PRIMARY_MESSAGE}
+
+How may I help?
+- **[1]** NITECHSPARK services (assess → report → remediate → re-test)
+- **[2]** Cybersecurity, Linux/DevOps & DPDP assessments
+- **[3]** The ${productCount}-product fleet on /work
+- **[4]** Research & technical reports
+- **[5]** Contact, WhatsApp & booking a call`;
         }
 
         return NextResponse.json({
@@ -114,9 +132,9 @@ How may I assist your inquiry today?
             reply,
             timestamp: new Date().toISOString(),
         });
-    } catch (error) {
+    } catch {
         return NextResponse.json(
-            { error: "Failed to process query in NSK Cortex engine." },
+            { error: "Failed to process query in NITECHSPARK Cortex engine." },
             { status: 500 }
         );
     }

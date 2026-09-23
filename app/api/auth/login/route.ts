@@ -30,7 +30,7 @@ export async function POST(req: Request) {
                 user: {
                     name: "Nithyananthan Nagarajan",
                     role: "ADMIN",
-                    category: "FOUNDER & CMD",
+                    category: "FOUNDER & CEO",
                 },
             });
 

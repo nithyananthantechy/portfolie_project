@@ -1,48 +1,108 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" fill="none">
   <defs>
-    <linearGradient id="cyberGlow" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#00f5c4"/>
-      <stop offset="50%" stop-color="#00d4ff"/>
-      <stop offset="100%" stop-color="#6c63ff"/>
+    <!-- Background Shield Gradient -->
+    <linearGradient id="shieldBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#090d16"/>
+      <stop offset="50%" stop-color="#040711"/>
+      <stop offset="100%" stop-color="#02040a"/>
     </linearGradient>
-    <filter id="neonBlur" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="3" result="blur" />
+
+    <!-- Outer Border Cyber Gradient -->
+    <linearGradient id="shieldBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="50%" stop-color="#0ea5e9"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+
+    <!-- Left Pillar Gradient -->
+    <linearGradient id="leftStem" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#bae6fd"/>
+      <stop offset="50%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+
+    <!-- Diagonal Power Vector Gradient -->
+    <linearGradient id="diagVector" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="30%" stop-color="#ffffff"/>
+      <stop offset="50%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0369a1"/>
+    </linearGradient>
+
+    <!-- Right Pillar Gradient -->
+    <linearGradient id="rightStem" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0284c7"/>
+      <stop offset="50%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#7dd3fc"/>
+    </linearGradient>
+
+    <!-- Glow Effect -->
+    <filter id="cyberGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
       <feMerge>
-        <feMergeNode in="blur" />
-        <feMergeNode in="SourceGraphic" />
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Intense Spark Glow -->
+    <filter id="intenseSpark" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3.5" result="glow"/>
+      <feMerge>
+        <feMergeNode in="glow"/>
+        <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
   </defs>
 
-  <!-- Dark cyber background container -->
-  <rect width="128" height="128" rx="28" fill="#030712" />
-  
-  <!-- Outer Hexagonal / Shield Border -->
-  <polygon points="64,12 116,40 116,88 64,116 12,88 12,40" 
-           fill="rgba(0, 245, 196, 0.05)" 
-           stroke="url(#cyberGlow)" 
-           stroke-width="3.5" 
-           stroke-linejoin="round"
-           filter="url(#neonBlur)" />
+  <!-- Hexagonal Cyber Shield -->
+  <polygon points="60,8 106,25 106,75 60,112 14,75 14,25"
+           fill="url(#shieldBg)"
+           stroke="url(#shieldBorder)"
+           stroke-width="2.5"
+           stroke-linejoin="round"/>
 
-  <!-- Inner Tech Nodes & Lines -->
-  <line x1="64" y1="12" x2="64" y2="34" stroke="#00f5c4" stroke-width="2" stroke-dasharray="2 2" opacity="0.6"/>
-  <line x1="64" y1="94" x2="64" y2="116" stroke="#6c63ff" stroke-width="2" stroke-dasharray="2 2" opacity="0.6"/>
-  
-  <!-- Central Stylized N / NSK Emblem -->
-  <path d="M42,88 L42,40 L86,88 L86,40" 
-        fill="none" 
-        stroke="url(#cyberGlow)" 
-        stroke-width="7" 
-        stroke-linecap="round" 
-        stroke-linejoin="round"
-        filter="url(#neonBlur)" />
-        
-  <!-- Corner Quantum Dots -->
-  <circle cx="64" cy="12" r="3.5" fill="#00f5c4" />
-  <circle cx="116" cy="40" r="3.5" fill="#00d4ff" />
-  <circle cx="116" cy="88" r="3.5" fill="#6c63ff" />
-  <circle cx="64" cy="116" r="3.5" fill="#6c63ff" />
-  <circle cx="12" cy="88" r="3.5" fill="#00d4ff" />
-  <circle cx="12" cy="40" r="3.5" fill="#00f5c4" />
+  <!-- Inner Reticle Border -->
+  <polygon points="60,16 98,30 98,71 60,103 22,71 22,30"
+           fill="none"
+           stroke="#38bdf8"
+           stroke-width="1"
+           stroke-opacity="0.25"
+           stroke-dasharray="4 3"/>
+
+  <!-- Subtle Cyber Axis Grid -->
+  <line x1="60" y1="16" x2="60" y2="103" stroke="#38bdf8" stroke-width="0.7" stroke-opacity="0.12"/>
+  <line x1="22" y1="50" x2="98" y2="50" stroke="#38bdf8" stroke-width="0.7" stroke-opacity="0.12"/>
+
+  <!-- Monogram N Structure -->
+  <!-- Left Vertical Beam -->
+  <polygon points="34,44 46,32 46,88 34,88" fill="url(#leftStem)"/>
+
+  <!-- Right Vertical Beam -->
+  <polygon points="74,32 86,32 86,76 74,88" fill="url(#rightStem)"/>
+
+  <!-- Diagonal Electric Beam -->
+  <polygon points="34,44 46,32 86,76 74,88" fill="url(#diagVector)" filter="url(#cyberGlow)"/>
+
+  <!-- Left Top Chamfer Bevel Highlight -->
+  <polygon points="34,44 46,32 46,38 38,46" fill="#ffffff" opacity="0.6"/>
+
+  <!-- Right Bottom Chamfer Bevel Accent -->
+  <polygon points="86,76 74,88 74,82 82,74" fill="#0284c7" opacity="0.8"/>
+
+  <!-- Central NITECHSPARK Energy Star -->
+  <g transform="translate(60, 60)" filter="url(#intenseSpark)">
+    <!-- 4-point Diamond Spark -->
+    <path d="M 0,-13 Q 0,0 13,0 Q 0,0 0,13 Q 0,0 -13,0 Q 0,0 0,-13 Z" fill="#ffffff"/>
+    <circle cx="0" cy="0" r="2.8" fill="#38bdf8"/>
+    <circle cx="0" cy="0" r="1.2" fill="#ffffff"/>
+  </g>
+
+  <!-- Hexagon Vertices Tech Nodes -->
+  <circle cx="60" cy="8" r="2.2" fill="#38bdf8"/>
+  <circle cx="106" cy="25" r="2.2" fill="#38bdf8"/>
+  <circle cx="106" cy="75" r="2.2" fill="#38bdf8"/>
+  <circle cx="60" cy="112" r="2.2" fill="#38bdf8"/>
+  <circle cx="14" cy="75" r="2.2" fill="#38bdf8"/>
+  <circle cx="14" cy="25" r="2.2" fill="#38bdf8"/>
 </svg>

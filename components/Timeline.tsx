@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { NITEORBIT_STATUS } from "@/lib/siteData";
 
 interface TimelineEntry {
     date: string;
@@ -12,9 +13,9 @@ interface TimelineEntry {
 const entries: TimelineEntry[] = [
     {
         date: "2026 — PRESENT",
-        title: "Founder, Chairman & Managing Director, NSK Groups",
+        title: "Founder & CEO, NITECHSPARK",
         description:
-            "Directing three ventures concurrently: NiTechSpark (Enterprise IT & SRE, operational), NiteHire (AI candidate screening & ATS, live), NiteOrbit (space ground systems & telemetry, stealth). Strategic edge datacenter infrastructure partnerships established across India.",
+            `Leading cybersecurity & IT infrastructure services with a clear workflow — ASSESS → REPORT → REMEDIATE → RE-TEST. Concurrent ventures: NiteHire (AI candidate screening & ATS, live), NiteOrbit (${NITEORBIT_STATUS.toLowerCase()}). Building in public — early engagements are founding-cohort slots.`,
         highlight: true,
     },
     {
@@ -25,9 +26,9 @@ const entries: TimelineEntry[] = [
     },
     {
         date: "APRIL 2026",
-        title: "Presented at DEFCON Coimbatore",
+        title: "Presented at DEFCON Coimbatore (DCG Kovai)",
         description:
-            "Keynote architecture presentation on NiteSentinel zero-trust compliance scanner at DCG Kovai Chapter. Active technical contributor in Tamil Nadu's elite enterprise cybersecurity network.",
+            "Architecture walkthrough of the NiteSentinel zero-trust compliance scanner at the DCG Kovai chapter meetup. Active member of the local enterprise cybersecurity community.",
     },
     {
         date: "JANUARY 2026",
@@ -57,7 +58,7 @@ export default function Timeline() {
                         EXECUTIVE JOURNEY
                     </h2>
                     <p className="text-slate-400 text-sm font-mono mt-4">
-                        {">"} Trajectory from systems engineering architect to technology holding founder
+                        {">"} Trajectory from systems engineering architect to cybersecurity founder
                     </p>
                 </motion.div>
 
@@ -74,7 +75,7 @@ export default function Timeline() {
                             <div className="relative aspect-[3/4] w-full rounded-xl overflow-hidden border border-slate-800">
                                 <img
                                     src="/nithyananthan_profile_full.png"
-                                    alt="Nithyananthan Nagarajan - Founder & CMD"
+                                    alt="Nithyananthan Nagarajan - Founder & CEO"
                                     className="w-full h-full object-cover transition-all duration-700"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-60" />

@@ -57,12 +57,12 @@ export default function DailyUpdatesSection() {
 
                     <p className="mt-4 text-xs sm:text-sm text-slate-400 max-w-2xl mx-auto font-sans">
                         Continuous situational dispatches covering cybersecurity vulnerability alerts, infrastructure telemetry,
-                        and NSK Groups corporate conglomerate growth.
+                        and NITECHSPARK venture updates.
                     </p>
 
                     {/* Filter buttons */}
                     <div className="flex flex-wrap justify-center gap-2 mt-8">
-                        {["ALL", "CYBER & TECH DISPATCH", "NSK BUSINESS & MARKET WIRE"].map((ch) => (
+                        {["ALL", "CYBER & TECH DISPATCH", "NITECHSPARK BUSINESS & MARKET WIRE"].map((ch) => (
                             <button
                                 key={ch}
                                 onClick={() => setChannelFilter(ch)}

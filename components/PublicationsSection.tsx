@@ -44,7 +44,7 @@ export default function PublicationsSection() {
                     <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-sky-500/30 bg-sky-500/10 mb-3">
                         <Sparkles size={12} className="text-sky-400" />
                         <span className="font-mono text-[11px] text-sky-400 tracking-[0.2em] uppercase font-semibold">
-                            NSK RESEARCH CORE // TECHNICAL PROCEEDINGS
+                            NITECHSPARK RESEARCH CORE // TECHNICAL PROCEEDINGS
                         </span>
                     </div>
 
@@ -54,7 +54,7 @@ export default function PublicationsSection() {
 
                     <p className="mt-4 text-xs sm:text-sm text-slate-400 max-w-2xl mx-auto font-sans">
                         Peer-grade technical specifications, zero-trust cryptographic models, and engineering architectures
-                        authored by Nithyananthan Nagarajan across NSK Groups holdings.
+                        authored by Nithyananthan Nagarajan across NITECHSPARK holdings.
                     </p>
 
                     {/* Category Filter Pills */}
@@ -148,6 +148,13 @@ export default function PublicationsSection() {
                                             </span>
                                         ))}
                                     </div>
+
+                                    {(paper.downloadsCount > 0 || paper.citationsCount > 0) && (
+                                        <div className="flex gap-4 text-[11px] font-mono text-slate-500 mb-2">
+                                            {paper.downloadsCount > 0 && <span>{paper.downloadsCount} downloads</span>}
+                                            {paper.citationsCount > 0 && <span>{paper.citationsCount} citations</span>}
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* Footer Actions */}

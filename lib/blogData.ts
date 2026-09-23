@@ -6,7 +6,7 @@ export interface BlogPost {
     content: string;
     date: string;
     readTime: string;
-    category: "EMPIRE & LEADERSHIP" | "CYBERSECURITY" | "LINUX SRE & DEVOPS" | "AI ENGINEERING";
+    category: "FOUNDER & LEADERSHIP" | "CYBERSECURITY" | "LINUX SRE & DEVOPS" | "AI ENGINEERING";
     tags: string[];
     author: {
         name: string;
@@ -20,27 +20,27 @@ export const blogPosts: BlogPost[] = [
     {
         id: "sovereign-technology-empire-blueprint",
         slug: "sovereign-technology-empire-blueprint",
-        title: "Building a Sovereign Technology Empire from Erode: The NSK Groups Blueprint",
+        title: "Building a Sovereign Technology Studio from Erode: The NITECHSPARK Blueprint",
         excerpt:
-            "How we architected a multi-venture conglomerate governing enterprise cybersecurity, autonomous AI recruitment, and orbital ground systems from Tamil Nadu, India.",
+            "How we built a founder-led technology studio spanning enterprise cybersecurity, autonomous AI recruitment, and orbital ground systems from Tamil Nadu, India.",
         date: "SEPTEMBER 2026",
         readTime: "7 min read",
-        category: "EMPIRE & LEADERSHIP",
-        tags: ["NSK Groups", "Executive Leadership", "Venture Building", "MSME Tech", "India"],
+        category: "FOUNDER & LEADERSHIP",
+        tags: ["NITECHSPARK", "Executive Leadership", "Venture Building", "MSME Tech", "India"],
         featured: true,
         author: {
             name: "Nithyananthan Nagarajan",
-            role: "Founder, Chairman & Managing Director · NSK Groups",
+            role: "Founder & CEO · NITECHSPARK",
             avatar: "/favicon.svg",
         },
         content: `
 ### The Sovereign Vision
 
-When I founded **NSK Groups** in Erode, Tamil Nadu, the conventional advice was to either move to a tier-1 metropolitan tech hub or build a single narrow software tool. Both paradigms ignore the compounding advantage of building a sovereign, vertically aligned enterprise conglomerate.
+When I founded **NITECHSPARK** in Erode, Tamil Nadu, the conventional advice was to either move to a tier-1 metropolitan tech hub or build a single narrow software tool. Both paradigms ignore the compounding advantage of building a focused, vertically aligned cybersecurity & IT infrastructure studio.
 
 A technology holding company must not merely exist on paper; it must govern real, operational systems that solve existential problems for businesses and societies.
 
-### The Three Pillars of the NSK Empire
+### The Three Pillars of the NITECHSPARK Portfolio
 
 1. **NiTechSpark (The Defensive Shield & Infrastructure)**: Enterprise IT cannot survive on reactive ticketing. We built NiTechSpark to deliver zero-trust Linux server administration, continuous vulnerability telemetry, and compliance mapping under the DPDP Act 2023.
 2. **NiteHire (The Autonomous Workforce Engine)**: Traditional recruitment is crippled by bias, keyword manipulation, and sluggish response times. NiteHire brings 2-level autonomous AI screening to automate hiring pipelines with extreme precision.
@@ -131,7 +131,7 @@ This ensures companies hire true technical builders rather than prompt-engineeri
         featured: false,
         author: {
             name: "Nithyananthan Nagarajan",
-            role: "Founder & CMD · NSK Groups",
+            role: "Founder & CEO · NITECHSPARK",
             avatar: "/favicon.svg",
         },
         content: `

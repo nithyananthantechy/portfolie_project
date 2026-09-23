@@ -48,7 +48,7 @@ export default function PublicationsPage() {
 
                 <div className="flex items-center gap-2 text-xs font-mono text-sky-400">
                     <Shield size={14} />
-                    <span>NSK RESEARCH PROCEEDINGS</span>
+                    <span>NITECHSPARK RESEARCH PROCEEDINGS</span>
                 </div>
             </div>
 
@@ -67,7 +67,7 @@ export default function PublicationsPage() {
 
                 <p className="mt-4 text-xs sm:text-sm text-slate-300 max-w-3xl mx-auto font-sans">
                     Architecture whitepapers, sovereign cybersecurity models, and zero-trust algorithms
-                    authored by <strong>Nithyananthan Nagarajan</strong>, Founder & CMD of NSK Groups.
+                    authored by <strong>Nithyananthan Nagarajan</strong>, Founder & CEO of NITECHSPARK.
                 </p>
 
                 {/* Search & Filter Controls */}

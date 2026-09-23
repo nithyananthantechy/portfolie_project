@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Terminal, CornerDownLeft } from "lucide-react";
+import { productCount, NITEORBIT_STATUS } from "@/lib/siteData";
 
 interface CommandLog {
     command: string;
@@ -25,7 +26,7 @@ export default function TerminalBlock() {
     const [logs, setLogs] = useState<CommandLog[]>([]);
     const [inputValue, setInputValue] = useState("");
     const inputRef = useRef<HTMLInputElement>(null);
-    const scrollBottomRef = useRef<HTMLDivElement>(null);
+    const terminalScrollRef = useRef<HTMLDivElement>(null);
 
     // Initial sequence
     useEffect(() => {
@@ -33,11 +34,11 @@ export default function TerminalBlock() {
 
         const initialLogs: CommandLog[] = [
             {
-                command: "nsk --init-handshake",
+                command: "nitechspark --init-handshake",
                 response: (
                     <div className="text-emerald-400 space-y-1">
-                        <p>[ OK ] HOST: nsk-groups-primary-node.local</p>
-                        <p>[ OK ] OPERATOR: Nithyananthan Nagarajan (CMD)</p>
+                        <p>[ OK ] HOST: nitechspark-primary-node.local</p>
+                        <p>[ OK ] OPERATOR: Nithyananthan Nagarajan (Founder &amp; CEO)</p>
                         <p>[ OK ] PROTOCOLS: Linux DevOps / Zero-Trust / AI Orchestration</p>
                     </div>
                 ),
@@ -47,8 +48,8 @@ export default function TerminalBlock() {
                 response: (
                     <div className="text-slate-300 space-y-1">
                         <p className="text-white font-bold tracking-wide">NITHYANANTHAN NAGARAJAN</p>
-                        <p>Founder, Chairman & Managing Director of NSK Groups</p>
-                        <p>Founder of NiTechSpark · NiteHire · NiteOrbit</p>
+                        <p>Founder &amp; CEO of NITECHSPARK</p>
+                        <p>Founder of NiteHire · NiteOrbit</p>
                         <p className="text-xs text-slate-400">Location: Erode, Tamil Nadu, India · MSME Registered</p>
                     </div>
                 ),
@@ -59,7 +60,9 @@ export default function TerminalBlock() {
     }, [isInView]);
 
     useEffect(() => {
-        scrollBottomRef.current?.scrollIntoView({ behavior: "smooth" });
+        if (terminalScrollRef.current) {
+            terminalScrollRef.current.scrollTop = terminalScrollRef.current.scrollHeight;
+        }
     }, [logs]);
 
     const executeCommand = (cmd: string) => {
@@ -74,8 +77,8 @@ export default function TerminalBlock() {
                     <div className="text-slate-300 space-y-1">
                         <p className="text-sky-400 font-bold">AVAILABLE COMMANDS:</p>
                         <p>• <span className="text-sky-400">whoami</span> — Identity and background</p>
-                        <p>• <span className="text-sky-400">ventures</span> — List 3 core ventures under NSK Groups</p>
-                        <p>• <span className="text-sky-400">products</span> — Catalog of 10+ live platforms</p>
+                        <p>• <span className="text-sky-400">ventures</span> — List core ventures under NITECHSPARK</p>
+                        <p>• <span className="text-sky-400">products</span> — Catalog of {productCount} shipped platforms</p>
                         <p>• <span className="text-sky-400">skills</span> — Hard engineering & SRE competencies</p>
                         <p>• <span className="text-sky-400">contact</span> — Direct comms channels & WhatsApp</p>
                         <p>• <span className="text-sky-400">msme</span> — Official government registration status</p>
@@ -88,7 +91,7 @@ export default function TerminalBlock() {
                 response = (
                     <div className="text-slate-300 space-y-1">
                         <p className="text-white font-bold">NITHYANANTHAN NAGARAJAN</p>
-                        <p>Founder & CMD at NSK Groups. Infrastructure engineer turned multi-venture builder.</p>
+                        <p>Founder &amp; CEO at NITECHSPARK. Infrastructure engineer turned cybersecurity founder.</p>
                         <p>Specializes in Linux Kernel DevOps, AI Recruitment ATS, and Zero-Trust Compliance.</p>
                     </div>
                 );
@@ -98,16 +101,13 @@ export default function TerminalBlock() {
                 response = (
                     <div className="text-slate-300 space-y-2">
                         <div>
-                            <span className="text-indigo-400 font-bold">[ NSK GROUPS ]</span> — Parent Technology Holding Conglomerate (nskgroups.website)
+                            <span className="text-sky-400 font-bold">[ NITECHSPARK ]</span> — Cybersecurity, IT Infrastructure, Linux DevOps &amp; SRE (nitechspark.site)
                         </div>
                         <div>
-                            <span className="text-sky-400 font-bold">[ NITECHSPARK ]</span> — IT Infrastructure, Linux DevOps, Cybersecurity & SRE (nitechspark.site)
+                            <span className="text-cyan-400 font-bold">[ NITEHIRE ]</span> — Next-Gen AI Recruitment, 2-Level Screening &amp; ATS (nitehire.site)
                         </div>
                         <div>
-                            <span className="text-cyan-400 font-bold">[ NITEHIRE ]</span> — Next-Gen AI Recruitment, 2-Level Screening & ATS (nitehire.site)
-                        </div>
-                        <div>
-                            <span className="text-amber-400 font-bold">[ NITEORBIT ]</span> — Space Ground Systems & Satellite Telemetry (niteorbit.space)
+                            <span className="text-amber-400 font-bold">[ NITEORBIT ]</span> — {NITEORBIT_STATUS} (niteorbit.space)
                         </div>
                     </div>
                 );
@@ -116,15 +116,16 @@ export default function TerminalBlock() {
             case "products":
                 response = (
                     <div className="text-slate-300 space-y-1">
-                        <p className="text-sky-400 font-bold">PRODUCTION PRODUCT FLEET:</p>
+                        <p className="text-sky-400 font-bold">PRODUCT FLEET ({productCount} applications):</p>
                         <p>1. <span className="text-white font-bold">PropoTrack</span> — Multi-vendor proposal tracker (tracker.nitechspark.site)</p>
-                        <p>2. <span className="text-white font-bold">NiteSentinel</span> — Zero-trust endpoint security & DPDP compliance</p>
-                        <p>3. <span className="text-white font-bold">sparkAudit</span> — GRC evidence automation & checklist sync</p>
-                        <p>4. <span className="text-white font-bold">CyberScan</span> — Async port scanner & SSL certificate monitor</p>
-                        <p>5. <span className="text-white font-bold">RCA Engine</span> — AI incident root cause diagnostic system</p>
-                        <p>6. <span className="text-white font-bold">Alone AI (NiteBuddy)</span> — Vector-memory emotional AI companion</p>
-                        <p>7. <span className="text-white font-bold">SustainHub</span> — Corporate ESG telemetry & metrics helpdesk</p>
-                        <p>8. <span className="text-white font-bold">NSK Connect</span> — Secure C-Suite incident response Android app</p>
+                        <p>2. <span className="text-white font-bold">NiteSentinel</span> — Endpoint security &amp; DPDP compliance auditor (beta)</p>
+                        <p>3. <span className="text-white font-bold">sparkAudit</span> — GRC evidence automation &amp; checklist sync</p>
+                        <p>4. <span className="text-white font-bold">CyberScan</span> — Async port scanner &amp; SSL certificate monitor</p>
+                        <p>5. <span className="text-white font-bold">RCA Engine</span> — Incident root-cause helper (pilot)</p>
+                        <p>6. <span className="text-white font-bold">Alone AI (NiteBuddy)</span> — Vector-memory AI companion (beta)</p>
+                        <p>7. <span className="text-white font-bold">SustainHub</span> — ESG metrics &amp; telemetry tracker</p>
+                        <p>8. <span className="text-white font-bold">NiteConnect</span> — Secure incident comms Android app (in development)</p>
+                        <p className="text-slate-500">Full list with problem → solution → status on /work</p>
                     </div>
                 );
                 break;
@@ -145,9 +146,9 @@ export default function TerminalBlock() {
                 response = (
                     <div className="text-slate-300 space-y-1">
                         <p className="text-sky-400 font-bold">COMMUNICATION CHANNELS:</p>
-                        <p>• Direct Email: <span className="text-white">nithyananthan@nskgroups.website</span></p>
+                        <p>• Direct Email: <span className="text-white">nithyananthan@nitechspark.site</span></p>
                         <p>• Phone / WhatsApp: <span className="text-white">+91 63855 76354</span></p>
-                        <p>• Calendly: <span className="text-white">calendly.com/nithyananthan-nskgroups</span></p>
+                        <p>• NITECHSPARK: <span className="text-white">nitechspark.site</span></p>
                     </div>
                 );
                 break;
@@ -208,7 +209,7 @@ export default function TerminalBlock() {
                         <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
                         <span className="ml-3 text-xs font-mono text-slate-400 flex items-center gap-1.5">
                             <Terminal size={13} className="text-sky-400" />
-                            <span>nsk-shell // nithyananthan@nsk-primary: ~</span>
+                            <span>nitechspark-shell // nithyananthan@nitechspark: ~</span>
                         </span>
                     </div>
 
@@ -235,13 +236,14 @@ export default function TerminalBlock() {
 
                 {/* Terminal Screen Logs */}
                 <div
+                    ref={terminalScrollRef}
                     className="p-6 font-mono text-xs sm:text-sm leading-relaxed max-h-[380px] overflow-y-auto space-y-4"
                     onClick={() => inputRef.current?.focus()}
                 >
                     {logs.map((log, i) => (
                         <div key={i} className="space-y-1">
                             <div className="flex items-center gap-2 text-sky-400 font-semibold">
-                                <span className="text-slate-500">nithyananthan@nsk:~$</span>
+                                <span className="text-slate-500">nithyananthan@nitechspark:~$</span>
                                 <span>{log.command}</span>
                             </div>
                             <div className="pl-4 text-xs sm:text-sm border-l border-slate-800 py-0.5">
@@ -252,7 +254,7 @@ export default function TerminalBlock() {
 
                     {/* Interactive Input Line */}
                     <form onSubmit={handleFormSubmit} className="flex items-center gap-2 pt-2 text-sky-400 font-semibold">
-                        <span className="text-slate-500 flex-shrink-0">nithyananthan@nsk:~$</span>
+                        <span className="text-slate-500 flex-shrink-0">nithyananthan@nitechspark:~$</span>
                         <input
                             ref={inputRef}
                             type="text"
@@ -267,8 +269,6 @@ export default function TerminalBlock() {
                             <CornerDownLeft size={14} />
                         </button>
                     </form>
-
-                    <div ref={scrollBottomRef} />
                 </div>
             </div>
         </motion.div>

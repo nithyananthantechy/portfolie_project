@@ -28,7 +28,7 @@ export default function AdminDashboard() {
 
     // Blog form
     const [blogTitle, setBlogTitle] = useState("");
-    const [blogCategory, setBlogCategory] = useState("EMPIRE & LEADERSHIP");
+    const [blogCategory, setBlogCategory] = useState("FOUNDER & LEADERSHIP");
     const [blogExcerpt, setBlogExcerpt] = useState("");
     const [blogContent, setBlogContent] = useState("");
     const [blogTags, setBlogTags] = useState("");
@@ -146,7 +146,7 @@ export default function AdminDashboard() {
                 body: JSON.stringify({
                     type: "paper",
                     data: {
-                        refId: paperRefId || `NSK-TR-2026-${Math.floor(Math.random() * 90 + 10)}`,
+                        refId: paperRefId || `NS-TR-2026-${Math.floor(Math.random() * 90 + 10)}`,
                         title: paperTitle,
                         subtitle: paperSubtitle,
                         category: paperCategory,
@@ -231,10 +231,10 @@ export default function AdminDashboard() {
                         </div>
                         <div>
                             <span className="font-orbitron font-bold text-sm text-white tracking-wider block">
-                                CHAIRMAN PUBLISHING STUDIO
+                                FOUNDER PUBLISHING STUDIO
                             </span>
                             <span className="text-[10px] font-mono text-sky-400 tracking-widest uppercase block">
-                                NSK GROUPS // FOUNDER CONSOLE
+                                NITECHSPARK // FOUNDER CONSOLE
                             </span>
                         </div>
                     </div>
@@ -364,7 +364,7 @@ export default function AdminDashboard() {
                                             onChange={(e) => setBlogCategory(e.target.value)}
                                             className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs focus:outline-none focus:border-neon"
                                         >
-                                            <option value="EMPIRE & LEADERSHIP">EMPIRE & LEADERSHIP</option>
+                                            <option value="FOUNDER & LEADERSHIP">FOUNDER & LEADERSHIP</option>
                                             <option value="CYBERSECURITY">CYBERSECURITY</option>
                                             <option value="LINUX SRE & DEVOPS">LINUX SRE & DEVOPS</option>
                                             <option value="AI ENGINEERING">AI ENGINEERING</option>
@@ -379,7 +379,7 @@ export default function AdminDashboard() {
                                             type="text"
                                             value={blogTags}
                                             onChange={(e) => setBlogTags(e.target.value)}
-                                            placeholder="Zero-Trust, Linux SRE, NSK Groups"
+                                            placeholder="Zero-Trust, Linux SRE, NITECHSPARK"
                                             className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs focus:outline-none focus:border-neon"
                                         />
                                     </div>
@@ -414,7 +414,7 @@ export default function AdminDashboard() {
 
                                 <div className="flex items-center justify-between pt-4 border-t border-white/10">
                                     <span className="text-xs font-mono text-text-primary/40">
-                                        Author: Nithyananthan Nagarajan (CMD)
+                                        Author: Nithyananthan Nagarajan (Founder & CEO)
                                     </span>
 
                                     <button
@@ -440,7 +440,7 @@ export default function AdminDashboard() {
                                 </h2>
                             </div>
                             <p className="text-xs text-text-primary/60 mb-6">
-                                Publish research papers, RFCs, and engineering specifications under NSK Groups Research Core.
+                                Publish research papers, RFCs, and engineering specifications under NITECHSPARK Research Core.
                             </p>
 
                             <form onSubmit={submitPaper} className="space-y-4">
@@ -453,7 +453,7 @@ export default function AdminDashboard() {
                                             type="text"
                                             value={paperRefId}
                                             onChange={(e) => setPaperRefId(e.target.value)}
-                                            placeholder="e.g. NSK-TR-2026-05"
+                                            placeholder="e.g. NS-TR-2026-05"
                                             className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs focus:outline-none focus:border-gold font-mono"
                                         />
                                     </div>
@@ -543,7 +543,7 @@ export default function AdminDashboard() {
 
                                 <div className="flex items-center justify-between pt-4 border-t border-white/10">
                                     <span className="text-xs font-mono text-text-primary/40">
-                                        Directorate: NSK Research Core
+                                        Directorate: NITECHSPARK Research Core
                                     </span>
 
                                     <button
@@ -569,7 +569,7 @@ export default function AdminDashboard() {
                                 </h2>
                             </div>
                             <p className="text-xs text-text-primary/60 mb-6">
-                                Broadcast real-time CVE alerts, kernel updates, or NSK Groups conglomerate market milestones.
+                                Broadcast real-time CVE alerts, kernel updates, or NITECHSPARK business and market milestones.
                             </p>
 
                             <form onSubmit={submitWire} className="space-y-4">
@@ -584,7 +584,7 @@ export default function AdminDashboard() {
                                             className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs focus:outline-none focus:border-danger"
                                         >
                                             <option value="CYBER & TECH DISPATCH">CYBER & TECH DISPATCH</option>
-                                            <option value="NSK BUSINESS & MARKET WIRE">NSK BUSINESS & MARKET WIRE</option>
+                                            <option value="NITECHSPARK BUSINESS & MARKET WIRE">NITECHSPARK BUSINESS & MARKET WIRE</option>
                                         </select>
                                     </div>
 
@@ -736,7 +736,7 @@ export default function AdminDashboard() {
 
                             <div className="glass-panel p-6 rounded-2xl border border-cyan-500/30 text-center">
                                 <span className="text-xs font-mono text-cyan-400 uppercase block mb-1">
-                                    HOLDINGS GOVERNED
+                                    VENTURES GOVERNED
                                 </span>
                                 <span className="font-orbitron text-3xl font-black text-white">
                                     3 VENTURES

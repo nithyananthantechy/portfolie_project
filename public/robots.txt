@@ -4,8 +4,7 @@ Disallow: /admin/
 Disallow: /api/admin/
 
 # Sitemaps and AI directives
-Sitemap: https://nithyananthan.nskgroups.website/sitemap.xml
-Sitemap: https://nskgroups.website/sitemap.xml
+Sitemap: https://nitechspark.site/sitemap.xml
 
 # LLM Crawler Access
 User-agent: GPTBot

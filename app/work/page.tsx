@@ -1,0 +1,97 @@
+import type { Metadata } from "next";
+import PageShell from "@/components/PageShell";
+import ProductsSection from "@/components/portfolio/ProductsSection";
+import { resolveLocale, languageAlternates, baseOpenGraph } from "@/lib/serverSeo";
+import { products, caseTemplates, FOUNDING_SLOTS, LINKS, SITE } from "@/lib/siteData";
+
+export const metadata: Metadata = {
+    title: "Work — Product Fleet & Case Templates",
+    description: `Problem → solution → status for all ${products.length} applications in the NITECHSPARK portfolio, plus anonymised case templates. No fabricated client logos.`,
+    alternates: languageAlternates("/work"),
+    openGraph: {
+        ...baseOpenGraph("/work"),
+        title: `Work | ${SITE.name}`,
+        description: `Problem → solution → status for all ${products.length} applications, plus anonymised case templates.`,
+    },
+};
+
+export default async function WorkPage({
+    searchParams,
+}: {
+    searchParams: Promise<{ lang?: string }>;
+}) {
+    const sp = await searchParams;
+    const locale = await resolveLocale(sp.lang);
+
+    return (
+        <PageShell locale={locale}>
+            <section className="py-12 px-4 border-b border-slate-800/60">
+                <div className="max-w-5xl mx-auto">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-sky-500/25 bg-sky-500/10 text-xs font-mono text-sky-400 mb-3">
+                        WORK
+                    </div>
+                    <h1 className="font-orbitron text-3xl md:text-4xl font-bold text-white section-heading">
+                        PRODUCT FLEET & CASE TEMPLATES
+                    </h1>
+                    <p className="text-slate-400 text-xs sm:text-sm font-sans mt-4 max-w-3xl">
+                        Every product below is listed with the problem it solves, what was built, and an honest status
+                        (Live / Beta / Pilot / In development). Case templates describe typical patterns — not named
+                        clients. No engagements have been published yet.
+                    </p>
+                    <div className="mt-4 flex flex-wrap gap-3 text-xs font-mono">
+                        <a href="/work/testimonials" className="text-sky-400 hover:text-white underline underline-offset-4">
+                            Testimonials (founding cohort — {FOUNDING_SLOTS} slots) →
+                        </a>
+                        <a href={LINKS.calendly} className="text-slate-400 hover:text-white underline underline-offset-4">
+                            Book a call
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <ProductsSection products={products} />
+
+            <section id="case-templates" className="py-16 px-4 border-t border-slate-800/60">
+                <div className="max-w-6xl mx-auto">
+                    <div className="mb-10">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-amber-500/30 bg-amber-500/10 text-xs font-mono text-amber-300 mb-3">
+                            ILLUSTRATIVE PATTERNS — NOT CLIENT STORIES
+                        </div>
+                        <h2 className="font-orbitron text-2xl md:text-3xl font-bold text-white section-heading">
+                            CASE TEMPLATES
+                        </h2>
+                        <p className="text-slate-400 text-xs sm:text-sm font-mono mt-3">
+                            {">"} Anonymised problem patterns we fix. No client has engaged yet — this shows how we think.
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                        {caseTemplates.map((c) => (
+                            <article
+                                key={c.id}
+                                className="glass-card rounded-2xl p-6 border border-slate-800/80 flex flex-col"
+                                style={{ background: "rgba(15, 23, 42, 0.65)" }}
+                            >
+                                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/30 text-amber-300 w-fit mb-3">
+                                    {c.patternLabel}
+                                </span>
+                                <h3 className="font-orbitron font-bold text-sm text-white leading-snug mb-3">{c.title}</h3>
+                                <p className="text-xs text-slate-400 font-sans mb-3">
+                                    <strong className="text-slate-300">Problem: </strong>
+                                    {c.problem}
+                                </p>
+                                <p className="text-xs text-slate-300 font-sans mb-4">
+                                    <strong className="text-sky-400">Approach: </strong>
+                                    {c.approach}
+                                </p>
+                                <p className="text-[11px] font-mono text-slate-500 mt-auto pt-3 border-t border-slate-800">
+                                    {c.outcomeType}
+                                </p>
+                            </article>
+                        ))}
+                    </div>
+                </div>
+            </section>
+        </PageShell>
+    );
+}

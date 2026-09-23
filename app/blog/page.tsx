@@ -24,7 +24,7 @@ export default function BlogPage() {
             .catch(() => {});
     }, []);
 
-    const categories = ["ALL", "EMPIRE & LEADERSHIP", "CYBERSECURITY", "LINUX SRE & DEVOPS", "AI ENGINEERING"];
+    const categories = ["ALL", "FOUNDER & LEADERSHIP", "CYBERSECURITY", "LINUX SRE & DEVOPS", "AI ENGINEERING"];
 
     const filtered = posts.filter((p) => {
         const matchesCat = category === "ALL" || p.category === category;
@@ -71,7 +71,7 @@ export default function BlogPage() {
                 </div>
 
                 <h1 className="font-orbitron text-3xl sm:text-4xl md:text-5xl font-black text-white section-heading tracking-wide">
-                    CHAIRMAN & MD DISPATCHES
+                    FOUNDER&apos;S DISPATCHES
                 </h1>
 
                 <p className="mt-4 text-xs sm:text-sm text-slate-300 max-w-3xl mx-auto font-sans">

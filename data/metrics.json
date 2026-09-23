@@ -1,0 +1,7 @@
+{
+  "clients": null,
+  "assessmentsSold": null,
+  "productsShipped": null,
+  "betaUsers": null,
+  "note": "All values start as null. The UI hides nulls instead of showing zeros or inflated numbers. Fill these with real numbers only when they are true."
+}

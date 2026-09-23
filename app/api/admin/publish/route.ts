@@ -48,11 +48,11 @@ export async function POST(request: Request) {
                 content: data.content,
                 date: data.date || "JUST NOW",
                 readTime: data.readTime || `${Math.max(1, Math.ceil(data.content.split(" ").length / 200))} min read`,
-                category: data.category || "EMPIRE & LEADERSHIP",
+                category: data.category || "FOUNDER & LEADERSHIP",
                 tags: Array.isArray(data.tags) ? data.tags : data.tags.split(",").map((t: string) => t.trim()),
                 author: {
                     name: "Nithyananthan Nagarajan",
-                    role: "Founder, Chairman & MD · NSK Groups",
+                    role: "Founder & CEO · NITECHSPARK",
                     avatar: "/favicon.svg",
                 },
                 featured: Boolean(data.featured),
@@ -64,14 +64,14 @@ export async function POST(request: Request) {
         if (type === "paper") {
             const newPaper = {
                 id: `paper-${Date.now()}`,
-                refId: data.refId || `NSK-TR-2026-0${Date.now().toString().slice(-2)}`,
+                refId: data.refId || `NS-TR-2026-0${Date.now().toString().slice(-2)}`,
                 title: data.title,
                 subtitle: data.subtitle || "Technical Architecture Specification",
                 date: data.date || "SEPTEMBER 2026",
                 category: data.category || "CYBERSECURITY & ZERO-TRUST",
                 abstract: data.abstract,
-                authors: data.authors || ["Nithyananthan Nagarajan (CMD, NSK Groups)"],
-                organization: data.organization || "NSK Groups · Research Directorate",
+                authors: data.authors || ["Nithyananthan Nagarajan (Founder & CEO, NITECHSPARK)"],
+                organization: data.organization || "NITECHSPARK · Research Directorate",
                 tags: Array.isArray(data.tags) ? data.tags : data.tags.split(",").map((t: string) => t.trim()),
                 readTime: data.readTime || "15 min read",
                 downloadsCount: 0,
@@ -83,7 +83,7 @@ export async function POST(request: Request) {
                 bibtex: `@article{nagarajan${Date.now()},
   title={${data.title}},
   author={Nagarajan, Nithyananthan},
-  journal={NSK Groups Technical Proceedings},
+  journal={NITECHSPARK Technical Proceedings},
   year={2026}
 }`,
             };

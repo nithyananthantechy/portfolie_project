@@ -1,0 +1,113 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 4805 >>
+stream
+BT /F2 17 Tf 46 748 Td (MSME Cyber Risk Self-Check - 20 Yes/No Questions) Tj ET
+BT /F1 9.5 Tf 46 730 Td (NITECHSPARK | Erode, Tamil Nadu | Udyam MSME registered) Tj ET
+BT /F1 9.5 Tf 46 716 Td (Mark Yes or No for each question. Be honest - this is for you, not for us.) Tj ET
+0.2 0.72 0.97 RG 0.8 w 46 708 m 566 708 l S
+BT /F2 9 Tf 460 694 Td (YES) Tj ET
+BT /F2 9 Tf 522 694 Td (NO) Tj ET
+BT /F1 9.2 Tf 46 676 Td ( 1. Do servers use SSH key login with password login disabled?) Tj ET
+BT /F1 9.2 Tf 466 676 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 526 676 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 46 660.5 Td ( 2. Is root login over SSH disabled?) Tj ET
+BT /F1 9.2 Tf 466 660.5 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 526 660.5 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 46 645 Td ( 3. Is a firewall on, allowing only the ports you actually need?) Tj ET
+BT /F1 9.2 Tf 466 645 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 526 645 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 46 629.5 Td ( 4. Are OS and critical packages patched within 30 days?) Tj ET
+BT /F1 9.2 Tf 466 629.5 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 526 629.5 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 46 614 Td ( 5. Is critical data backed up off-site  and restored at least once this quarter?) Tj ET
+BT /F1 9.2 Tf 466 614 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 526 614 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 46 598.5 Td ( 6. Does someone other than one person know the backup restore steps?) Tj ET
+BT /F1 9.2 Tf 466 598.5 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 526 598.5 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 46 583 Td ( 7. Do you monitor uptime and TLS certificate expiry with alerts?) Tj ET
+BT /F1 9.2 Tf 466 583 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 526 583 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 46 567.5 Td ( 8. Does every person have their own account \(no shared logins\)?) Tj ET
+BT /F1 9.2 Tf 466 567.5 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 526 567.5 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 46 552 Td ( 9. Is MFA on for email, cloud consoles, DNS and hosting panels?) Tj ET
+BT /F1 9.2 Tf 466 552 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 526 552 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 46 536.5 Td (10. Is there a written access list \(who can reach what\), reviewed twice a year?) Tj ET
+BT /F1 9.2 Tf 466 536.5 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 526 536.5 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 46 521 Td (11. Are default passwords changed on routers, NAS, cameras and IoT devices?) Tj ET
+BT /F1 9.2 Tf 466 521 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 526 521 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 46 505.5 Td (12. Do you know what customer personal data you store, where, and why?) Tj ET
+BT /F1 9.2 Tf 466 505.5 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 526 505.5 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 46 490 Td (13. Do your forms and records capture clear consent for the data collected?) Tj ET
+BT /F1 9.2 Tf 466 490 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 526 490 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 46 474.5 Td (14. Do you have a retention/deletion rule so old personal data is not kept fore...) Tj ET
+BT /F1 9.2 Tf 466 474.5 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 526 474.5 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 46 459 Td (15. Can your team detect and report a suspected breach the same day?) Tj ET
+BT /F1 9.2 Tf 466 459 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 526 459 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 46 443.5 Td (16. Is there a written incident checklist \(who to call, what to preserve\)?) Tj ET
+BT /F1 9.2 Tf 466 443.5 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 526 443.5 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 46 428 Td (17. Are laptops and company devices encrypted or passcode-protected?) Tj ET
+BT /F1 9.2 Tf 466 428 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 526 428 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 46 412.5 Td (18. Do joiners get access on day 1  and lose ALL access on their last day?) Tj ET
+BT /F1 9.2 Tf 466 412.5 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 526 412.5 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 46 397 Td (19. Are databases reachable only from your app/servers, not the public internet?) Tj ET
+BT /F1 9.2 Tf 466 397 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 526 397 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 46 381.5 Td (20. Has someone outside your day-to-day team reviewed your security in 12 months?) Tj ET
+BT /F1 9.2 Tf 466 381.5 Td ([   ]) Tj ET
+BT /F1 9.2 Tf 526 381.5 Td ([   ]) Tj ET
+0.2 0.72 0.97 RG 0.8 w 46 372 m 566 372 l S
+BT /F2 10 Tf 46 352 Td (SCORING \(count your Yes answers\):) Tj ET
+BT /F1 9.2 Tf 46 338 Td (0-6  : Urgent gaps. Start here - do not postpone an assessment.) Tj ET
+BT /F1 9.2 Tf 46 325 Td (7-13 : Baseline exists, but real holes remain \(backup, access, incident path\).) Tj ET
+BT /F1 9.2 Tf 46 312 Td (14-20: Decent baseline - book a Professional review to validate and harden.) Tj ET
+BT /F1 8.5 Tf 46 74 Td (This checklist is a starting point, not an audit, certification or guarantee.) Tj ET
+BT /F1 8.5 Tf 46 61 Td (Free copy: nitechspark.site/msme-cyber-risk-self-check.pdf) Tj ET
+BT /F1 8.5 Tf 46 48 Td (Assessments from Rs 7,500 | Book a free 15-min intro call | WhatsApp +91 63855 76354) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+7 0 obj
+<< /Title (MSME Cyber Risk Self-Check Checklist) /Author (NITECHSPARK) /Subject (20 yes/no questions for MSME cyber risk) /Creator (NITECHSPARK portfolio) >>
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000251 00000 n 
+0000005108 00000 n 
+0000005205 00000 n 
+0000005307 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R /Info 7 0 R >>
+startxref
+5480
+%%EOF
