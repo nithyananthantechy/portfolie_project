@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { NITEORBIT_STATUS } from "@/lib/siteData";
 
 interface TimelineEntry {
     date: string;
@@ -15,32 +14,27 @@ const entries: TimelineEntry[] = [
         date: "2026 — PRESENT",
         title: "Founder & CEO, NITECHSPARK",
         description:
-            `Leading cybersecurity & IT infrastructure services with a clear workflow — ASSESS → REPORT → REMEDIATE → RE-TEST. Concurrent ventures: NiteHire (AI candidate screening & ATS, live), NiteOrbit (${NITEORBIT_STATUS.toLowerCase()}). Building in public — early engagements are founding-cohort slots.`,
+            "Leading cybersecurity & IT infrastructure services with a clear workflow — ASSESS → REPORT → REMEDIATE → RE-TEST. Providing Linux hardening, server troubleshooting, monitoring deployments, and DPDP Act readiness.",
         highlight: true,
     },
     {
-        date: "MAY 2026",
-        title: "Launched NiteHire ATS",
+        date: "2025 — 2026",
+        title: "Junior AIOps Engineer, DesiCrew Solutions Pvt. Ltd.",
         description:
-            "Engineered and deployed an autonomous 2-level AI recruitment and talent assessment platform solo — from vector architecture and resume parsing to real-time communication assessment pipelines.",
+            "Hands-on engineering role executing AIOps operations, multi-server infrastructure and application monitoring (Zabbix, Prometheus, Grafana), centralized log ingestion (ELK Stack, Syslog), Linux administration, and incident root cause analysis (RCA).",
+        highlight: true,
     },
     {
-        date: "APRIL 2026",
-        title: "Presented at DEFCON Coimbatore (DCG Kovai)",
+        date: "OCT 2025 — JAN 2026",
+        title: "Cisco Networking Academy Credentials",
         description:
-            "Architecture walkthrough of the NiteSentinel zero-trust compliance scanner at the DCG Kovai chapter meetup. Active member of the local enterprise cybersecurity community.",
+            "Completed 8 Cisco Networking Academy milestones spanning Networking Basics (Badge & Certificate), Networking Protocols, Network Communications, Internet Protocol, Network Access, and Introduction to Cybersecurity.",
     },
     {
         date: "JANUARY 2026",
-        title: "Founded NiTechSpark",
+        title: "Incorporated NITECHSPARK",
         description:
-            "Initial enterprise venture incorporated. Udyam MSME registered in Erode, Tamil Nadu. Shipped production security tooling: PropoTrack, CyberScan, sparkAudit, and NiteSentinel.",
-    },
-    {
-        date: "FOUNDATIONAL YEARS",
-        title: "Systems Engineer & Linux SRE / AIOps Architect",
-        description:
-            "Deep engineering foundation across distributed Linux clusters, KVM virtualization, automated CI/CD pipelines, Prometheus/Grafana observability telemetry, and zero-trust perimeter defense.",
+            "Registered as Government of India Udyam MSME in Erode, Tamil Nadu. Shipped production infrastructure and security projects: CyberScan, Zabbix network monitoring setup, and system management automation suites.",
     },
 ];
 

@@ -3,35 +3,29 @@ import InteractiveCyberCanvas from "@/components/InteractiveCyberCanvas";
 import DraggableAiWidget from "@/components/DraggableAiWidget";
 import Navbar from "@/components/Navbar";
 import TerminalBlock from "@/components/TerminalBlock";
-import VentureCard from "@/components/VentureCard";
-import SkillsSection from "@/components/portfolio/SkillsSection";
-import Timeline from "@/components/Timeline";
-import PublicationsSection from "@/components/PublicationsSection";
-import BlogSection from "@/components/BlogSection";
-import DailyUpdatesSection from "@/components/DailyUpdatesSection";
+import Footer from "@/components/portfolio/Footer";
+import { CredentialsStrip, StickyMobileBar } from "@/components/portfolio/Sections";
 
 import Hero from "@/components/portfolio/Hero";
-import SelfQualify from "@/components/portfolio/SelfQualify";
+import ExperienceSection from "@/components/portfolio/ExperienceSection";
+import SkillsSection from "@/components/portfolio/SkillsSection";
+import AiOpsSection from "@/components/portfolio/AiOpsSection";
+import SelectedProjectsSection from "@/components/portfolio/SelectedProjectsSection";
+import ServicesEngineeringSection from "@/components/portfolio/ServicesEngineeringSection";
+import CiscoAchievementsSection from "@/components/portfolio/CiscoAchievementsSection";
+import FounderVenturesSection from "@/components/portfolio/FounderVenturesSection";
+import OtherProjectsSection from "@/components/portfolio/OtherProjectsSection";
 import ContactSection from "@/components/portfolio/ContactSection";
 import FaqSection from "@/components/portfolio/FaqSection";
 import ChecklistCta from "@/components/portfolio/ChecklistCta";
-import ProductsSection from "@/components/portfolio/ProductsSection";
-import Footer from "@/components/portfolio/Footer";
-import {
-    CredentialsStrip,
-    StatsStrip,
-    WhyWorkWithUs,
-    ServicesPreview,
-    StickyMobileBar,
-} from "@/components/portfolio/Sections";
 
-import { ventures, products } from "@/lib/siteData";
 import type { Locale } from "@/lib/i18n";
+import { LINKS } from "@/lib/siteData";
 
 /**
  * The full portfolio page — SERVER COMPONENT.
- * All sections render into initial HTML (no loading spinner, no client-only gate).
- * Client components below hydrate on top of server-rendered markup.
+ * Homepage Flow:
+ * ENGINEER → EXPERIENCE → SKILLS → AIOPS → PROJECTS → SERVICES → CREDENTIALS → FOUNDER → OTHER PROJECTS → CONTACT
  */
 export default function PortfolioView({ locale }: { locale: Locale }) {
     return (
@@ -46,51 +40,43 @@ export default function PortfolioView({ locale }: { locale: Locale }) {
             <Navbar locale={locale} />
 
             <main>
+                {/* 1. Hero */}
                 <Hero locale={locale} />
                 <CredentialsStrip locale={locale} />
-                <StatsStrip venturesCount={ventures.length} productsCount={products.length} />
-                <SelfQualify locale={locale} />
-                <WhyWorkWithUs locale={locale} />
-                <ServicesPreview locale={locale} />
 
-                {/* Ventures */}
-                <section id="ventures" className="py-20 px-4">
-                    <div className="max-w-6xl mx-auto">
-                        <div className="mb-12">
-                            <div className="flex items-center gap-2 mb-2">
-                                <span className="w-2 h-2 rounded-full bg-sky-400" />
-                                <span className="text-xs font-mono text-sky-400 tracking-widest uppercase font-semibold">
-                                    FOUNDER&apos;S VENTURES
-                                </span>
-                            </div>
-                            <h2 className="font-orbitron text-2xl md:text-3xl font-bold text-white section-heading">
-                                VENTURES &amp; PRODUCTS
-                            </h2>
-                            <p className="text-slate-400 text-xs sm:text-sm font-mono mt-3">
-                                {">"} Ventures built and led by Nithyananthan Nagarajan under the NITECHSPARK brand.
-                            </p>
-                        </div>
+                {/* 2. Professional Experience */}
+                <ExperienceSection />
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {ventures.map((v, i) => (
-                                <VentureCard key={v.name} {...v} index={i} />
-                            ))}
-                        </div>
-                    </div>
-                </section>
+                {/* 3. Core Technical Skills */}
+                <SkillsSection />
 
-                {/* Interactive terminal */}
-                <section className="py-16 px-4">
+                {/* 4. AIOps & Infrastructure Engineering */}
+                <AiOpsSection />
+
+                {/* 5. Selected Engineering Projects */}
+                <SelectedProjectsSection />
+
+                {/* 6. Cybersecurity & Infrastructure Services */}
+                <ServicesEngineeringSection />
+
+                {/* 7. Cisco Networking Academy Achievements */}
+                <CiscoAchievementsSection />
+
+                {/* 8. Founder / NITECHSPARK */}
+                <FounderVenturesSection />
+
+                {/* Interactive Diagnostic Terminal */}
+                <section className="py-14 px-4 border-t border-slate-800/80">
                     <TerminalBlock />
                 </section>
 
-                <ProductsSection products={products} />
-                <PublicationsSection />
-                <BlogSection />
-                <DailyUpdatesSection />
-                <SkillsSection />
-                <Timeline />
+                {/* 9. Other Projects & Experiments */}
+                <OtherProjectsSection />
+
+                {/* Lead Magnet / Security Self-Check */}
                 <ChecklistCta />
+
+                {/* 10. Contact */}
                 <ContactSection locale={locale} />
                 <FaqSection locale={locale} />
             </main>
@@ -98,9 +84,9 @@ export default function PortfolioView({ locale }: { locale: Locale }) {
             <Footer />
             <StickyMobileBar />
 
-            {/* Desktop floating WhatsApp (mobile uses the sticky bar) */}
+            {/* Desktop floating WhatsApp */}
             <a
-                href="https://wa.me/916385576354"
+                href={LINKS.whatsapp}
                 target="_blank"
                 rel="noopener noreferrer"
                 data-track="whatsapp_click"

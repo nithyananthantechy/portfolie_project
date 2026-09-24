@@ -4,19 +4,19 @@ import { resolveLocale, languageAlternates, baseOpenGraph, defaultKeywords } fro
 import { SITE } from "@/lib/siteData";
 
 export const metadata: Metadata = {
-    title: `${SITE.name} | Founder-led Cybersecurity, IT & AI Studio · ${SITE.company}`,
+    title: `${SITE.name} | Cybersecurity & IT Infrastructure Engineer`,
     description: SITE.description,
     keywords: defaultKeywords(),
     alternates: languageAlternates("/"),
     openGraph: {
         ...baseOpenGraph("/"),
-        title: `${SITE.name} | Founder & CEO · ${SITE.company}`,
-        description: SITE.description,
+        title: `${SITE.name} | Cybersecurity & IT Infrastructure Engineer`,
+        description: "Linux • AIOps • Cybersecurity • Infrastructure Automation",
     },
     twitter: {
         card: "summary_large_image",
-        title: `${SITE.name} | Founder & CEO · ${SITE.company}`,
-        description: SITE.description,
+        title: `${SITE.name} | Cybersecurity & IT Infrastructure Engineer`,
+        description: "Linux • AIOps • Cybersecurity • Infrastructure Automation",
         images: [SITE.ogImage],
     },
 };

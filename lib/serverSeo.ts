@@ -26,13 +26,15 @@ export function baseOpenGraph(path: string) {
         type: "website" as const,
         locale: "en_US" as const,
         url: `${SITE.baseUrl}${path}`,
-        siteName: `${SITE.company} | ${SITE.name} — Founder-led security & IT studio`,
+        siteName: `${SITE.name} | Cybersecurity & IT Infrastructure Engineer`,
+        title: `${SITE.name} | Cybersecurity & IT Infrastructure Engineer`,
+        description: "Linux • AIOps • Cybersecurity • Infrastructure Automation",
         images: [
             {
                 url: SITE.ogImage,
                 width: 1200,
                 height: 630,
-                alt: `${SITE.name} — Founder & CEO, ${SITE.company}`,
+                alt: `${SITE.name} — Cybersecurity & IT Infrastructure Engineer`,
             },
         ],
     };
@@ -40,17 +42,21 @@ export function baseOpenGraph(path: string) {
 
 export function defaultKeywords() {
     return [
-        SITE.name,
+        "Nithyananthan Nagarajan",
+        "Cybersecurity Engineer",
+        "IT Infrastructure Engineer",
+        "AIOps Engineer",
+        "Linux Engineer",
+        "Linux System Administrator",
+        "Cybersecurity Consultant",
+        "IT Infrastructure Consultant",
+        "Server Troubleshooting",
+        "AIOps Monitoring",
+        "Infrastructure Automation",
+        "Cybersecurity Assessment",
+        "Erode Tamil Nadu India",
         "NITECHSPARK",
-        "Cybersecurity Consultant Tamil Nadu",
-        "MSME Security Assessment India",
-        "DPDP Act Compliance Consultant",
-        "Linux DevOps Erode",
-        "IT Infrastructure Consultant India",
-        "NiTechSpark",
-        "NiteHire",
-        "NiteOrbit",
-        "Udyam MSME Registered",
         LINKS.linkedin,
+        LINKS.github,
     ];
 }
