@@ -3,10 +3,11 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { selectedEngineeringProjects, EngineeringProject } from "@/lib/siteData";
-import { ArrowUpRight, Github, ExternalLink, ShieldCheck, Lock, Image as ImageIcon } from "lucide-react";
+import { ArrowUpRight, Github, ExternalLink, ShieldCheck, Lock, Image as ImageIcon, ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function SelectedProjectsSection() {
     const [projects, setProjects] = useState<EngineeringProject[]>(selectedEngineeringProjects);
+    const [activeImageIndices, setActiveImageIndices] = useState<Record<string, number>>({});
 
     useEffect(() => {
         fetch("/api/admin/publish")
@@ -40,47 +41,128 @@ export default function SelectedProjectsSection() {
 
                 {/* Project Cards Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {projects.map((project, idx) => (
-                        <motion.article
-                            key={project.id}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.45, delay: (idx % 4) * 0.1 }}
-                            className="glass-card rounded-2xl p-6 sm:p-7 border border-slate-800/90 hover:border-sky-500/40 transition-all duration-300 backdrop-blur-xl relative overflow-hidden flex flex-col justify-between"
-                            style={{ background: "rgba(15, 23, 42, 0.7)" }}
-                        >
-                            {/* Card Header: Focus Badge + Status */}
-                            <div>
-                                <div className="flex items-center justify-between gap-2 mb-3.5">
-                                    <span className="text-[10px] font-mono px-2.5 py-1 rounded-md bg-sky-500/10 border border-sky-500/30 text-sky-300 uppercase tracking-wider font-semibold">
-                                        {project.engineeringFocus}
-                                    </span>
-                                    <span
-                                        className={`text-[10px] font-mono px-2 py-0.5 rounded border uppercase tracking-wider ${
-                                            project.status === "Live"
-                                                ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-300"
-                                                : project.status === "Completed"
-                                                ? "bg-blue-500/10 border-blue-500/30 text-blue-300"
-                                                : "bg-amber-500/10 border-amber-500/30 text-amber-300"
-                                        }`}
-                                    >
-                                        {project.status}
-                                    </span>
-                                </div>
+                    {projects.map((project, idx) => {
+                        const allImages = project.images && project.images.length > 0
+                            ? project.images
+                            : project.image
+                            ? [project.image]
+                            : [];
+                        const activeIdx = activeImageIndices[project.id] || 0;
+                        const currentImg = allImages[activeIdx] || allImages[0];
 
-                                {/* Project Image if uploaded */}
-                                {project.image && (
-                                    <div className="mb-4 rounded-xl overflow-hidden border border-slate-700/60 bg-black/40 relative aspect-video max-h-56 group/img shadow-lg">
-                                        <img
-                                            src={project.image}
-                                            alt={project.name}
-                                            className="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-500"
-                                            loading="lazy"
-                                        />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none" />
+                        return (
+                            <motion.article
+                                key={project.id}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.45, delay: (idx % 4) * 0.1 }}
+                                className="glass-card rounded-2xl p-6 sm:p-7 border border-slate-800/90 hover:border-sky-500/40 transition-all duration-300 backdrop-blur-xl relative overflow-hidden flex flex-col justify-between"
+                                style={{ background: "rgba(15, 23, 42, 0.7)" }}
+                            >
+                                {/* Card Header: Focus Badge + Status */}
+                                <div>
+                                    <div className="flex items-center justify-between gap-2 mb-3.5">
+                                        <span className="text-[10px] font-mono px-2.5 py-1 rounded-md bg-sky-500/10 border border-sky-500/30 text-sky-300 uppercase tracking-wider font-semibold">
+                                            {project.engineeringFocus}
+                                        </span>
+                                        <span
+                                            className={`text-[10px] font-mono px-2 py-0.5 rounded border uppercase tracking-wider ${
+                                                project.status === "Live"
+                                                    ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-300"
+                                                    : project.status === "Completed"
+                                                    ? "bg-blue-500/10 border-blue-500/30 text-blue-300"
+                                                    : "bg-amber-500/10 border-amber-500/30 text-amber-300"
+                                            }`}
+                                        >
+                                            {project.status}
+                                        </span>
                                     </div>
-                                )}
+
+                                    {/* Multi-Image Gallery / Carousel if uploaded */}
+                                    {allImages.length > 0 && (
+                                        <div className="mb-4">
+                                            <div className="rounded-xl overflow-hidden border border-slate-700/60 bg-black/40 relative aspect-video max-h-56 group/img shadow-lg">
+                                                <img
+                                                    src={currentImg}
+                                                    alt={`${project.name} image ${activeIdx + 1}`}
+                                                    className="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-500"
+                                                    loading="lazy"
+                                                />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none" />
+
+                                                {/* Left/Right controls if >1 image */}
+                                                {allImages.length > 1 && (
+                                                    <>
+                                                        <button
+                                                            type="button"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                setActiveImageIndices((prev) => ({
+                                                                    ...prev,
+                                                                    [project.id]: (activeIdx - 1 + allImages.length) % allImages.length,
+                                                                }));
+                                                            }}
+                                                            className="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-black/70 hover:bg-black/90 text-white flex items-center justify-center opacity-80 hover:opacity-100 transition-opacity backdrop-blur-sm border border-white/20 z-10"
+                                                            title="Previous image"
+                                                        >
+                                                            <ChevronLeft size={16} />
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                setActiveImageIndices((prev) => ({
+                                                                    ...prev,
+                                                                    [project.id]: (activeIdx + 1) % allImages.length,
+                                                                }));
+                                                            }}
+                                                            className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-black/70 hover:bg-black/90 text-white flex items-center justify-center opacity-80 hover:opacity-100 transition-opacity backdrop-blur-sm border border-white/20 z-10"
+                                                            title="Next image"
+                                                        >
+                                                            <ChevronRight size={16} />
+                                                        </button>
+
+                                                        {/* Image Counter Badge */}
+                                                        <div className="absolute bottom-2 right-2 bg-black/75 backdrop-blur-md border border-white/20 text-white text-[10px] font-mono px-2 py-0.5 rounded-full flex items-center gap-1 z-10">
+                                                            <ImageIcon size={10} className="text-sky-400" />
+                                                            <span>{activeIdx + 1} / {allImages.length}</span>
+                                                        </div>
+                                                    </>
+                                                )}
+                                            </div>
+
+                                            {/* Thumbnail switcher strip */}
+                                            {allImages.length > 1 && (
+                                                <div className="flex items-center gap-1.5 mt-2 overflow-x-auto pb-1">
+                                                    {allImages.map((thumbUrl, thumbIdx) => (
+                                                        <button
+                                                            key={`${thumbUrl}-${thumbIdx}`}
+                                                            type="button"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                setActiveImageIndices((prev) => ({
+                                                                    ...prev,
+                                                                    [project.id]: thumbIdx,
+                                                                }));
+                                                            }}
+                                                            className={`w-12 h-8 rounded-md overflow-hidden border shrink-0 transition-all ${
+                                                                activeIdx === thumbIdx
+                                                                    ? "border-sky-400 ring-1 ring-sky-400 scale-105"
+                                                                    : "border-slate-800 opacity-60 hover:opacity-100"
+                                                            }`}
+                                                        >
+                                                            <img
+                                                                src={thumbUrl}
+                                                                alt=""
+                                                                className="w-full h-full object-cover"
+                                                            />
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
 
                                 {/* Project Name */}
                                 <h3 className="font-orbitron font-bold text-lg sm:text-xl text-white mb-2 leading-snug">
@@ -162,7 +244,8 @@ export default function SelectedProjectsSection() {
                                 )}
                             </div>
                         </motion.article>
-                    ))}
+                        );
+                    })}
                 </div>
             </div>
         </section>

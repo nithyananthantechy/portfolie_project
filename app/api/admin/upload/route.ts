@@ -30,13 +30,28 @@ export async function POST(request: Request) {
 
     try {
         const formData = await request.formData();
-        const file = formData.get("file") as File | null;
+        const files: File[] = [];
 
-        if (!file) {
+        // Collect all files from "files" and "file" fields
+        const multiFiles = formData.getAll("files");
+        for (const entry of multiFiles) {
+            if (entry instanceof File && entry.size > 0) {
+                files.push(entry);
+            }
+        }
+
+        const singleFiles = formData.getAll("file");
+        for (const entry of singleFiles) {
+            if (entry instanceof File && entry.size > 0 && !files.includes(entry)) {
+                files.push(entry);
+            }
+        }
+
+        if (files.length === 0) {
             return NextResponse.json({ error: "No image file provided." }, { status: 400 });
         }
 
-        // Validate MIME type
+        // Validate MIME types
         const allowedTypes = [
             "image/jpeg",
             "image/png",
@@ -45,23 +60,8 @@ export async function POST(request: Request) {
             "image/svg+xml",
             "image/avif",
         ];
-        if (!allowedTypes.includes(file.type)) {
-            return NextResponse.json(
-                { error: `Unsupported image format (${file.type}). Allowed: JPG, PNG, WEBP, GIF, SVG, AVIF.` },
-                { status: 400 }
-            );
-        }
 
-        // Limit size to 10MB
-        const maxBytes = 10 * 1024 * 1024;
-        if (file.size > maxBytes) {
-            return NextResponse.json(
-                { error: "File exceeds 10MB upload limit." },
-                { status: 400 }
-            );
-        }
-
-        const buffer = Buffer.from(await file.arrayBuffer());
+        const maxBytes = 15 * 1024 * 1024; // 15MB limit per file
 
         // Ensure public/uploads directory exists
         const uploadsDir = path.join(process.cwd(), "public", "uploads");
@@ -69,23 +69,55 @@ export async function POST(request: Request) {
             fs.mkdirSync(uploadsDir, { recursive: true });
         }
 
-        // Generate sanitized unique filename
-        const safeOriginalName = file.name
-            .toLowerCase()
-            .replace(/[^a-z0-9.]/g, "-")
-            .replace(/-+/g, "-");
-        const uniqueFilename = `proj-${Date.now()}-${safeOriginalName}`;
-        const filePath = path.join(uploadsDir, uniqueFilename);
+        const uploadedUrls: string[] = [];
+        const uploadedFiles: Array<{ url: string; filename: string; size: number }> = [];
 
-        await fs.promises.writeFile(filePath, buffer);
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
 
-        const publicUrl = `/uploads/${uniqueFilename}`;
+            if (!allowedTypes.includes(file.type)) {
+                return NextResponse.json(
+                    {
+                        error: `File "${file.name}" has unsupported format (${file.type}). Allowed: JPG, PNG, WEBP, GIF, SVG, AVIF.`,
+                    },
+                    { status: 400 }
+                );
+            }
+
+            if (file.size > maxBytes) {
+                return NextResponse.json(
+                    { error: `File "${file.name}" exceeds 15MB upload limit.` },
+                    { status: 400 }
+                );
+            }
+
+            const buffer = Buffer.from(await file.arrayBuffer());
+
+            // Generate sanitized unique filename
+            const safeOriginalName = file.name
+                .toLowerCase()
+                .replace(/[^a-z0-9.]/g, "-")
+                .replace(/-+/g, "-");
+            const uniqueFilename = `proj-${Date.now()}-${i}-${safeOriginalName}`;
+            const filePath = path.join(uploadsDir, uniqueFilename);
+
+            await fs.promises.writeFile(filePath, buffer);
+
+            const publicUrl = `/uploads/${uniqueFilename}`;
+            uploadedUrls.push(publicUrl);
+            uploadedFiles.push({
+                url: publicUrl,
+                filename: uniqueFilename,
+                size: file.size,
+            });
+        }
 
         return NextResponse.json({
             success: true,
-            url: publicUrl,
-            filename: uniqueFilename,
-            size: file.size,
+            url: uploadedUrls[0],
+            urls: uploadedUrls,
+            files: uploadedFiles,
+            count: uploadedFiles.length,
         });
     } catch (e: any) {
         console.error("Upload error:", e);

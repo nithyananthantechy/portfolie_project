@@ -59,6 +59,18 @@ export async function POST(request: Request) {
                 ? data.techStack.split(",").map((s: string) => s.trim()).filter(Boolean)
                 : [];
 
+            const rawImages: string[] = Array.isArray(data.images)
+                ? data.images.map((s: any) => String(s).trim()).filter(Boolean)
+                : typeof data.images === "string"
+                ? data.images.split(",").map((s: string) => s.trim()).filter(Boolean)
+                : [];
+
+            if (data.image && typeof data.image === "string" && data.image.trim() && !rawImages.includes(data.image.trim())) {
+                rawImages.unshift(data.image.trim());
+            }
+
+            const primaryImage = rawImages[0] || (data.image ? String(data.image).trim() : undefined);
+
             const newProject: EngineeringProject = {
                 id: safeId,
                 name: data.name,
@@ -71,7 +83,8 @@ export async function POST(request: Request) {
                 demoUrl: data.demoUrl ? data.demoUrl.trim() : undefined,
                 isPrivate: Boolean(data.isPrivate),
                 privateNote: data.privateNote ? data.privateNote.trim() : undefined,
-                image: data.image ? data.image.trim() : undefined,
+                image: primaryImage,
+                images: rawImages.length > 0 ? rawImages : undefined,
             };
 
             const updatedProjects = addProject(newProject);

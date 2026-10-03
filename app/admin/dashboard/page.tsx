@@ -74,7 +74,8 @@ export default function AdminDashboard() {
     const [projectDemoUrl, setProjectDemoUrl] = useState("");
     const [projectIsPrivate, setProjectIsPrivate] = useState(false);
     const [projectPrivateNote, setProjectPrivateNote] = useState("");
-    const [projectImage, setProjectImage] = useState("");
+    const [projectImages, setProjectImages] = useState<string[]>([]);
+    const [manualImageUrl, setManualImageUrl] = useState("");
     const [uploadingImage, setUploadingImage] = useState(false);
     const [uploadError, setUploadError] = useState("");
     const [projectPublishing, setProjectPublishing] = useState(false);
@@ -248,30 +249,68 @@ export default function AdminDashboard() {
         }
     };
 
-    // Image upload handler
+    // Multiple image upload handler
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
+        const files = e.target.files;
+        if (!files || files.length === 0) return;
         setUploadingImage(true);
         setUploadError("");
         try {
             const formData = new FormData();
-            formData.append("file", file);
+            for (let i = 0; i < files.length; i++) {
+                formData.append("files", files[i]);
+            }
             const res = await fetch("/api/admin/upload", {
                 method: "POST",
                 body: formData,
             });
             const data = await res.json();
-            if (data.success && data.url) {
-                setProjectImage(data.url);
+            if (data.success) {
+                const incomingUrls: string[] = data.urls || (data.url ? [data.url] : []);
+                setProjectImages((prev) => {
+                    const next = [...prev];
+                    for (const u of incomingUrls) {
+                        if (!next.includes(u)) next.push(u);
+                    }
+                    return next;
+                });
             } else {
-                setUploadError(data.error || "Failed to upload image");
+                setUploadError(data.error || "Failed to upload images");
             }
         } catch (err: any) {
             setUploadError(err.message || "Network upload error");
         } finally {
             setUploadingImage(false);
+            e.target.value = "";
         }
+    };
+
+    const handleAddManualImageUrl = () => {
+        if (!manualImageUrl.trim()) return;
+        const urls = manualImageUrl
+            .split(/[\n,]+/)
+            .map((u) => u.trim())
+            .filter(Boolean);
+        setProjectImages((prev) => {
+            const next = [...prev];
+            for (const u of urls) {
+                if (!next.includes(u)) next.push(u);
+            }
+            return next;
+        });
+        setManualImageUrl("");
+    };
+
+    const handleRemoveImage = (indexToRemove: number) => {
+        setProjectImages((prev) => prev.filter((_, idx) => idx !== indexToRemove));
+    };
+
+    const handleSetCoverImage = (indexToCover: number) => {
+        setProjectImages((prev) => {
+            const target = prev[indexToCover];
+            if (!target) return prev;
+            return [target, ...prev.filter((_, idx) => idx !== indexToCover)];
+        });
     };
 
     // Submit Project
@@ -295,7 +334,8 @@ export default function AdminDashboard() {
                         demoUrl: projectDemoUrl,
                         isPrivate: projectIsPrivate,
                         privateNote: projectPrivateNote,
-                        image: projectImage,
+                        image: projectImages[0] || "",
+                        images: projectImages,
                     },
                 }),
             });
@@ -313,7 +353,8 @@ export default function AdminDashboard() {
                     setProjectDemoUrl("");
                     setProjectIsPrivate(false);
                     setProjectPrivateNote("");
-                    setProjectImage("");
+                    setProjectImages([]);
+                    setManualImageUrl("");
                 }, 2000);
             } else {
                 alert(data.error || "Failed to publish project");
@@ -651,42 +692,45 @@ export default function AdminDashboard() {
                                     </div>
 
                                     {/* IMAGE UPLOAD SECTION */}
-                                    <div className="p-4 rounded-xl border border-sky-500/20 bg-sky-950/20 space-y-3">
+                                    <div className="p-4 rounded-xl border border-sky-500/20 bg-sky-950/20 space-y-4">
                                         <div className="flex items-center justify-between">
                                             <label className="text-xs font-mono text-sky-300 font-semibold flex items-center gap-1.5">
                                                 <ImageIcon size={14} className="text-sky-400" />
-                                                <span>PROJECT SCREENSHOT / IMAGE:</span>
+                                                <span>PROJECT IMAGES &amp; SCREENSHOTS ({projectImages.length} attached):</span>
                                             </label>
                                             <span className="text-[10px] font-mono text-slate-400">
-                                                PNG, JPG, WEBP, SVG (Max 10MB)
+                                                Batch Upload Supported · PNG, JPG, WEBP, SVG
                                             </span>
                                         </div>
 
-                                        {/* Upload Dropzone */}
-                                        <div className="relative border-2 border-dashed border-sky-500/30 hover:border-sky-400/60 rounded-xl p-4 transition-colors bg-black/30 flex flex-col items-center justify-center text-center">
+                                        {/* Upload Dropzone with Multiple selection */}
+                                        <div className="relative border-2 border-dashed border-sky-500/30 hover:border-sky-400/60 rounded-xl p-5 transition-colors bg-black/30 flex flex-col items-center justify-center text-center group cursor-pointer">
                                             <input
                                                 type="file"
+                                                multiple
                                                 accept="image/*"
                                                 onChange={handleImageUpload}
                                                 disabled={uploadingImage}
                                                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed z-10"
                                             />
-                                            <div className="flex flex-col items-center gap-1.5 pointer-events-none">
-                                                <div className="w-10 h-10 rounded-full bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400">
+                                            <div className="flex flex-col items-center gap-2 pointer-events-none">
+                                                <div className="w-12 h-12 rounded-full bg-sky-500/10 border border-sky-500/30 group-hover:scale-110 group-hover:border-sky-400 flex items-center justify-center text-sky-400 transition-all">
                                                     {uploadingImage ? (
-                                                        <RefreshCw size={18} className="animate-spin" />
+                                                        <RefreshCw size={20} className="animate-spin" />
                                                     ) : (
-                                                        <Upload size={18} />
+                                                        <Upload size={20} />
                                                     )}
                                                 </div>
-                                                <p className="text-xs text-white font-mono font-medium">
-                                                    {uploadingImage
-                                                        ? "Uploading image to server..."
-                                                        : "Click or Drag & Drop to upload project image"}
-                                                </p>
-                                                <p className="text-[10px] text-slate-400 font-mono">
-                                                    Saved to public media storage automatically
-                                                </p>
+                                                <div>
+                                                    <p className="text-xs text-white font-mono font-medium">
+                                                        {uploadingImage
+                                                            ? "Uploading multiple images to server..."
+                                                            : "Click or Drag & Drop multiple images here"}
+                                                    </p>
+                                                    <p className="text-[10px] text-sky-400/80 font-mono mt-0.5">
+                                                        Select all screenshots at once (PNG, JPG, WEBP up to 15MB each)
+                                                    </p>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -696,48 +740,104 @@ export default function AdminDashboard() {
                                             </p>
                                         )}
 
-                                        {/* Image Preview & URL Display */}
-                                        {projectImage && (
-                                            <div className="flex items-center gap-4 p-3 rounded-lg bg-black/60 border border-emerald-500/30">
-                                                <div className="w-20 h-14 rounded-md overflow-hidden bg-slate-900 border border-slate-700 shrink-0 relative">
-                                                    <img
-                                                        src={projectImage}
-                                                        alt="Preview"
-                                                        className="w-full h-full object-cover"
-                                                    />
+                                        {/* Image Gallery Grid Preview */}
+                                        {projectImages.length > 0 && (
+                                            <div className="space-y-2 pt-2 border-t border-sky-500/20">
+                                                <div className="flex items-center justify-between text-xs font-mono">
+                                                    <span className="text-slate-300 font-semibold flex items-center gap-1.5">
+                                                        <span>Attached Images</span>
+                                                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300">
+                                                            {projectImages.length}
+                                                        </span>
+                                                    </span>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setProjectImages([])}
+                                                        className="text-[10px] text-rose-400 hover:text-rose-300 underline"
+                                                    >
+                                                        Clear All Images
+                                                    </button>
                                                 </div>
-                                                <div className="min-w-0 flex-1">
-                                                    <div className="flex items-center gap-1 text-[11px] font-mono text-emerald-400 font-semibold mb-0.5">
-                                                        <CheckCircle2 size={13} />
-                                                        <span>Image Attached Successfully</span>
-                                                    </div>
-                                                    <p className="text-[10px] font-mono text-slate-400 truncate">
-                                                        {projectImage}
-                                                    </p>
+
+                                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                                                    {projectImages.map((imgUrl, idx) => (
+                                                        <div
+                                                            key={`${imgUrl}-${idx}`}
+                                                            className={`relative rounded-xl overflow-hidden border bg-black/60 group p-1.5 flex flex-col justify-between ${
+                                                                idx === 0
+                                                                    ? "border-emerald-500/60 shadow-md shadow-emerald-500/10"
+                                                                    : "border-slate-800 hover:border-sky-500/40"
+                                                            }`}
+                                                        >
+                                                            <div className="aspect-video w-full rounded-lg overflow-hidden bg-slate-950 relative">
+                                                                <img
+                                                                    src={imgUrl}
+                                                                    alt={`Upload ${idx + 1}`}
+                                                                    className="w-full h-full object-cover"
+                                                                />
+                                                                {idx === 0 && (
+                                                                    <div className="absolute top-1 left-1 bg-emerald-500 text-black text-[9px] font-mono font-bold px-1.5 py-0.5 rounded shadow">
+                                                                        COVER
+                                                                    </div>
+                                                                )}
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => handleRemoveImage(idx)}
+                                                                    className="absolute top-1 right-1 w-5 h-5 rounded-full bg-rose-500/80 hover:bg-rose-600 text-white flex items-center justify-center transition-colors shadow"
+                                                                    title="Remove image"
+                                                                >
+                                                                    <X size={11} />
+                                                                </button>
+                                                            </div>
+
+                                                            <div className="pt-1.5 flex items-center justify-between text-[10px] font-mono">
+                                                                <span className="text-slate-400">
+                                                                    #{idx + 1}
+                                                                </span>
+                                                                {idx !== 0 && (
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => handleSetCoverImage(idx)}
+                                                                        className="text-sky-400 hover:text-white transition-colors"
+                                                                        title="Make this the primary cover image"
+                                                                    >
+                                                                        Set Cover
+                                                                    </button>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    ))}
                                                 </div>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setProjectImage("")}
-                                                    className="px-2.5 py-1 text-[10px] font-mono text-rose-400 hover:text-white bg-rose-500/10 hover:bg-rose-500/30 border border-rose-500/30 rounded flex items-center gap-1 shrink-0 transition-colors"
-                                                >
-                                                    <X size={12} />
-                                                    <span>Remove</span>
-                                                </button>
                                             </div>
                                         )}
 
-                                        {/* Direct URL input fallback */}
-                                        <div>
+                                        {/* Direct / External URL bulk input */}
+                                        <div className="pt-2 border-t border-sky-500/15">
                                             <label className="block text-[11px] font-mono text-slate-400 mb-1">
-                                                Or paste external image URL:
+                                                Or paste external image URLs (comma or newline separated):
                                             </label>
-                                            <input
-                                                type="text"
-                                                value={projectImage}
-                                                onChange={(e) => setProjectImage(e.target.value)}
-                                                placeholder="https://... or /uploads/..."
-                                                className="w-full px-3 py-1.5 rounded-lg bg-black/50 border border-white/10 text-white text-xs font-mono focus:outline-none focus:border-sky-400"
-                                            />
+                                            <div className="flex gap-2">
+                                                <input
+                                                    type="text"
+                                                    value={manualImageUrl}
+                                                    onChange={(e) => setManualImageUrl(e.target.value)}
+                                                    onKeyDown={(e) => {
+                                                        if (e.key === "Enter") {
+                                                            e.preventDefault();
+                                                            handleAddManualImageUrl();
+                                                        }
+                                                    }}
+                                                    placeholder="https://... or /uploads/..."
+                                                    className="flex-1 px-3 py-1.5 rounded-lg bg-black/50 border border-white/10 text-white text-xs font-mono focus:outline-none focus:border-sky-400"
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={handleAddManualImageUrl}
+                                                    className="px-3 py-1.5 rounded-lg bg-sky-500/20 hover:bg-sky-500/30 border border-sky-500/40 text-sky-300 text-xs font-mono transition-colors"
+                                                >
+                                                    Add URL
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -879,13 +979,19 @@ export default function AdminDashboard() {
                                                         {p.status}
                                                     </span>
                                                 </div>
-                                                {p.image && (
-                                                    <div className="w-full h-24 mb-2 rounded-lg overflow-hidden border border-slate-800 bg-slate-950">
+                                                {(p.image || (p.images && p.images.length > 0)) && (
+                                                    <div className="w-full h-24 mb-2 rounded-lg overflow-hidden border border-slate-800 bg-slate-950 relative">
                                                         <img
-                                                            src={p.image}
+                                                            src={p.image || p.images?.[0]}
                                                             alt={p.name}
                                                             className="w-full h-full object-cover"
                                                         />
+                                                        {p.images && p.images.length > 1 && (
+                                                            <div className="absolute bottom-1.5 right-1.5 bg-black/80 backdrop-blur-sm border border-white/20 text-white text-[9px] font-mono px-1.5 py-0.5 rounded flex items-center gap-1">
+                                                                <ImageIcon size={10} />
+                                                                <span>{p.images.length} photos</span>
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 )}
                                                 <h4 className="font-orbitron text-sm font-bold text-white mb-1">
