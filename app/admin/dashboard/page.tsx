@@ -249,36 +249,107 @@ export default function AdminDashboard() {
         }
     };
 
-    // Multiple image upload handler
+    const compressImageClient = (file: File): Promise<string> => {
+        return new Promise((resolve) => {
+            if (file.type === "image/svg+xml") {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result as string);
+                reader.onerror = () => resolve("");
+                reader.readAsDataURL(file);
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement("canvas");
+                    let { width, height } = img;
+                    const maxWidth = 1400;
+                    const maxHeight = 1000;
+
+                    if (width > maxWidth || height > maxHeight) {
+                        if (width / height > maxWidth / maxHeight) {
+                            height = Math.round((height * maxWidth) / width);
+                            width = maxWidth;
+                        } else {
+                            width = Math.round((width * maxHeight) / height);
+                            height = maxHeight;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext("2d");
+                    if (!ctx) {
+                        resolve(e.target?.result as string);
+                        return;
+                    }
+                    ctx.drawImage(img, 0, 0, width, height);
+                    resolve(canvas.toDataURL("image/webp", 0.82));
+                };
+                img.onerror = () => resolve(e.target?.result as string);
+                img.src = e.target?.result as string;
+            };
+            reader.onerror = () => resolve("");
+            reader.readAsDataURL(file);
+        });
+    };
+
+    // Multiple image upload handler with client-side compression fallback
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
         if (!files || files.length === 0) return;
         setUploadingImage(true);
         setUploadError("");
+
         try {
-            const formData = new FormData();
+            // Compress in browser for instant safety and to avoid payload limits
+            const clientCompressedUrls: string[] = [];
             for (let i = 0; i < files.length; i++) {
-                formData.append("files", files[i]);
+                const compressed = await compressImageClient(files[i]);
+                if (compressed) clientCompressedUrls.push(compressed);
             }
-            const res = await fetch("/api/admin/upload", {
-                method: "POST",
-                body: formData,
-            });
-            const data = await res.json();
-            if (data.success) {
-                const incomingUrls: string[] = data.urls || (data.url ? [data.url] : []);
+
+            // Attempt server upload
+            let serverSuccess = false;
+            try {
+                const formData = new FormData();
+                for (let i = 0; i < files.length; i++) {
+                    formData.append("files", files[i]);
+                }
+                const res = await fetch("/api/admin/upload", {
+                    method: "POST",
+                    body: formData,
+                });
+                const data = await res.json();
+                if (data.success && (data.urls || data.url)) {
+                    serverSuccess = true;
+                    const incomingUrls: string[] = data.urls || (data.url ? [data.url] : []);
+                    setProjectImages((prev) => {
+                        const next = [...prev];
+                        for (const u of incomingUrls) {
+                            if (!next.includes(u)) next.push(u);
+                        }
+                        return next;
+                    });
+                }
+            } catch {
+                serverSuccess = false;
+            }
+
+            // Fallback to client-compressed WebP Data URLs if server didn't provide URLs
+            if (!serverSuccess && clientCompressedUrls.length > 0) {
                 setProjectImages((prev) => {
                     const next = [...prev];
-                    for (const u of incomingUrls) {
+                    for (const u of clientCompressedUrls) {
                         if (!next.includes(u)) next.push(u);
                     }
                     return next;
                 });
-            } else {
-                setUploadError(data.error || "Failed to upload images");
             }
         } catch (err: any) {
-            setUploadError(err.message || "Network upload error");
+            setUploadError(err.message || "Failed to process images");
         } finally {
             setUploadingImage(false);
             e.target.value = "";

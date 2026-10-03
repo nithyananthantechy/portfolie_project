@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import * as jose from "jose";
 import path from "path";
 import fs from "fs";
+import sharp from "sharp";
 
 async function verifyAdmin(request: Request): Promise<boolean> {
     const cookieHeader = request.headers.get("cookie") || "";
@@ -61,12 +62,23 @@ export async function POST(request: Request) {
             "image/avif",
         ];
 
-        const maxBytes = 15 * 1024 * 1024; // 15MB limit per file
+        const maxBytes = 20 * 1024 * 1024; // 20MB limit per file
 
-        // Ensure public/uploads directory exists
+        // Check if filesystem allows writing (false in Vercel / serverless lambda)
+        let canWriteToDisk = false;
         const uploadsDir = path.join(process.cwd(), "public", "uploads");
-        if (!fs.existsSync(uploadsDir)) {
-            fs.mkdirSync(uploadsDir, { recursive: true });
+
+        // Never attempt disk write on read-only serverless platforms like Vercel or AWS Lambda
+        const isServerless = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.NOW_REGION);
+        if (!isServerless) {
+            try {
+                if (!fs.existsSync(uploadsDir)) {
+                    fs.mkdirSync(uploadsDir, { recursive: true });
+                }
+                canWriteToDisk = true;
+            } catch {
+                canWriteToDisk = false;
+            }
         }
 
         const uploadedUrls: string[] = [];
@@ -86,29 +98,60 @@ export async function POST(request: Request) {
 
             if (file.size > maxBytes) {
                 return NextResponse.json(
-                    { error: `File "${file.name}" exceeds 15MB upload limit.` },
+                    { error: `File "${file.name}" exceeds upload limit.` },
                     { status: 400 }
                 );
             }
 
-            const buffer = Buffer.from(await file.arrayBuffer());
+            const rawBuffer = Buffer.from(await file.arrayBuffer());
 
-            // Generate sanitized unique filename
+            // Optimize and compress using sharp
+            let processedBuffer = rawBuffer;
+            let finalMime = file.type;
+            let extension = "webp";
+
+            if (file.type === "image/svg+xml") {
+                extension = "svg";
+                finalMime = "image/svg+xml";
+            } else {
+                try {
+                    processedBuffer = await sharp(rawBuffer)
+                        .resize({ width: 1400, withoutEnlargement: true })
+                        .webp({ quality: 82 })
+                        .toBuffer();
+                    finalMime = "image/webp";
+                    extension = "webp";
+                } catch {
+                    processedBuffer = rawBuffer;
+                }
+            }
+
+            let publicUrl = "";
             const safeOriginalName = file.name
                 .toLowerCase()
-                .replace(/[^a-z0-9.]/g, "-")
+                .replace(/[^a-z0-9]/g, "-")
                 .replace(/-+/g, "-");
-            const uniqueFilename = `proj-${Date.now()}-${i}-${safeOriginalName}`;
-            const filePath = path.join(uploadsDir, uniqueFilename);
+            const uniqueFilename = `proj-${Date.now()}-${i}-${safeOriginalName}.${extension}`;
 
-            await fs.promises.writeFile(filePath, buffer);
+            if (canWriteToDisk) {
+                try {
+                    const filePath = path.join(uploadsDir, uniqueFilename);
+                    await fs.promises.writeFile(filePath, processedBuffer);
+                    publicUrl = `/uploads/${uniqueFilename}`;
+                } catch {
+                    // Fallback to Data URL if write fails
+                    publicUrl = `data:${finalMime};base64,${processedBuffer.toString("base64")}`;
+                }
+            } else {
+                // Serverless runtime (Vercel): encode to optimized base64 Data URL
+                publicUrl = `data:${finalMime};base64,${processedBuffer.toString("base64")}`;
+            }
 
-            const publicUrl = `/uploads/${uniqueFilename}`;
             uploadedUrls.push(publicUrl);
             uploadedFiles.push({
                 url: publicUrl,
                 filename: uniqueFilename,
-                size: file.size,
+                size: processedBuffer.length,
             });
         }
 
