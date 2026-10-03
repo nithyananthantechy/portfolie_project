@@ -13,6 +13,9 @@ import {
 } from "@/lib/publishedStore";
 import { EngineeringProject } from "@/lib/siteData";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 async function verifyAdmin(request: Request): Promise<boolean> {
     const cookieHeader = request.headers.get("cookie") || "";
     const match = cookieHeader.match(/token=([^;]+)/);
@@ -30,13 +33,36 @@ async function verifyAdmin(request: Request): Promise<boolean> {
 }
 
 export async function GET(request: Request) {
-    return NextResponse.json({
-        success: true,
-        blogs: getAllBlogs(),
-        papers: getAllPapers(),
-        updates: getAllUpdates(),
-        projects: getAllProjects(),
-    });
+    try {
+        const [blogs, papers, updates, projects] = await Promise.all([
+            getAllBlogs(),
+            getAllPapers(),
+            getAllUpdates(),
+            getAllProjects(),
+        ]);
+
+        return NextResponse.json(
+            {
+                success: true,
+                blogs,
+                papers,
+                updates,
+                projects,
+            },
+            {
+                headers: {
+                    "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+                    "Pragma": "no-cache",
+                    "Expires": "0",
+                },
+            }
+        );
+    } catch (e: any) {
+        return NextResponse.json(
+            { error: e.message || "Failed to load published content" },
+            { status: 500 }
+        );
+    }
 }
 
 export async function POST(request: Request) {
@@ -87,8 +113,20 @@ export async function POST(request: Request) {
                 images: rawImages.length > 0 ? rawImages : undefined,
             };
 
-            const updatedProjects = addProject(newProject);
-            return NextResponse.json({ success: true, item: newProject, total: updatedProjects.length });
+            const updatedProjects = await addProject(newProject);
+            return NextResponse.json(
+                {
+                    success: true,
+                    item: newProject,
+                    total: updatedProjects.length,
+                    projects: updatedProjects,
+                },
+                {
+                    headers: {
+                        "Cache-Control": "no-store, no-cache, must-revalidate",
+                    },
+                }
+            );
         }
 
         if (type === "blog") {
@@ -109,8 +147,8 @@ export async function POST(request: Request) {
                 },
                 featured: Boolean(data.featured),
             };
-            const updated = addBlog(newBlog);
-            return NextResponse.json({ success: true, item: newBlog, total: updated.length });
+            const updated = await addBlog(newBlog);
+            return NextResponse.json({ success: true, item: newBlog, total: updated.length, blogs: updated });
         }
 
         if (type === "paper") {
@@ -139,8 +177,8 @@ export async function POST(request: Request) {
   year={2026}
 }`,
             };
-            const updated = addPaper(newPaper);
-            return NextResponse.json({ success: true, item: newPaper, total: updated.length });
+            const updated = await addPaper(newPaper);
+            return NextResponse.json({ success: true, item: newPaper, total: updated.length, papers: updated });
         }
 
         if (type === "update") {
@@ -155,8 +193,8 @@ export async function POST(request: Request) {
                 tags: Array.isArray(data.tags) ? data.tags : data.tags.split(",").map((t: string) => t.trim()),
                 actionTakeaway: data.actionTakeaway,
             };
-            const updated = addUpdate(newUpdate);
-            return NextResponse.json({ success: true, item: newUpdate, total: updated.length });
+            const updated = await addUpdate(newUpdate);
+            return NextResponse.json({ success: true, item: newUpdate, total: updated.length, updates: updated });
         }
 
         return NextResponse.json({ error: "Unknown publication type" }, { status: 400 });
@@ -184,7 +222,7 @@ export async function DELETE(request: Request) {
         }
 
         if (type === "project") {
-            const updated = deleteProject(id);
+            const updated = await deleteProject(id);
             return NextResponse.json({ success: true, projects: updated });
         }
 
@@ -193,4 +231,3 @@ export async function DELETE(request: Request) {
         return NextResponse.json({ error: e.message || "Failed to delete item." }, { status: 500 });
     }
 }
-

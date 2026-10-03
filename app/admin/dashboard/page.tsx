@@ -90,21 +90,33 @@ export default function AdminDashboard() {
 
     const loadData = async () => {
         try {
-            const resMsgs = await fetch("/api/admin/messages");
+            const timestamp = Date.now();
+            const resMsgs = await fetch(`/api/admin/messages?t=${timestamp}`, { cache: "no-store" });
             const dataMsgs = await resMsgs.json();
             if (dataMsgs.success) setMessages(dataMsgs.messages || []);
 
-            const resUsers = await fetch("/api/admin/users");
+            const resUsers = await fetch(`/api/admin/users?t=${timestamp}`, { cache: "no-store" });
             const dataUsers = await resUsers.json();
             if (dataUsers.success) {
                 setUsers(dataUsers.users || []);
                 setVisitCount(dataUsers.stats?.visitCount || 0);
             }
 
-            const resPublish = await fetch("/api/admin/publish");
+            const resPublish = await fetch(`/api/admin/publish?t=${timestamp}`, { cache: "no-store" });
             const dataPublish = await resPublish.json();
             if (dataPublish.success && Array.isArray(dataPublish.projects)) {
                 setPublishedProjects(dataPublish.projects);
+            } else {
+                try {
+                    const localSaved = JSON.parse(localStorage.getItem("nn_custom_projects") || "[]");
+                    if (Array.isArray(localSaved) && localSaved.length > 0) {
+                        setPublishedProjects((prev) => {
+                            const ids = new Set(prev.map((p) => p.id));
+                            const missing = localSaved.filter((p: any) => !ids.has(p.id));
+                            return [...missing, ...prev];
+                        });
+                    }
+                } catch {}
             }
         } catch {
         } finally {
@@ -412,8 +424,24 @@ export default function AdminDashboard() {
             });
             const data = await res.json();
             if (data.success) {
+                // Update state immediately so UI reflects without delay
+                if (data.projects && Array.isArray(data.projects)) {
+                    setPublishedProjects(data.projects);
+                } else if (data.item) {
+                    setPublishedProjects((prev) => [data.item, ...prev.filter((p) => p.id !== data.item.id)]);
+                }
+
+                // Instant browser backup
+                if (data.item) {
+                    try {
+                        const localSaved = JSON.parse(localStorage.getItem("nn_custom_projects") || "[]");
+                        const updated = [data.item, ...localSaved.filter((p: any) => p.id !== data.item.id)];
+                        localStorage.setItem("nn_custom_projects", JSON.stringify(updated));
+                    } catch {}
+                }
+
                 setProjectSuccess(true);
-                loadData();
+                await loadData();
                 setTimeout(() => {
                     setProjectSuccess(false);
                     setProjectName("");
@@ -447,6 +475,11 @@ export default function AdminDashboard() {
             const data = await res.json();
             if (data.success) {
                 setPublishedProjects(data.projects || []);
+                try {
+                    const localSaved = JSON.parse(localStorage.getItem("nn_custom_projects") || "[]");
+                    const updated = localSaved.filter((p: any) => p.id !== id);
+                    localStorage.setItem("nn_custom_projects", JSON.stringify(updated));
+                } catch {}
             } else {
                 alert(data.error || "Failed to delete project");
             }

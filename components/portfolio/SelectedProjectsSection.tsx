@@ -10,11 +10,29 @@ export default function SelectedProjectsSection() {
     const [activeImageIndices, setActiveImageIndices] = useState<Record<string, number>>({});
 
     useEffect(() => {
-        fetch("/api/admin/publish")
+        // 1. Instant hydration from localStorage
+        try {
+            const localSaved = JSON.parse(localStorage.getItem("nn_custom_projects") || "[]");
+            if (Array.isArray(localSaved) && localSaved.length > 0) {
+                setProjects((prev) => {
+                    const ids = new Set(localSaved.map((p: any) => p.id));
+                    return [...localSaved, ...prev.filter((p) => !ids.has(p.id))];
+                });
+            }
+        } catch {}
+
+        // 2. Fresh live fetch with cache-busting
+        fetch(`/api/admin/publish?t=${Date.now()}`, { cache: "no-store" })
             .then((res) => res.json())
             .then((data) => {
                 if (data.success && Array.isArray(data.projects) && data.projects.length > 0) {
                     setProjects(data.projects);
+                    try {
+                        const customOnes = data.projects.filter(
+                            (p: EngineeringProject) => !selectedEngineeringProjects.some((orig) => orig.id === p.id)
+                        );
+                        localStorage.setItem("nn_custom_projects", JSON.stringify(customOnes));
+                    } catch {}
                 }
             })
             .catch(() => {});
