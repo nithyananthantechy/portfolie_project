@@ -346,5 +346,125 @@
       ],
       "actionTakeaway": "Share /portfolio on WhatsApp or LinkedIn — preview metadata now matches the page."
     }
+  ],
+  "projects": [
+    {
+      "id": "zabbix-monitoring",
+      "name": "Zabbix Network Monitoring Tool",
+      "problem": "IT administrators and network engineers lack a centralized, automated monitoring setup to track server health, endpoint availability, and network devices.",
+      "whatIBuilt": "Configured a complete Zabbix network monitoring environment for servers, switches, and endpoints. Implemented proactive alert thresholds, custom metrics gathering, and automated availability dashboards.",
+      "techStack": [
+        "Zabbix",
+        "Linux",
+        "SNMP",
+        "Shell Scripting",
+        "Network Monitoring"
+      ],
+      "engineeringFocus": "Monitoring",
+      "status": "Completed",
+      "githubUrl": "https://github.com/nithyananthantechy/Zabbix_Network_Monitoring_tool"
+    },
+    {
+      "id": "syslog-elk-stack",
+      "name": "Centralized Syslog & Elastic Stack (ELK) Telemetry",
+      "problem": "Dispersed infrastructure logs across firewalls, Linux servers, and Active Directory make incident triage and security auditing slow and manual.",
+      "whatIBuilt": "Engineered a centralized Syslog ingestion server on Ubuntu integrated with Elasticsearch, Logstash, Beats, and Kibana. Enabled structured parsing, index lifecycle management, and real-time visualization for multi-device log streams.",
+      "techStack": [
+        "Elasticsearch",
+        "Logstash",
+        "Kibana",
+        "Syslog",
+        "Ubuntu Linux",
+        "Beats"
+      ],
+      "engineeringFocus": "AIOps",
+      "status": "Completed",
+      "githubUrl": "https://github.com/nithyananthantechy/syslog-server-ubuntu-elastic-stack-kibana"
+    },
+    {
+      "id": "packet-firewall",
+      "name": "Stateful Linux Packet-Filtering Firewall",
+      "problem": "Unprotected Linux server endpoints are vulnerable to unauthorized access and port exploitation without custom packet filtering and logging.",
+      "whatIBuilt": "Implemented a stateful packet-filtering firewall using Linux iptables on Ubuntu Server with a default-deny policy. Configured granular rule sets allowing SSH, HTTP, and HTTPS while strictly dropping unwanted traffic and logging dropped packet telemetry.",
+      "techStack": [
+        "iptables",
+        "Linux",
+        "Ubuntu Server",
+        "Bash",
+        "Network Security",
+        "Nmap"
+      ],
+      "engineeringFocus": "Linux Hardening",
+      "status": "Completed",
+      "githubUrl": "https://github.com/nithyananthantechy/basic-packet-filtering-firewall"
+    },
+    {
+      "id": "cyberscan",
+      "name": "CyberScan — Async Network Reconnaissance & SSL Auditor",
+      "problem": "Expired SSL certificates and unexpected exposed open ports often go unnoticed until external systems fail or security audits flag them.",
+      "whatIBuilt": "Developed a high-performance, multi-threaded asynchronous port scanner and SSL monitoring dashboard. Built socket-based network discovery, real-time service detection, and SSL certificate expiration alerting.",
+      "techStack": [
+        "Python",
+        "Flask",
+        "Async Sockets",
+        "SSL/TLS",
+        "Tailwind CSS"
+      ],
+      "engineeringFocus": "Cybersecurity",
+      "status": "Live",
+      "githubUrl": "https://github.com/nithyananthantechy/Port_Sacnner",
+      "demoUrl": "https://cyberscan.nitechspark.site"
+    },
+    {
+      "id": "sys-mgmt-scripts",
+      "name": "System Management & Automation Suite",
+      "problem": "Repetitive system administration tasks—process monitoring, directory health checks, and log rotations—consume excessive administrative time when handled manually.",
+      "whatIBuilt": "Built a modular automation toolset using Python and Bash for headless Linux server management. Automated critical process health surveillance, disk utilization threshold checks, and automated system remediation routines.",
+      "techStack": [
+        "Python",
+        "Bash",
+        "Linux Administration",
+        "Cron",
+        "Systemd"
+      ],
+      "engineeringFocus": "Infrastructure Automation",
+      "status": "Completed",
+      "githubUrl": "https://github.com/nithyananthantechy/System-Management-Scripts-Python-and-Shell"
+    },
+    {
+      "id": "pdf2excel-ai",
+      "name": "PDF2Excel AI — Industrial OCR Extraction Pipeline",
+      "problem": "Operations and finance teams spend hours manually re-typing unstructured data from complex multi-page industrial PDFs, OBL sheets, and warrants into spreadsheets.",
+      "whatIBuilt": "Engineered a full-stack OCR and table extraction pipeline using React and Express. Integrated high-precision tabular parsing to process complex industrial documents into clean, multi-sheet formatted Excel workbooks.",
+      "techStack": [
+        "React",
+        "Express",
+        "Node.js",
+        "OCR",
+        "TypeScript",
+        "ExcelJS"
+      ],
+      "engineeringFocus": "Full Stack",
+      "status": "Pilot",
+      "githubUrl": "https://github.com/nithyananthantechy/PDF2Excel-AI"
+    },
+    {
+      "id": "private-aiops-platform",
+      "name": "Private AIOps Alert Triage & Root Cause Analysis Platform",
+      "problem": "Complex infrastructure monitoring environments flood engineering teams with cascading alerts, obscuring root cause dependencies during major incidents.",
+      "whatIBuilt": "Built as part of professional infrastructure engineering work. Connects monitoring signals with workflow automation and incident correlation routines to accelerate root-cause identification and operational response.",
+      "techStack": [
+        "Python",
+        "Flask",
+        "n8n",
+        "Observability Pipelines",
+        "RCA Workflows",
+        "Linux"
+      ],
+      "engineeringFocus": "Incident Diagnostics",
+      "status": "Pilot",
+      "isPrivate": true,
+      "privateNote": "Built as part of professional infrastructure engineering work."
+    }
   ]
 }

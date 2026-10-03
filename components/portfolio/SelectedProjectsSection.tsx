@@ -1,10 +1,24 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { selectedEngineeringProjects } from "@/lib/siteData";
-import { ArrowUpRight, Github, ExternalLink, ShieldCheck, Lock } from "lucide-react";
+import { selectedEngineeringProjects, EngineeringProject } from "@/lib/siteData";
+import { ArrowUpRight, Github, ExternalLink, ShieldCheck, Lock, Image as ImageIcon } from "lucide-react";
 
 export default function SelectedProjectsSection() {
+    const [projects, setProjects] = useState<EngineeringProject[]>(selectedEngineeringProjects);
+
+    useEffect(() => {
+        fetch("/api/admin/publish")
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.success && Array.isArray(data.projects) && data.projects.length > 0) {
+                    setProjects(data.projects);
+                }
+            })
+            .catch(() => {});
+    }, []);
+
     return (
         <section id="projects" className="py-20 px-4 border-t border-slate-800/80">
             <div className="max-w-6xl mx-auto">
@@ -26,7 +40,7 @@ export default function SelectedProjectsSection() {
 
                 {/* Project Cards Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {selectedEngineeringProjects.map((project, idx) => (
+                    {projects.map((project, idx) => (
                         <motion.article
                             key={project.id}
                             initial={{ opacity: 0, y: 20 }}
@@ -54,6 +68,19 @@ export default function SelectedProjectsSection() {
                                         {project.status}
                                     </span>
                                 </div>
+
+                                {/* Project Image if uploaded */}
+                                {project.image && (
+                                    <div className="mb-4 rounded-xl overflow-hidden border border-slate-700/60 bg-black/40 relative aspect-video max-h-56 group/img shadow-lg">
+                                        <img
+                                            src={project.image}
+                                            alt={project.name}
+                                            className="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-500"
+                                            loading="lazy"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none" />
+                                    </div>
+                                )}
 
                                 {/* Project Name */}
                                 <h3 className="font-orbitron font-bold text-lg sm:text-xl text-white mb-2 leading-snug">

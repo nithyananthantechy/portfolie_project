@@ -3,6 +3,7 @@ import path from "path";
 import { blogPosts, BlogPost } from "./blogData";
 import { researchPapers, ResearchPaper } from "./papersData";
 import { dailyUpdates, DailyUpdate } from "./updatesData";
+import { selectedEngineeringProjects, EngineeringProject } from "./siteData";
 
 const dataDir = path.join(process.cwd(), "data");
 const storageFile = path.join(dataDir, "published_content.json");
@@ -11,6 +12,7 @@ interface PublishedStorage {
     blogs: BlogPost[];
     papers: ResearchPaper[];
     updates: DailyUpdate[];
+    projects?: EngineeringProject[];
 }
 
 function ensureStorage(): PublishedStorage {
@@ -23,17 +25,24 @@ function ensureStorage(): PublishedStorage {
                 blogs: blogPosts,
                 papers: researchPapers,
                 updates: dailyUpdates,
+                projects: selectedEngineeringProjects,
             };
             fs.writeFileSync(storageFile, JSON.stringify(initial, null, 2));
             return initial;
         }
         const data = fs.readFileSync(storageFile, "utf-8");
-        return JSON.parse(data);
+        const parsed: PublishedStorage = JSON.parse(data);
+        if (!parsed.projects || !Array.isArray(parsed.projects)) {
+            parsed.projects = selectedEngineeringProjects;
+            saveStorage(parsed);
+        }
+        return parsed;
     } catch {
         return {
             blogs: blogPosts,
             papers: researchPapers,
             updates: dailyUpdates,
+            projects: selectedEngineeringProjects,
         };
     }
 }
@@ -81,3 +90,24 @@ export function addUpdate(update: DailyUpdate): DailyUpdate[] {
     saveStorage(current);
     return current.updates;
 }
+
+export function getAllProjects(): EngineeringProject[] {
+    return ensureStorage().projects || selectedEngineeringProjects;
+}
+
+export function addProject(project: EngineeringProject): EngineeringProject[] {
+    const current = ensureStorage();
+    const existing = current.projects || selectedEngineeringProjects;
+    current.projects = [project, ...existing.filter((p) => p.id !== project.id)];
+    saveStorage(current);
+    return current.projects;
+}
+
+export function deleteProject(id: string): EngineeringProject[] {
+    const current = ensureStorage();
+    const existing = current.projects || selectedEngineeringProjects;
+    current.projects = existing.filter((p) => p.id !== id);
+    saveStorage(current);
+    return current.projects;
+}
+

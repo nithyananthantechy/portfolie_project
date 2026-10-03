@@ -1,6 +1,17 @@
 import { NextResponse } from "next/server";
 import * as jose from "jose";
-import { getAllBlogs, addBlog, getAllPapers, addPaper, getAllUpdates, addUpdate } from "@/lib/publishedStore";
+import {
+    getAllBlogs,
+    addBlog,
+    getAllPapers,
+    addPaper,
+    getAllUpdates,
+    addUpdate,
+    getAllProjects,
+    addProject,
+    deleteProject,
+} from "@/lib/publishedStore";
+import { EngineeringProject } from "@/lib/siteData";
 
 async function verifyAdmin(request: Request): Promise<boolean> {
     const cookieHeader = request.headers.get("cookie") || "";
@@ -24,6 +35,7 @@ export async function GET(request: Request) {
         blogs: getAllBlogs(),
         papers: getAllPapers(),
         updates: getAllUpdates(),
+        projects: getAllProjects(),
     });
 }
 
@@ -38,6 +50,33 @@ export async function POST(request: Request) {
 
     try {
         const { type, data } = await request.json();
+
+        if (type === "project") {
+            const safeId = data.id || `proj-${Date.now()}-${(data.name || "item").toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 10)}`;
+            const techList = Array.isArray(data.techStack)
+                ? data.techStack
+                : typeof data.techStack === "string"
+                ? data.techStack.split(",").map((s: string) => s.trim()).filter(Boolean)
+                : [];
+
+            const newProject: EngineeringProject = {
+                id: safeId,
+                name: data.name,
+                problem: data.problem || "",
+                whatIBuilt: data.whatIBuilt || "",
+                techStack: techList.length > 0 ? techList : ["Full Stack", "TypeScript"],
+                engineeringFocus: data.engineeringFocus || "Full Stack",
+                status: data.status || "Completed",
+                githubUrl: data.githubUrl ? data.githubUrl.trim() : undefined,
+                demoUrl: data.demoUrl ? data.demoUrl.trim() : undefined,
+                isPrivate: Boolean(data.isPrivate),
+                privateNote: data.privateNote ? data.privateNote.trim() : undefined,
+                image: data.image ? data.image.trim() : undefined,
+            };
+
+            const updatedProjects = addProject(newProject);
+            return NextResponse.json({ success: true, item: newProject, total: updatedProjects.length });
+        }
 
         if (type === "blog") {
             const newBlog = {
@@ -112,3 +151,33 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: e.message || "Failed to publish item." }, { status: 500 });
     }
 }
+
+export async function DELETE(request: Request) {
+    const isAdmin = await verifyAdmin(request);
+    if (!isAdmin) {
+        return NextResponse.json(
+            { error: "Unauthorized. Admin session token required." },
+            { status: 401 }
+        );
+    }
+
+    try {
+        const { searchParams } = new URL(request.url);
+        const type = searchParams.get("type");
+        const id = searchParams.get("id");
+
+        if (!type || !id) {
+            return NextResponse.json({ error: "Missing type or id query param." }, { status: 400 });
+        }
+
+        if (type === "project") {
+            const updated = deleteProject(id);
+            return NextResponse.json({ success: true, projects: updated });
+        }
+
+        return NextResponse.json({ error: "Unsupported deletion type." }, { status: 400 });
+    } catch (e: any) {
+        return NextResponse.json({ error: e.message || "Failed to delete item." }, { status: 500 });
+    }
+}
+

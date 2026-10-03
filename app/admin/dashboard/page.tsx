@@ -19,12 +19,18 @@ import {
     ShieldCheck,
     Plus,
     Tag,
+    FolderGit2,
+    Upload,
+    Image as ImageIcon,
+    CheckCircle2,
+    AlertCircle,
+    X,
 } from "lucide-react";
 import MatrixBackground from "@/components/MatrixBackground";
 
 export default function AdminDashboard() {
     const router = useRouter();
-    const [activeTab, setActiveTab] = useState<"publish-blog" | "publish-paper" | "publish-wire" | "messages" | "telemetry">("publish-blog");
+    const [activeTab, setActiveTab] = useState<"publish-blog" | "publish-project" | "publish-paper" | "publish-wire" | "messages" | "telemetry">("publish-blog");
 
     // Blog form
     const [blogTitle, setBlogTitle] = useState("");
@@ -57,6 +63,24 @@ export default function AdminDashboard() {
     const [wirePublishing, setWirePublishing] = useState(false);
     const [wireSuccess, setWireSuccess] = useState(false);
 
+    // Project form
+    const [projectName, setProjectName] = useState("");
+    const [projectFocus, setProjectFocus] = useState("Full Stack");
+    const [projectStatus, setProjectStatus] = useState("Completed");
+    const [projectProblem, setProjectProblem] = useState("");
+    const [projectWhatIBuilt, setProjectWhatIBuilt] = useState("");
+    const [projectTechStack, setProjectTechStack] = useState("");
+    const [projectGithubUrl, setProjectGithubUrl] = useState("");
+    const [projectDemoUrl, setProjectDemoUrl] = useState("");
+    const [projectIsPrivate, setProjectIsPrivate] = useState(false);
+    const [projectPrivateNote, setProjectPrivateNote] = useState("");
+    const [projectImage, setProjectImage] = useState("");
+    const [uploadingImage, setUploadingImage] = useState(false);
+    const [uploadError, setUploadError] = useState("");
+    const [projectPublishing, setProjectPublishing] = useState(false);
+    const [projectSuccess, setProjectSuccess] = useState(false);
+    const [publishedProjects, setPublishedProjects] = useState<any[]>([]);
+
     // Messages & Visitors
     const [messages, setMessages] = useState<any[]>([]);
     const [users, setUsers] = useState<any[]>([]);
@@ -74,6 +98,12 @@ export default function AdminDashboard() {
             if (dataUsers.success) {
                 setUsers(dataUsers.users || []);
                 setVisitCount(dataUsers.stats?.visitCount || 0);
+            }
+
+            const resPublish = await fetch("/api/admin/publish");
+            const dataPublish = await resPublish.json();
+            if (dataPublish.success && Array.isArray(dataPublish.projects)) {
+                setPublishedProjects(dataPublish.projects);
             }
         } catch {
         } finally {
@@ -218,6 +248,102 @@ export default function AdminDashboard() {
         }
     };
 
+    // Image upload handler
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        setUploadingImage(true);
+        setUploadError("");
+        try {
+            const formData = new FormData();
+            formData.append("file", file);
+            const res = await fetch("/api/admin/upload", {
+                method: "POST",
+                body: formData,
+            });
+            const data = await res.json();
+            if (data.success && data.url) {
+                setProjectImage(data.url);
+            } else {
+                setUploadError(data.error || "Failed to upload image");
+            }
+        } catch (err: any) {
+            setUploadError(err.message || "Network upload error");
+        } finally {
+            setUploadingImage(false);
+        }
+    };
+
+    // Submit Project
+    const submitProject = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setProjectPublishing(true);
+        try {
+            const res = await fetch("/api/admin/publish", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    type: "project",
+                    data: {
+                        name: projectName,
+                        engineeringFocus: projectFocus,
+                        status: projectStatus,
+                        problem: projectProblem,
+                        whatIBuilt: projectWhatIBuilt,
+                        techStack: projectTechStack,
+                        githubUrl: projectGithubUrl,
+                        demoUrl: projectDemoUrl,
+                        isPrivate: projectIsPrivate,
+                        privateNote: projectPrivateNote,
+                        image: projectImage,
+                    },
+                }),
+            });
+            const data = await res.json();
+            if (data.success) {
+                setProjectSuccess(true);
+                loadData();
+                setTimeout(() => {
+                    setProjectSuccess(false);
+                    setProjectName("");
+                    setProjectProblem("");
+                    setProjectWhatIBuilt("");
+                    setProjectTechStack("");
+                    setProjectGithubUrl("");
+                    setProjectDemoUrl("");
+                    setProjectIsPrivate(false);
+                    setProjectPrivateNote("");
+                    setProjectImage("");
+                }, 2000);
+            } else {
+                alert(data.error || "Failed to publish project");
+            }
+        } catch (err: any) {
+            alert(err.message || "Network transmission error");
+        } finally {
+            setProjectPublishing(false);
+        }
+    };
+
+    // Delete Project
+    const handleDeleteProject = async (id: string) => {
+        if (!confirm("Are you sure you want to remove this project from live portfolio?")) return;
+        try {
+            const res = await fetch(`/api/admin/publish?type=project&id=${id}`, {
+                method: "DELETE",
+            });
+            const data = await res.json();
+            if (data.success) {
+                setPublishedProjects(data.projects || []);
+            } else {
+                alert(data.error || "Failed to delete project");
+            }
+        } catch (e: any) {
+            alert(e.message || "Error deleting project");
+        }
+    };
+
+
     return (
         <main className="min-h-screen relative overflow-hidden font-rajdhani pb-20" style={{ background: "var(--bg)" }}>
             <MatrixBackground />
@@ -273,6 +399,18 @@ export default function AdminDashboard() {
                     >
                         <PenTool size={14} />
                         <span>WRITE & PUBLISH BLOG</span>
+                    </button>
+
+                    <button
+                        onClick={() => setActiveTab("publish-project")}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-xl border transition-all ${
+                            activeTab === "publish-project"
+                                ? "bg-white text-slate-950 border-white font-bold shadow-sm"
+                                : "bg-slate-900/60 border-slate-800 text-slate-400 hover:text-white"
+                        }`}
+                    >
+                        <FolderGit2 size={14} />
+                        <span>PUBLISH PROJECT</span>
                     </button>
 
                     <button
@@ -430,7 +568,354 @@ export default function AdminDashboard() {
                         </div>
                     )}
 
-                    {/* 2. PUBLISH PROJECT PAPER / WHITEPAPER */}
+                    {/* 2. PUBLISH PROJECT */}
+                    {activeTab === "publish-project" && (
+                        <div className="space-y-8">
+                            <div className="max-w-4xl glass-panel p-6 sm:p-8 rounded-2xl border border-sky-500/30 bg-panel/70">
+                                <div className="flex items-center gap-2 mb-4">
+                                    <FolderGit2 size={20} className="text-sky-400" />
+                                    <h2 className="font-orbitron font-bold text-lg text-white">
+                                        PUBLISH SELECTED ENGINEERING PROJECT
+                                    </h2>
+                                </div>
+                                <p className="text-xs text-text-primary/60 mb-6">
+                                    Deploy engineering projects directly to the portfolio's live showcase and /work page. Upload screenshots or architecture diagrams, specify problem statements, technical implementations, and stack.
+                                </p>
+
+                                <form onSubmit={submitProject} className="space-y-5">
+                                    {/* Project Name */}
+                                    <div>
+                                        <label className="block text-xs font-mono text-sky-400 mb-1">
+                                            PROJECT NAME / TITLE: *
+                                        </label>
+                                        <input
+                                            type="text"
+                                            required
+                                            value={projectName}
+                                            onChange={(e) => setProjectName(e.target.value)}
+                                            placeholder="e.g. Sentriya — Autonomous Drone Fleet Dispatch Platform"
+                                            className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs focus:outline-none focus:border-sky-400"
+                                        />
+                                    </div>
+
+                                    {/* Focus, Status & Tech Stack */}
+                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                        <div>
+                                            <label className="block text-xs font-mono text-sky-400 mb-1">
+                                                ENGINEERING FOCUS:
+                                            </label>
+                                            <select
+                                                value={projectFocus}
+                                                onChange={(e) => setProjectFocus(e.target.value)}
+                                                className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs focus:outline-none focus:border-sky-400"
+                                            >
+                                                <option value="Full Stack">Full Stack</option>
+                                                <option value="Infrastructure Automation">Infrastructure Automation</option>
+                                                <option value="Cybersecurity">Cybersecurity</option>
+                                                <option value="AIOps">AIOps</option>
+                                                <option value="Monitoring">Monitoring</option>
+                                                <option value="Linux Hardening">Linux Hardening</option>
+                                                <option value="Incident Diagnostics">Incident Diagnostics</option>
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-xs font-mono text-sky-400 mb-1">
+                                                PROJECT STATUS:
+                                            </label>
+                                            <select
+                                                value={projectStatus}
+                                                onChange={(e) => setProjectStatus(e.target.value)}
+                                                className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs focus:outline-none focus:border-sky-400"
+                                            >
+                                                <option value="Completed">Completed</option>
+                                                <option value="Live">Live</option>
+                                                <option value="Beta">Beta</option>
+                                                <option value="Pilot">Pilot</option>
+                                                <option value="In Development">In Development</option>
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-xs font-mono text-sky-400 mb-1">
+                                                TECH STACK (COMMA SEPARATED):
+                                            </label>
+                                            <input
+                                                type="text"
+                                                value={projectTechStack}
+                                                onChange={(e) => setProjectTechStack(e.target.value)}
+                                                placeholder="Next.js, TypeScript, Docker, Linux"
+                                                className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs focus:outline-none focus:border-sky-400"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* IMAGE UPLOAD SECTION */}
+                                    <div className="p-4 rounded-xl border border-sky-500/20 bg-sky-950/20 space-y-3">
+                                        <div className="flex items-center justify-between">
+                                            <label className="text-xs font-mono text-sky-300 font-semibold flex items-center gap-1.5">
+                                                <ImageIcon size={14} className="text-sky-400" />
+                                                <span>PROJECT SCREENSHOT / IMAGE:</span>
+                                            </label>
+                                            <span className="text-[10px] font-mono text-slate-400">
+                                                PNG, JPG, WEBP, SVG (Max 10MB)
+                                            </span>
+                                        </div>
+
+                                        {/* Upload Dropzone */}
+                                        <div className="relative border-2 border-dashed border-sky-500/30 hover:border-sky-400/60 rounded-xl p-4 transition-colors bg-black/30 flex flex-col items-center justify-center text-center">
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={handleImageUpload}
+                                                disabled={uploadingImage}
+                                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed z-10"
+                                            />
+                                            <div className="flex flex-col items-center gap-1.5 pointer-events-none">
+                                                <div className="w-10 h-10 rounded-full bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400">
+                                                    {uploadingImage ? (
+                                                        <RefreshCw size={18} className="animate-spin" />
+                                                    ) : (
+                                                        <Upload size={18} />
+                                                    )}
+                                                </div>
+                                                <p className="text-xs text-white font-mono font-medium">
+                                                    {uploadingImage
+                                                        ? "Uploading image to server..."
+                                                        : "Click or Drag & Drop to upload project image"}
+                                                </p>
+                                                <p className="text-[10px] text-slate-400 font-mono">
+                                                    Saved to public media storage automatically
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        {uploadError && (
+                                            <p className="text-xs text-rose-400 font-mono flex items-center gap-1">
+                                                <AlertCircle size={13} /> {uploadError}
+                                            </p>
+                                        )}
+
+                                        {/* Image Preview & URL Display */}
+                                        {projectImage && (
+                                            <div className="flex items-center gap-4 p-3 rounded-lg bg-black/60 border border-emerald-500/30">
+                                                <div className="w-20 h-14 rounded-md overflow-hidden bg-slate-900 border border-slate-700 shrink-0 relative">
+                                                    <img
+                                                        src={projectImage}
+                                                        alt="Preview"
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                </div>
+                                                <div className="min-w-0 flex-1">
+                                                    <div className="flex items-center gap-1 text-[11px] font-mono text-emerald-400 font-semibold mb-0.5">
+                                                        <CheckCircle2 size={13} />
+                                                        <span>Image Attached Successfully</span>
+                                                    </div>
+                                                    <p className="text-[10px] font-mono text-slate-400 truncate">
+                                                        {projectImage}
+                                                    </p>
+                                                </div>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setProjectImage("")}
+                                                    className="px-2.5 py-1 text-[10px] font-mono text-rose-400 hover:text-white bg-rose-500/10 hover:bg-rose-500/30 border border-rose-500/30 rounded flex items-center gap-1 shrink-0 transition-colors"
+                                                >
+                                                    <X size={12} />
+                                                    <span>Remove</span>
+                                                </button>
+                                            </div>
+                                        )}
+
+                                        {/* Direct URL input fallback */}
+                                        <div>
+                                            <label className="block text-[11px] font-mono text-slate-400 mb-1">
+                                                Or paste external image URL:
+                                            </label>
+                                            <input
+                                                type="text"
+                                                value={projectImage}
+                                                onChange={(e) => setProjectImage(e.target.value)}
+                                                placeholder="https://... or /uploads/..."
+                                                className="w-full px-3 py-1.5 rounded-lg bg-black/50 border border-white/10 text-white text-xs font-mono focus:outline-none focus:border-sky-400"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Problem Statement */}
+                                    <div>
+                                        <label className="block text-xs font-mono text-sky-400 mb-1">
+                                            PROBLEM STATEMENT: *
+                                        </label>
+                                        <textarea
+                                            rows={3}
+                                            required
+                                            value={projectProblem}
+                                            onChange={(e) => setProjectProblem(e.target.value)}
+                                            placeholder="What specific engineering limitation, vulnerability, or operational pain point does this address?"
+                                            className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs focus:outline-none focus:border-sky-400"
+                                        />
+                                    </div>
+
+                                    {/* What I Built */}
+                                    <div>
+                                        <label className="block text-xs font-mono text-sky-400 mb-1">
+                                            WHAT I BUILT / ARCHITECTURE DETAILS: *
+                                        </label>
+                                        <textarea
+                                            rows={4}
+                                            required
+                                            value={projectWhatIBuilt}
+                                            onChange={(e) => setProjectWhatIBuilt(e.target.value)}
+                                            placeholder="Engineered low-level packet filters, configured automated alerts, designed high-throughput pipelines..."
+                                            className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs focus:outline-none focus:border-sky-400"
+                                        />
+                                    </div>
+
+                                    {/* URLs: GitHub & Live Demo */}
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="block text-xs font-mono text-sky-400 mb-1">
+                                                GITHUB REPOSITORY URL (OPTIONAL):
+                                            </label>
+                                            <input
+                                                type="url"
+                                                value={projectGithubUrl}
+                                                onChange={(e) => setProjectGithubUrl(e.target.value)}
+                                                placeholder="https://github.com/nithyananthantechy/..."
+                                                className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs focus:outline-none focus:border-sky-400"
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-xs font-mono text-sky-400 mb-1">
+                                                LIVE DEMO URL (OPTIONAL):
+                                            </label>
+                                            <input
+                                                type="url"
+                                                value={projectDemoUrl}
+                                                onChange={(e) => setProjectDemoUrl(e.target.value)}
+                                                placeholder="https://myproject.nitechspark.site"
+                                                className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs focus:outline-none focus:border-sky-400"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Confidentiality / Private Work */}
+                                    <div className="p-3.5 rounded-xl border border-white/10 bg-black/40 space-y-2">
+                                        <label className="flex items-center gap-2 cursor-pointer text-xs font-mono text-slate-300">
+                                            <input
+                                                type="checkbox"
+                                                checked={projectIsPrivate}
+                                                onChange={(e) => setProjectIsPrivate(e.target.checked)}
+                                                className="rounded bg-black border-slate-700 text-sky-500 focus:ring-sky-500"
+                                            />
+                                            <span>Mark as Confidential / Private Engineering Project (Hides code links)</span>
+                                        </label>
+                                        {projectIsPrivate && (
+                                            <input
+                                                type="text"
+                                                value={projectPrivateNote}
+                                                onChange={(e) => setProjectPrivateNote(e.target.value)}
+                                                placeholder="e.g. Built as part of professional infrastructure engineering work under NDA."
+                                                className="w-full px-3 py-1.5 rounded-lg bg-black/60 border border-amber-500/30 text-amber-200 text-xs font-mono focus:outline-none focus:border-amber-400"
+                                            />
+                                        )}
+                                    </div>
+
+                                    {/* Action Bar */}
+                                    <div className="flex items-center justify-between pt-4 border-t border-white/10">
+                                        <span className="text-xs font-mono text-text-primary/40">
+                                            Visible in Live Portfolio &amp; /work instantly
+                                        </span>
+
+                                        <button
+                                            type="submit"
+                                            disabled={projectPublishing}
+                                            className="btn-cyber px-6 py-2.5 text-xs flex items-center gap-2 font-bold bg-sky-500/20 border-sky-400 text-sky-300 hover:bg-sky-500/30"
+                                        >
+                                            {projectSuccess ? <Check size={14} /> : <Plus size={14} />}
+                                            <span>
+                                                {projectSuccess
+                                                    ? "PROJECT PUBLISHED LIVE!"
+                                                    : projectPublishing
+                                                    ? "TRANSMITTING..."
+                                                    : "PUBLISH PROJECT TO PORTFOLIO"}
+                                            </span>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            {/* CURRENTLY ACTIVE PROJECTS FEED */}
+                            <div className="max-w-4xl glass-panel p-6 sm:p-8 rounded-2xl border border-white/10 bg-panel/70">
+                                <div className="flex items-center justify-between mb-4">
+                                    <div className="flex items-center gap-2">
+                                        <ShieldCheck size={18} className="text-sky-400" />
+                                        <h3 className="font-orbitron font-bold text-base text-white">
+                                            ACTIVE PORTFOLIO PROJECTS ({publishedProjects.length})
+                                        </h3>
+                                    </div>
+                                    <button
+                                        onClick={loadData}
+                                        className="text-xs font-mono text-slate-400 hover:text-white flex items-center gap-1.5"
+                                    >
+                                        <RefreshCw size={12} />
+                                        <span>Sync</span>
+                                    </button>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {publishedProjects.map((p) => (
+                                        <div
+                                            key={p.id}
+                                            className="p-4 rounded-xl border border-slate-800 bg-black/50 flex flex-col justify-between"
+                                        >
+                                            <div>
+                                                <div className="flex items-center justify-between gap-2 mb-2">
+                                                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/10 border border-sky-500/30 text-sky-300">
+                                                        {p.engineeringFocus}
+                                                    </span>
+                                                    <span className="text-[10px] font-mono text-slate-400">
+                                                        {p.status}
+                                                    </span>
+                                                </div>
+                                                {p.image && (
+                                                    <div className="w-full h-24 mb-2 rounded-lg overflow-hidden border border-slate-800 bg-slate-950">
+                                                        <img
+                                                            src={p.image}
+                                                            alt={p.name}
+                                                            className="w-full h-full object-cover"
+                                                        />
+                                                    </div>
+                                                )}
+                                                <h4 className="font-orbitron text-sm font-bold text-white mb-1">
+                                                    {p.name}
+                                                </h4>
+                                                <p className="text-xs text-slate-300 line-clamp-2 mb-3">
+                                                    {p.problem}
+                                                </p>
+                                            </div>
+
+                                            <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between">
+                                                <span className="text-[10px] font-mono text-slate-500 truncate max-w-[180px]">
+                                                    {Array.isArray(p.techStack) ? p.techStack.join(", ") : p.techStack}
+                                                </span>
+                                                <button
+                                                    onClick={() => handleDeleteProject(p.id)}
+                                                    className="text-slate-400 hover:text-rose-400 p-1.5 rounded transition-colors"
+                                                    title="Remove project"
+                                                >
+                                                    <Trash2 size={13} />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* 3. PUBLISH PROJECT PAPER / WHITEPAPER */}
                     {activeTab === "publish-paper" && (
                         <div className="max-w-3xl glass-panel p-6 sm:p-8 rounded-2xl border border-gold/30 bg-panel/70">
                             <div className="flex items-center gap-2 mb-4">

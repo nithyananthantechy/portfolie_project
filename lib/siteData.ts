@@ -342,6 +342,8 @@ export interface EngineeringProject {
     demoUrl?: string;
     isPrivate?: boolean;
     privateNote?: string;
+    image?: string;
+    images?: string[];
 }
 
 export const selectedEngineeringProjects: EngineeringProject[] = [
