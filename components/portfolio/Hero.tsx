@@ -54,8 +54,12 @@ export default function Hero({ locale }: { locale: Locale }) {
                             {SITE.name}
                         </span>
                         <span className="text-slate-600 hidden sm:inline">•</span>
-                        <span className="text-xs sm:text-sm font-mono text-slate-300 font-medium tracking-wide">
+                        <span className="text-xs sm:text-sm font-mono text-emerald-400 font-semibold tracking-wide bg-emerald-950/40 border border-emerald-800/40 px-2.5 py-1 rounded">
                             Founder &amp; CEO — NITECHSPARK
+                        </span>
+                        <span className="text-slate-600 hidden sm:inline">•</span>
+                        <span className="text-xs sm:text-sm font-mono text-slate-300 font-medium tracking-wide">
+                            Cybersecurity &amp; IT Infrastructure Analyst &amp; Consultant
                         </span>
                     </div>
 
@@ -144,19 +148,23 @@ export default function Hero({ locale }: { locale: Locale }) {
                         <div className="w-full h-full rounded-xl overflow-hidden border border-slate-800 relative bg-black/60">
                             <Image
                                 src={SITE.headshot}
-                                alt={`${SITE.name} — Cybersecurity & IT Infrastructure Engineer`}
+                                alt={`${SITE.name} — Founder & CEO NITECHSPARK | Cybersecurity & IT Infrastructure Analyst & Consultant`}
                                 fill
                                 priority
                                 sizes="(max-width: 768px) 288px, 320px"
                                 className="w-full h-full object-cover object-top"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-transparent to-transparent opacity-60 pointer-events-none" />
-                            <div className="absolute bottom-3 left-3 right-3 p-2.5 rounded-lg bg-slate-950/80 backdrop-blur-md border border-slate-800/80">
-                                <div className="text-[11px] font-orbitron font-bold text-white tracking-wide">
-                                    {SITE.name}
+                            <div className="absolute bottom-3 left-3 right-3 p-3 rounded-xl bg-slate-950/90 backdrop-blur-md border border-slate-800/90 shadow-xl space-y-1">
+                                <div className="text-xs font-orbitron font-bold text-white tracking-wide flex items-center justify-between">
+                                    <span>{SITE.name}</span>
+                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" title="Available for Consultation" />
                                 </div>
-                                <div className="text-[10px] font-mono text-sky-400">
-                                    Cybersecurity &amp; IT Infrastructure
+                                <div className="text-[11px] font-mono text-emerald-400 font-semibold tracking-wide">
+                                    Founder &amp; CEO · NITECHSPARK
+                                </div>
+                                <div className="text-[10px] font-mono text-sky-400 leading-tight">
+                                    Cybersecurity &amp; IT Infrastructure Analyst &amp; Consultant
                                 </div>
                             </div>
                         </div>

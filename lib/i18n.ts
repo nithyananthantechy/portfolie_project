@@ -21,8 +21,8 @@ const en = {
     hero: {
         eyebrow: "CYBERSECURITY • LINUX • AIOPS • IT INFRASTRUCTURE",
         titleLine1: "Cybersecurity & IT",
-        titleLine2: "Infrastructure Engineer",
-        role: "Cybersecurity & IT Infrastructure Engineer",
+        titleLine2: "Infrastructure Analyst & Consultant",
+        role: "Cybersecurity & IT Infrastructure Analyst & Consultant",
         specialty: "Founder & CEO — NITECHSPARK",
         bio: "Building, securing and troubleshooting Linux, servers, networks and business infrastructure — with hands-on AIOps and automation experience.",
         primaryCta: "Book a Technical Consultation",
@@ -116,8 +116,8 @@ const ta = {
     hero: {
         eyebrow: "சைபர் பாதுகாப்பு • LINUX • AIOPS • IT உள்கட்டமைப்பு",
         titleLine1: "சைபர் பாதுகாப்பு & IT",
-        titleLine2: "உள்கட்டமைப்பு பொறியாளர்",
-        role: "சைபர் பாதுகாப்பு & IT உள்கட்டமைப்பு பொறியாளர்",
+        titleLine2: "உள்கட்டமைப்பு ஆய்வாளர் & ஆலோசகர்",
+        role: "சைபர் பாதுகாப்பு & IT உள்கட்டமைப்பு ஆய்வாளர் & ஆலோசகர்",
         specialty: "நிறுவனர் & CEO — NITECHSPARK",
         bio: "Linux அமைப்புகள், சேவையகங்கள், நெட்வொர்க்குகள் மற்றும் வணிக உள்கட்டமைப்பை உருவாக்குதல், பாதுகாத்தல் மற்றும் சிக்கல் தீர்த்தல் — நேரடி AIOps மற்றும் ஆட்டோமேஷன் அனுபவத்துடன்.",
         primaryCta: "தொழில்நுட்ப ஆலோசனை முன்பதிவு",

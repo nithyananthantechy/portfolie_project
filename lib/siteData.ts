@@ -17,17 +17,17 @@ import testimonialsJson from "@/data/testimonials.json";
 
 export const SITE = {
     name: "Nithyananthan Nagarajan",
-    role: "Cybersecurity & IT Infrastructure Engineer",
-    roleShort: "Cybersecurity & IT Infrastructure Engineer",
+    role: "Cybersecurity & IT Infrastructure Analyst & Consultant",
+    roleShort: "Cybersecurity & IT Infrastructure Consultant",
     founderRole: "Founder & CEO — NITECHSPARK",
     company: "NITECHSPARK",
     tagline:
-        "Cybersecurity, Linux and IT Infrastructure Engineer focused on building, troubleshooting, securing and automating real-world systems.",
+        "Cybersecurity & IT Infrastructure Analyst & Consultant focused on building, troubleshooting, securing and automating real-world systems.",
     secondaryTagline:
         "Founder building practical cybersecurity, infrastructure and AI products.",
     baseUrl: "https://nithyananthan.nskgroups.website",
     description:
-        "Cybersecurity, Linux and IT Infrastructure Engineer focused on building, troubleshooting, securing and automating real-world systems — with hands-on AIOps, Linux administration, and infrastructure automation experience.",
+        "Cybersecurity & IT Infrastructure Analyst & Consultant and Founder & CEO of NITECHSPARK, focused on building, troubleshooting, securing and automating real-world systems — with hands-on AIOps, Linux administration, and infrastructure automation experience.",
     ogImage: "/og-image.png",
     headshot: "/nithyananthan_executive.png",
     logo: "/logo.svg",
