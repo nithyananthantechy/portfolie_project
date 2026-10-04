@@ -2,25 +2,19 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
 import { selectedEngineeringProjects, EngineeringProject } from "@/lib/siteData";
 import {
     ArrowUpRight,
     Github,
     ExternalLink,
-    ShieldCheck,
     Lock,
     Image as ImageIcon,
     ChevronLeft,
     ChevronRight,
     ChevronDown,
     ChevronUp,
-    Trash2,
-    CheckCircle2,
-    AlertCircle,
     X,
     Maximize2,
-    Edit3,
 } from "lucide-react";
 
 export default function SelectedProjectsSection() {
@@ -28,10 +22,6 @@ export default function SelectedProjectsSection() {
     const [activeImageIndices, setActiveImageIndices] = useState<Record<string, number>>({});
     const [expandedProblems, setExpandedProblems] = useState<Record<string, boolean>>({});
     const [expandedBuilt, setExpandedBuilt] = useState<Record<string, boolean>>({});
-    const [isAdmin, setIsAdmin] = useState(false);
-    const [deletingId, setDeletingId] = useState<string | null>(null);
-    const [statusToast, setStatusToast] = useState<{ type: "success" | "error"; message: string } | null>(null);
-
     // Fullscreen Image Lightbox state
     const [lightbox, setLightbox] = useState<{
         projectId: string;
@@ -41,15 +31,6 @@ export default function SelectedProjectsSection() {
     } | null>(null);
 
     useEffect(() => {
-        // Check if admin is logged in
-        fetch("/api/auth/me")
-            .then((r) => r.json())
-            .then((res) => {
-                if (res.success && res.user?.role === "ADMIN") {
-                    setIsAdmin(true);
-                }
-            })
-            .catch(() => {});
 
         // 1. Instant hydration from localStorage, excluding tombstones
         try {
@@ -119,88 +100,9 @@ export default function SelectedProjectsSection() {
         return () => window.removeEventListener("keydown", handleKeyDown);
     }, [lightbox, handleLightboxNext, handleLightboxPrev]);
 
-    const handleDeleteLiveProject = async (project: EngineeringProject) => {
-        const confirmed = window.confirm(
-            `Are you sure you want to permanently delete "${project.name}" from the live portfolio?`
-        );
-        if (!confirmed) return;
-
-        setDeletingId(project.id);
-        try {
-            const res = await fetch(`/api/admin/publish?type=project&id=${project.id}`, {
-                method: "DELETE",
-            });
-            const data = await res.json();
-            if (data.success) {
-                setProjects((prev) => prev.filter((p) => p.id !== project.id));
-
-                try {
-                    const localSaved = JSON.parse(localStorage.getItem("nn_custom_projects") || "[]");
-                    const updated = localSaved.filter((p: any) => p.id !== project.id);
-                    localStorage.setItem("nn_custom_projects", JSON.stringify(updated));
-
-                    const deleted = JSON.parse(localStorage.getItem("nn_deleted_projects") || "[]");
-                    if (!deleted.includes(project.id)) {
-                        deleted.push(project.id);
-                        localStorage.setItem("nn_deleted_projects", JSON.stringify(deleted));
-                    }
-                } catch {}
-
-                setStatusToast({
-                    type: "success",
-                    message: `Project "${project.name}" was permanently removed from live portfolio.`,
-                });
-            } else {
-                setStatusToast({
-                    type: "error",
-                    message: data.error || "Failed to delete project. Please make sure you are logged in as admin.",
-                });
-            }
-        } catch (err: any) {
-            setStatusToast({
-                type: "error",
-                message: err.message || "Network error while deleting project.",
-            });
-        } finally {
-            setDeletingId(null);
-            setTimeout(() => setStatusToast(null), 4000);
-        }
-    };
-
     return (
         <section id="projects" className="py-20 px-4 border-t border-slate-800/80">
             <div className="max-w-6xl mx-auto">
-                {/* Status Toast */}
-                <AnimatePresence>
-                    {statusToast && (
-                        <motion.div
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -10 }}
-                            className={`mb-6 p-4 rounded-xl border flex items-center justify-between text-xs font-mono shadow-xl ${
-                                statusToast.type === "success"
-                                    ? "bg-emerald-950/80 border-emerald-500/40 text-emerald-300"
-                                    : "bg-rose-950/80 border-rose-500/40 text-rose-300"
-                            }`}
-                        >
-                            <div className="flex items-center gap-2">
-                                {statusToast.type === "success" ? (
-                                    <CheckCircle2 size={16} className="text-emerald-400 shrink-0" />
-                                ) : (
-                                    <AlertCircle size={16} className="text-rose-400 shrink-0" />
-                                )}
-                                <span>{statusToast.message}</span>
-                            </div>
-                            <button
-                                onClick={() => setStatusToast(null)}
-                                className="text-slate-400 hover:text-white ml-3"
-                            >
-                                <X size={14} />
-                            </button>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-
                 {/* Header */}
                 <div className="mb-12 text-center md:text-left">
                     <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 mb-2">
@@ -210,13 +112,6 @@ export default function SelectedProjectsSection() {
                                 CODE &amp; IMPLEMENTATION
                             </span>
                         </div>
-
-                        {isAdmin && (
-                            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-300 text-[10px] font-mono">
-                                <ShieldCheck size={11} className="text-rose-400" />
-                                <span>FOUNDER ADMIN CONTROLS ACTIVE</span>
-                            </span>
-                        )}
                     </div>
 
                     <h2 className="font-orbitron text-2xl md:text-3xl font-bold text-white section-heading">
@@ -273,33 +168,6 @@ export default function SelectedProjectsSection() {
                                                 {project.status}
                                             </span>
                                         </div>
-
-                                        {isAdmin && (
-                                            <div className="flex items-center gap-2">
-                                                <Link
-                                                    href={`/admin/dashboard?tab=publish-project&editId=${project.id}`}
-                                                    className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-mono text-sky-300 hover:text-white bg-sky-950/80 hover:bg-sky-900 border border-sky-500/40 hover:border-sky-400 rounded-md transition-all shadow-sm"
-                                                    title={`Edit "${project.name}" in Founder Studio`}
-                                                >
-                                                    <Edit3 size={11} className="text-sky-400" />
-                                                    <span>EDIT</span>
-                                                </Link>
-
-                                                <button
-                                                    type="button"
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        handleDeleteLiveProject(project);
-                                                    }}
-                                                    disabled={deletingId === project.id}
-                                                    className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-mono text-rose-300 hover:text-white bg-rose-950/80 hover:bg-rose-900 border border-rose-500/40 hover:border-rose-400 rounded-md transition-all shadow-sm group/del cursor-pointer"
-                                                    title={`Permanently delete "${project.name}" from live portfolio`}
-                                                >
-                                                    <Trash2 size={11} className="text-rose-400 group-hover/del:text-rose-200" />
-                                                    <span>{deletingId === project.id ? "DELETING..." : "DELETE"}</span>
-                                                </button>
-                                            </div>
-                                        )}
                                     </div>
 
                                     {/* Multi-Image Gallery / Carousel with Fullscreen View Trigger */}
