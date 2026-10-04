@@ -25,6 +25,7 @@ import {
     CheckCircle2,
     AlertCircle,
     X,
+    Edit3,
 } from "lucide-react";
 import MatrixBackground from "@/components/MatrixBackground";
 
@@ -82,6 +83,7 @@ export default function AdminDashboard() {
     const [projectSuccess, setProjectSuccess] = useState(false);
     const [publishedProjects, setPublishedProjects] = useState<any[]>([]);
     const [deletingProjectId, setDeletingProjectId] = useState<string | null>(null);
+    const [editingProjectId, setEditingProjectId] = useState<string | null>(null);
     const [projectSearch, setProjectSearch] = useState("");
 
     // Messages & Visitors
@@ -398,6 +400,65 @@ export default function AdminDashboard() {
         });
     };
 
+    const handleStartEditProject = (p: any) => {
+        setEditingProjectId(p.id);
+        setProjectName(p.name || "");
+        setProjectFocus(p.engineeringFocus || "Full Stack");
+        setProjectStatus(p.status || "Completed");
+        setProjectProblem(p.problem || "");
+        setProjectWhatIBuilt(p.whatIBuilt || "");
+        setProjectTechStack(
+            Array.isArray(p.techStack) ? p.techStack.join(", ") : p.techStack || ""
+        );
+        setProjectGithubUrl(p.githubUrl || "");
+        setProjectDemoUrl(p.demoUrl || "");
+        setProjectIsPrivate(Boolean(p.isPrivate));
+        setProjectPrivateNote(p.privateNote || "");
+        const imgs = p.images && p.images.length > 0 ? p.images : p.image ? [p.image] : [];
+        setProjectImages(imgs);
+        setActiveTab("publish-project");
+        if (typeof window !== "undefined") {
+            const formEl = document.getElementById("project-form-container");
+            if (formEl) {
+                formEl.scrollIntoView({ behavior: "smooth" });
+            } else {
+                window.scrollTo({ top: 350, behavior: "smooth" });
+            }
+        }
+    };
+
+    const handleCancelEditProject = () => {
+        setEditingProjectId(null);
+        setProjectName("");
+        setProjectProblem("");
+        setProjectWhatIBuilt("");
+        setProjectTechStack("");
+        setProjectGithubUrl("");
+        setProjectDemoUrl("");
+        setProjectIsPrivate(false);
+        setProjectPrivateNote("");
+        setProjectImages([]);
+        setManualImageUrl("");
+    };
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const params = new URLSearchParams(window.location.search);
+            const tabParam = params.get("tab");
+            const editIdParam = params.get("editId");
+
+            if (tabParam === "publish-project") {
+                setActiveTab("publish-project");
+            }
+            if (editIdParam && publishedProjects.length > 0) {
+                const target = publishedProjects.find((p) => p.id === editIdParam);
+                if (target) {
+                    handleStartEditProject(target);
+                }
+            }
+        }
+    }, [publishedProjects]);
+
     // Submit Project
     const submitProject = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -409,6 +470,7 @@ export default function AdminDashboard() {
                 body: JSON.stringify({
                     type: "project",
                     data: {
+                        id: editingProjectId || undefined,
                         name: projectName,
                         engineeringFocus: projectFocus,
                         status: projectStatus,
@@ -443,6 +505,7 @@ export default function AdminDashboard() {
                 }
 
                 setProjectSuccess(true);
+                setEditingProjectId(null);
                 await loadData();
                 setTimeout(() => {
                     setProjectSuccess(false);
@@ -730,12 +793,35 @@ export default function AdminDashboard() {
 
                     {/* 2. PUBLISH PROJECT */}
                     {activeTab === "publish-project" && (
-                        <div className="space-y-8">
+                        <div className="space-y-8" id="project-form-container">
                             <div className="max-w-4xl glass-panel p-6 sm:p-8 rounded-2xl border border-sky-500/30 bg-panel/70">
+                                {editingProjectId && (
+                                    <div className="mb-5 p-4 rounded-xl border border-amber-500/40 bg-amber-500/10 flex items-center justify-between text-xs font-mono text-amber-300 shadow-md">
+                                        <div className="flex items-center gap-2">
+                                            <Edit3 size={16} className="text-amber-400 shrink-0" />
+                                            <span>
+                                                EDITING LIVE PROJECT:{" "}
+                                                <strong className="text-white underline">
+                                                    {projectName || editingProjectId}
+                                                </strong>
+                                            </span>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={handleCancelEditProject}
+                                            className="px-3 py-1 rounded-lg bg-black/70 border border-amber-500/40 text-amber-300 hover:text-white hover:border-amber-300 transition-colors cursor-pointer"
+                                        >
+                                            Cancel Edit
+                                        </button>
+                                    </div>
+                                )}
+
                                 <div className="flex items-center gap-2 mb-4">
                                     <FolderGit2 size={20} className="text-sky-400" />
                                     <h2 className="font-orbitron font-bold text-lg text-white">
-                                        PUBLISH SELECTED ENGINEERING PROJECT
+                                        {editingProjectId
+                                            ? "EDIT & UPDATE SELECTED ENGINEERING PROJECT"
+                                            : "PUBLISH SELECTED ENGINEERING PROJECT"}
                                     </h2>
                                 </div>
                                 <p className="text-xs text-text-primary/60 mb-6">
@@ -1050,14 +1136,28 @@ export default function AdminDashboard() {
                                         <button
                                             type="submit"
                                             disabled={projectPublishing}
-                                            className="btn-cyber px-6 py-2.5 text-xs flex items-center gap-2 font-bold bg-sky-500/20 border-sky-400 text-sky-300 hover:bg-sky-500/30"
+                                            className={`btn-cyber px-6 py-2.5 text-xs flex items-center gap-2 font-bold ${
+                                                editingProjectId
+                                                    ? "bg-amber-500/20 border-amber-400 text-amber-300 hover:bg-amber-500/30"
+                                                    : "bg-sky-500/20 border-sky-400 text-sky-300 hover:bg-sky-500/30"
+                                            }`}
                                         >
-                                            {projectSuccess ? <Check size={14} /> : <Plus size={14} />}
+                                            {projectSuccess ? (
+                                                <Check size={14} />
+                                            ) : editingProjectId ? (
+                                                <Edit3 size={14} />
+                                            ) : (
+                                                <Plus size={14} />
+                                            )}
                                             <span>
                                                 {projectSuccess
-                                                    ? "PROJECT PUBLISHED LIVE!"
+                                                    ? editingProjectId
+                                                        ? "PROJECT UPDATED LIVE!"
+                                                        : "PROJECT PUBLISHED LIVE!"
                                                     : projectPublishing
                                                     ? "TRANSMITTING..."
+                                                    : editingProjectId
+                                                    ? "SAVE / UPDATE LIVE PROJECT"
                                                     : "PUBLISH PROJECT TO PORTFOLIO"}
                                             </span>
                                         </button>
@@ -1149,19 +1249,31 @@ export default function AdminDashboard() {
                                                         </p>
                                                     </div>
 
-                                                    <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
+                                                    <div className="pt-3 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2">
                                                         <span className="text-[10px] font-mono text-slate-500 truncate max-w-[130px]">
                                                             {Array.isArray(p.techStack) ? p.techStack.join(", ") : p.techStack}
                                                         </span>
-                                                        <button
-                                                            onClick={() => handleDeleteProject(p.id, p.name)}
-                                                            disabled={deletingProjectId === p.id}
-                                                            className="text-xs font-mono text-rose-300 hover:text-white px-2.5 py-1.5 rounded-lg border border-rose-500/40 hover:border-rose-400 bg-rose-950/70 hover:bg-rose-900 flex items-center gap-1.5 transition-all shadow-sm cursor-pointer disabled:opacity-50"
-                                                            title={`Permanently delete "${p.name}" from live portfolio`}
-                                                        >
-                                                            <Trash2 size={12} className="text-rose-400" />
-                                                            <span>{deletingProjectId === p.id ? "DELETING..." : "DELETE PROJECT"}</span>
-                                                        </button>
+                                                        <div className="flex items-center gap-2">
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => handleStartEditProject(p)}
+                                                                className="text-xs font-mono text-sky-300 hover:text-white px-2.5 py-1.5 rounded-lg border border-sky-500/40 hover:border-sky-400 bg-sky-950/70 hover:bg-sky-900 flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
+                                                                title={`Edit "${p.name}"`}
+                                                            >
+                                                                <Edit3 size={12} className="text-sky-400" />
+                                                                <span>EDIT PROJECT</span>
+                                                            </button>
+
+                                                            <button
+                                                                onClick={() => handleDeleteProject(p.id, p.name)}
+                                                                disabled={deletingProjectId === p.id}
+                                                                className="text-xs font-mono text-rose-300 hover:text-white px-2.5 py-1.5 rounded-lg border border-rose-500/40 hover:border-rose-400 bg-rose-950/70 hover:bg-rose-900 flex items-center gap-1.5 transition-all shadow-sm cursor-pointer disabled:opacity-50"
+                                                                title={`Permanently delete "${p.name}" from live portfolio`}
+                                                            >
+                                                                <Trash2 size={12} className="text-rose-400" />
+                                                                <span>{deletingProjectId === p.id ? "DELETING..." : "DELETE PROJECT"}</span>
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             ))}

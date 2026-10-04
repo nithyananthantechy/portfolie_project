@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import { selectedEngineeringProjects, EngineeringProject } from "@/lib/siteData";
 import {
     ArrowUpRight,
@@ -12,18 +13,32 @@ import {
     Image as ImageIcon,
     ChevronLeft,
     ChevronRight,
+    ChevronDown,
+    ChevronUp,
     Trash2,
     CheckCircle2,
     AlertCircle,
     X,
+    Maximize2,
+    Edit3,
 } from "lucide-react";
 
 export default function SelectedProjectsSection() {
     const [projects, setProjects] = useState<EngineeringProject[]>(selectedEngineeringProjects);
     const [activeImageIndices, setActiveImageIndices] = useState<Record<string, number>>({});
+    const [expandedProblems, setExpandedProblems] = useState<Record<string, boolean>>({});
+    const [expandedBuilt, setExpandedBuilt] = useState<Record<string, boolean>>({});
     const [isAdmin, setIsAdmin] = useState(false);
     const [deletingId, setDeletingId] = useState<string | null>(null);
     const [statusToast, setStatusToast] = useState<{ type: "success" | "error"; message: string } | null>(null);
+
+    // Fullscreen Image Lightbox state
+    const [lightbox, setLightbox] = useState<{
+        projectId: string;
+        title: string;
+        images: string[];
+        currentIndex: number;
+    } | null>(null);
 
     useEffect(() => {
         // Check if admin is logged in
@@ -70,6 +85,40 @@ export default function SelectedProjectsSection() {
             .catch(() => {});
     }, []);
 
+    // Handle Lightbox keyboard shortcuts
+    const handleLightboxNext = useCallback(() => {
+        if (!lightbox) return;
+        setLightbox((prev) => {
+            if (!prev) return null;
+            return {
+                ...prev,
+                currentIndex: (prev.currentIndex + 1) % prev.images.length,
+            };
+        });
+    }, [lightbox]);
+
+    const handleLightboxPrev = useCallback(() => {
+        if (!lightbox) return;
+        setLightbox((prev) => {
+            if (!prev) return null;
+            return {
+                ...prev,
+                currentIndex: (prev.currentIndex - 1 + prev.images.length) % prev.images.length,
+            };
+        });
+    }, [lightbox]);
+
+    useEffect(() => {
+        if (!lightbox) return;
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") setLightbox(null);
+            if (e.key === "ArrowRight") handleLightboxNext();
+            if (e.key === "ArrowLeft") handleLightboxPrev();
+        };
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [lightbox, handleLightboxNext, handleLightboxPrev]);
+
     const handleDeleteLiveProject = async (project: EngineeringProject) => {
         const confirmed = window.confirm(
             `Are you sure you want to permanently delete "${project.name}" from the live portfolio?`
@@ -83,10 +132,8 @@ export default function SelectedProjectsSection() {
             });
             const data = await res.json();
             if (data.success) {
-                // Remove from state immediately
                 setProjects((prev) => prev.filter((p) => p.id !== project.id));
 
-                // Clean from localStorage and mark as deleted
                 try {
                     const localSaved = JSON.parse(localStorage.getItem("nn_custom_projects") || "[]");
                     const updated = localSaved.filter((p: any) => p.id !== project.id);
@@ -181,7 +228,7 @@ export default function SelectedProjectsSection() {
                 </div>
 
                 {/* Project Cards Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
                     {projects.map((project, idx) => {
                         const allImages = project.images && project.images.length > 0
                             ? project.images
@@ -190,6 +237,12 @@ export default function SelectedProjectsSection() {
                             : [];
                         const activeIdx = activeImageIndices[project.id] || 0;
                         const currentImg = allImages[activeIdx] || allImages[0];
+
+                        const isProblemLong = (project.problem || "").length > 220;
+                        const isProblemExpanded = Boolean(expandedProblems[project.id]);
+
+                        const isBuiltLong = (project.whatIBuilt || "").length > 220;
+                        const isBuiltExpanded = Boolean(expandedBuilt[project.id]);
 
                         return (
                             <motion.article
@@ -201,9 +254,9 @@ export default function SelectedProjectsSection() {
                                 className="glass-card rounded-2xl p-6 sm:p-7 border border-slate-800/90 hover:border-sky-500/40 transition-all duration-300 backdrop-blur-xl relative overflow-hidden flex flex-col justify-between"
                                 style={{ background: "rgba(15, 23, 42, 0.7)" }}
                             >
-                                {/* Card Header: Focus Badge + Status + Admin Delete Button */}
+                                {/* Card Header: Focus Badge + Status + Admin Controls */}
                                 <div>
-                                    <div className="flex items-center justify-between gap-2 mb-3.5">
+                                    <div className="flex flex-wrap items-center justify-between gap-2 mb-3.5">
                                         <div className="flex items-center gap-2">
                                             <span className="text-[10px] font-mono px-2.5 py-1 rounded-md bg-sky-500/10 border border-sky-500/30 text-sky-300 uppercase tracking-wider font-semibold">
                                                 {project.engineeringFocus}
@@ -222,26 +275,48 @@ export default function SelectedProjectsSection() {
                                         </div>
 
                                         {isAdmin && (
-                                            <button
-                                                type="button"
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleDeleteLiveProject(project);
-                                                }}
-                                                disabled={deletingId === project.id}
-                                                className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono text-rose-300 hover:text-white bg-rose-950/80 hover:bg-rose-900 border border-rose-500/40 hover:border-rose-400 rounded-md transition-all shadow-sm group/del cursor-pointer z-10"
-                                                title={`Permanently delete "${project.name}" from live portfolio`}
-                                            >
-                                                <Trash2 size={12} className="text-rose-400 group-hover/del:text-rose-200" />
-                                                <span>{deletingId === project.id ? "DELETING..." : "DELETE PROJECT"}</span>
-                                            </button>
+                                            <div className="flex items-center gap-2">
+                                                <Link
+                                                    href={`/admin/dashboard?tab=publish-project&editId=${project.id}`}
+                                                    className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-mono text-sky-300 hover:text-white bg-sky-950/80 hover:bg-sky-900 border border-sky-500/40 hover:border-sky-400 rounded-md transition-all shadow-sm"
+                                                    title={`Edit "${project.name}" in Founder Studio`}
+                                                >
+                                                    <Edit3 size={11} className="text-sky-400" />
+                                                    <span>EDIT</span>
+                                                </Link>
+
+                                                <button
+                                                    type="button"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleDeleteLiveProject(project);
+                                                    }}
+                                                    disabled={deletingId === project.id}
+                                                    className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-mono text-rose-300 hover:text-white bg-rose-950/80 hover:bg-rose-900 border border-rose-500/40 hover:border-rose-400 rounded-md transition-all shadow-sm group/del cursor-pointer"
+                                                    title={`Permanently delete "${project.name}" from live portfolio`}
+                                                >
+                                                    <Trash2 size={11} className="text-rose-400 group-hover/del:text-rose-200" />
+                                                    <span>{deletingId === project.id ? "DELETING..." : "DELETE"}</span>
+                                                </button>
+                                            </div>
                                         )}
                                     </div>
 
-                                    {/* Multi-Image Gallery / Carousel if uploaded */}
+                                    {/* Multi-Image Gallery / Carousel with Fullscreen View Trigger */}
                                     {allImages.length > 0 && (
                                         <div className="mb-4">
-                                            <div className="rounded-xl overflow-hidden border border-slate-700/60 bg-black/40 relative aspect-video max-h-56 group/img shadow-lg">
+                                            <div
+                                                onClick={() => {
+                                                    setLightbox({
+                                                        projectId: project.id,
+                                                        title: project.name,
+                                                        images: allImages,
+                                                        currentIndex: activeIdx,
+                                                    });
+                                                }}
+                                                className="rounded-xl overflow-hidden border border-slate-700/60 bg-black/40 relative aspect-video max-h-56 group/img shadow-lg cursor-zoom-in"
+                                                title="Click to view full image in high resolution"
+                                            >
                                                 <img
                                                     src={currentImg}
                                                     alt={`${project.name} image ${activeIdx + 1}`}
@@ -249,6 +324,12 @@ export default function SelectedProjectsSection() {
                                                     loading="lazy"
                                                 />
                                                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none" />
+
+                                                {/* Fullscreen Expand Badge in Top-Right */}
+                                                <div className="absolute top-2.5 right-2.5 bg-black/80 hover:bg-black/95 backdrop-blur-md border border-white/20 text-white text-[10px] font-mono px-2 py-1 rounded-md flex items-center gap-1.5 opacity-85 group-hover/img:opacity-100 transition-opacity shadow-md z-10">
+                                                    <Maximize2 size={11} className="text-sky-400" />
+                                                    <span>View Full Image</span>
+                                                </div>
 
                                                 {/* Left/Right controls if >1 image */}
                                                 {allImages.length > 1 && (
@@ -328,24 +409,76 @@ export default function SelectedProjectsSection() {
                                         {project.name}
                                     </h3>
 
-                                    {/* Problem Statement */}
-                                    <div className="mb-3.5">
+                                    {/* Problem Statement with Expand/Collapse for Long Content */}
+                                    <div className="mb-4">
                                         <span className="text-[10px] font-mono uppercase tracking-wider text-rose-400 block mb-1 font-semibold">
                                             The Engineering Challenge:
                                         </span>
-                                        <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans">
-                                            {project.problem}
-                                        </p>
+                                        <div
+                                            className={`relative transition-all duration-300 ${
+                                                isProblemLong && !isProblemExpanded
+                                                    ? "max-h-24 overflow-hidden"
+                                                    : "max-h-none"
+                                            }`}
+                                        >
+                                            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans whitespace-pre-line">
+                                                {project.problem}
+                                            </p>
+                                            {isProblemLong && !isProblemExpanded && (
+                                                <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[rgba(15,23,42,0.95)] to-transparent pointer-events-none" />
+                                            )}
+                                        </div>
+                                        {isProblemLong && (
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    setExpandedProblems((prev) => ({
+                                                        ...prev,
+                                                        [project.id]: !prev[project.id],
+                                                    }))
+                                                }
+                                                className="mt-1 text-[11px] font-mono text-sky-400 hover:text-sky-300 flex items-center gap-1 font-semibold transition-colors"
+                                            >
+                                                <span>{isProblemExpanded ? "Show Less" : "Read Full Challenge"}</span>
+                                                {isProblemExpanded ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
+                                            </button>
+                                        )}
                                     </div>
 
-                                    {/* What I Built */}
+                                    {/* What I Built with Expand/Collapse for Long Content */}
                                     <div className="mb-5">
                                         <span className="text-[10px] font-mono uppercase tracking-wider text-sky-400 block mb-1 font-semibold">
                                             What I Built:
                                         </span>
-                                        <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans">
-                                            {project.whatIBuilt}
-                                        </p>
+                                        <div
+                                            className={`relative transition-all duration-300 ${
+                                                isBuiltLong && !isBuiltExpanded
+                                                    ? "max-h-24 overflow-hidden"
+                                                    : "max-h-none"
+                                            }`}
+                                        >
+                                            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans whitespace-pre-line">
+                                                {project.whatIBuilt}
+                                            </p>
+                                            {isBuiltLong && !isBuiltExpanded && (
+                                                <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[rgba(15,23,42,0.95)] to-transparent pointer-events-none" />
+                                            )}
+                                        </div>
+                                        {isBuiltLong && (
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    setExpandedBuilt((prev) => ({
+                                                        ...prev,
+                                                        [project.id]: !prev[project.id],
+                                                    }))
+                                                }
+                                                className="mt-1 text-[11px] font-mono text-sky-400 hover:text-sky-300 flex items-center gap-1 font-semibold transition-colors"
+                                            >
+                                                <span>{isBuiltExpanded ? "Show Less" : "Read Full Overview"}</span>
+                                                {isBuiltExpanded ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
+                                            </button>
+                                        )}
                                     </div>
 
                                     {/* Tech Stack Badges */}
@@ -407,6 +540,103 @@ export default function SelectedProjectsSection() {
                     })}
                 </div>
             </div>
+
+            {/* FULLSCREEN LIGHTBOX MODAL */}
+            <AnimatePresence>
+                {lightbox && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-50 bg-black/95 backdrop-blur-2xl flex flex-col justify-between p-4 sm:p-6"
+                        onClick={() => setLightbox(null)}
+                    >
+                        {/* Top Bar: Title, Counter & Close */}
+                        <div
+                            className="flex items-center justify-between w-full max-w-7xl mx-auto z-10"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <div className="flex items-center gap-3">
+                                <span className="font-orbitron font-bold text-white text-base sm:text-lg">
+                                    {lightbox.title}
+                                </span>
+                                <span className="text-xs font-mono text-sky-400 px-2.5 py-0.5 rounded-full bg-sky-500/10 border border-sky-500/30">
+                                    Screenshot {lightbox.currentIndex + 1} of {lightbox.images.length}
+                                </span>
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                                <span className="text-[11px] font-mono text-slate-500 hidden sm:inline">
+                                    Use Arrow keys or Esc
+                                </span>
+                                <button
+                                    onClick={() => setLightbox(null)}
+                                    className="p-2 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 hover:text-white hover:border-slate-500 transition-all cursor-pointer"
+                                    title="Close fullscreen view (Esc)"
+                                >
+                                    <X size={18} />
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Middle: Full Image with Prev/Next buttons */}
+                        <div
+                            className="relative flex-1 flex items-center justify-center my-4 overflow-hidden"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <img
+                                src={lightbox.images[lightbox.currentIndex]}
+                                alt={`${lightbox.title} full view`}
+                                className="max-h-[78vh] max-w-[94vw] w-auto h-auto object-contain rounded-xl shadow-2xl border border-white/10"
+                            />
+
+                            {lightbox.images.length > 1 && (
+                                <>
+                                    <button
+                                        onClick={handleLightboxPrev}
+                                        className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/80 hover:bg-black text-white flex items-center justify-center border border-white/20 transition-all shadow-xl hover:scale-110 cursor-pointer"
+                                        title="Previous image (Left Arrow)"
+                                    >
+                                        <ChevronLeft size={24} />
+                                    </button>
+
+                                    <button
+                                        onClick={handleLightboxNext}
+                                        className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/80 hover:bg-black text-white flex items-center justify-center border border-white/20 transition-all shadow-xl hover:scale-110 cursor-pointer"
+                                        title="Next image (Right Arrow)"
+                                    >
+                                        <ChevronRight size={24} />
+                                    </button>
+                                </>
+                            )}
+                        </div>
+
+                        {/* Bottom: Thumbnail Strip */}
+                        {lightbox.images.length > 1 && (
+                            <div
+                                className="w-full max-w-4xl mx-auto flex items-center justify-center gap-2 overflow-x-auto py-2 z-10"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                {lightbox.images.map((imgUrl, thumbIdx) => (
+                                    <button
+                                        key={thumbIdx}
+                                        onClick={() =>
+                                            setLightbox((prev) => (prev ? { ...prev, currentIndex: thumbIdx } : null))
+                                        }
+                                        className={`w-16 h-12 rounded-lg overflow-hidden border-2 flex-shrink-0 transition-all cursor-pointer ${
+                                            lightbox.currentIndex === thumbIdx
+                                                ? "border-sky-400 scale-105 shadow-md shadow-sky-500/20"
+                                                : "border-slate-800 opacity-50 hover:opacity-100"
+                                        }`}
+                                    >
+                                        <img src={imgUrl} alt={`thumb ${thumbIdx + 1}`} className="w-full h-full object-cover" />
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </section>
     );
 }
