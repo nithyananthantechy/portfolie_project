@@ -81,6 +81,8 @@ export default function AdminDashboard() {
     const [projectPublishing, setProjectPublishing] = useState(false);
     const [projectSuccess, setProjectSuccess] = useState(false);
     const [publishedProjects, setPublishedProjects] = useState<any[]>([]);
+    const [deletingProjectId, setDeletingProjectId] = useState<string | null>(null);
+    const [projectSearch, setProjectSearch] = useState("");
 
     // Messages & Visitors
     const [messages, setMessages] = useState<any[]>([]);
@@ -466,8 +468,12 @@ export default function AdminDashboard() {
     };
 
     // Delete Project
-    const handleDeleteProject = async (id: string) => {
-        if (!confirm("Are you sure you want to remove this project from live portfolio?")) return;
+    const handleDeleteProject = async (id: string, name?: string) => {
+        const confirmed = confirm(
+            `Are you sure you want to permanently delete "${name || "this project"}" from live portfolio?`
+        );
+        if (!confirmed) return;
+        setDeletingProjectId(id);
         try {
             const res = await fetch(`/api/admin/publish?type=project&id=${id}`, {
                 method: "DELETE",
@@ -479,12 +485,21 @@ export default function AdminDashboard() {
                     const localSaved = JSON.parse(localStorage.getItem("nn_custom_projects") || "[]");
                     const updated = localSaved.filter((p: any) => p.id !== id);
                     localStorage.setItem("nn_custom_projects", JSON.stringify(updated));
+
+                    const deleted = JSON.parse(localStorage.getItem("nn_deleted_projects") || "[]");
+                    if (!deleted.includes(id)) {
+                        deleted.push(id);
+                        localStorage.setItem("nn_deleted_projects", JSON.stringify(deleted));
+                    }
                 } catch {}
+                alert(`✓ Project "${name || id}" permanently removed from live portfolio.`);
             } else {
                 alert(data.error || "Failed to delete project");
             }
         } catch (e: any) {
             alert(e.message || "Error deleting project");
+        } finally {
+            setDeletingProjectId(null);
         }
     };
 
@@ -1052,75 +1067,106 @@ export default function AdminDashboard() {
 
                             {/* CURRENTLY ACTIVE PROJECTS FEED */}
                             <div className="max-w-4xl glass-panel p-6 sm:p-8 rounded-2xl border border-white/10 bg-panel/70">
-                                <div className="flex items-center justify-between mb-4">
+                                <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
                                     <div className="flex items-center gap-2">
                                         <ShieldCheck size={18} className="text-sky-400" />
                                         <h3 className="font-orbitron font-bold text-base text-white">
                                             ACTIVE PORTFOLIO PROJECTS ({publishedProjects.length})
                                         </h3>
                                     </div>
-                                    <button
-                                        onClick={loadData}
-                                        className="text-xs font-mono text-slate-400 hover:text-white flex items-center gap-1.5"
-                                    >
-                                        <RefreshCw size={12} />
-                                        <span>Sync</span>
-                                    </button>
+                                    <div className="flex items-center gap-2">
+                                        <input
+                                            type="text"
+                                            value={projectSearch}
+                                            onChange={(e) => setProjectSearch(e.target.value)}
+                                            placeholder="Search projects by name/tech..."
+                                            className="px-3 py-1.5 text-xs font-mono rounded-lg border border-slate-800 bg-slate-950/80 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 w-48 sm:w-60"
+                                        />
+                                        <button
+                                            onClick={loadData}
+                                            className="text-xs font-mono text-slate-400 hover:text-white px-2.5 py-1.5 rounded-lg border border-slate-800 bg-slate-900/60 flex items-center gap-1.5 transition-colors"
+                                        >
+                                            <RefreshCw size={12} />
+                                            <span>Sync</span>
+                                        </button>
+                                    </div>
                                 </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {publishedProjects.map((p) => (
-                                        <div
-                                            key={p.id}
-                                            className="p-4 rounded-xl border border-slate-800 bg-black/50 flex flex-col justify-between"
-                                        >
-                                            <div>
-                                                <div className="flex items-center justify-between gap-2 mb-2">
-                                                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/10 border border-sky-500/30 text-sky-300">
-                                                        {p.engineeringFocus}
-                                                    </span>
-                                                    <span className="text-[10px] font-mono text-slate-400">
-                                                        {p.status}
-                                                    </span>
-                                                </div>
-                                                {(p.image || (p.images && p.images.length > 0)) && (
-                                                    <div className="w-full h-24 mb-2 rounded-lg overflow-hidden border border-slate-800 bg-slate-950 relative">
-                                                        <img
-                                                            src={p.image || p.images?.[0]}
-                                                            alt={p.name}
-                                                            className="w-full h-full object-cover"
-                                                        />
-                                                        {p.images && p.images.length > 1 && (
-                                                            <div className="absolute bottom-1.5 right-1.5 bg-black/80 backdrop-blur-sm border border-white/20 text-white text-[9px] font-mono px-1.5 py-0.5 rounded flex items-center gap-1">
-                                                                <ImageIcon size={10} />
-                                                                <span>{p.images.length} photos</span>
+                                {publishedProjects.length === 0 ? (
+                                    <div className="p-8 text-center border border-dashed border-slate-800 rounded-xl">
+                                        <p className="text-xs font-mono text-slate-500">
+                                            No active projects found. Publish a new project using the form above.
+                                        </p>
+                                    </div>
+                                ) : (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        {publishedProjects
+                                            .filter((p) => {
+                                                if (!projectSearch.trim()) return true;
+                                                const q = projectSearch.toLowerCase();
+                                                return (
+                                                    p.name.toLowerCase().includes(q) ||
+                                                    (p.problem && p.problem.toLowerCase().includes(q)) ||
+                                                    (Array.isArray(p.techStack)
+                                                        ? p.techStack.join(" ").toLowerCase().includes(q)
+                                                        : String(p.techStack).toLowerCase().includes(q))
+                                                );
+                                            })
+                                            .map((p) => (
+                                                <div
+                                                    key={p.id}
+                                                    className="p-4 rounded-xl border border-slate-800 bg-black/50 flex flex-col justify-between hover:border-slate-700 transition-colors"
+                                                >
+                                                    <div>
+                                                        <div className="flex items-center justify-between gap-2 mb-2">
+                                                            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/10 border border-sky-500/30 text-sky-300">
+                                                                {p.engineeringFocus}
+                                                            </span>
+                                                            <span className="text-[10px] font-mono text-slate-400">
+                                                                {p.status}
+                                                            </span>
+                                                        </div>
+                                                        {(p.image || (p.images && p.images.length > 0)) && (
+                                                            <div className="w-full h-24 mb-2 rounded-lg overflow-hidden border border-slate-800 bg-slate-950 relative">
+                                                                <img
+                                                                    src={p.image || p.images?.[0]}
+                                                                    alt={p.name}
+                                                                    className="w-full h-full object-cover"
+                                                                />
+                                                                {p.images && p.images.length > 1 && (
+                                                                    <div className="absolute bottom-1.5 right-1.5 bg-black/80 backdrop-blur-sm border border-white/20 text-white text-[9px] font-mono px-1.5 py-0.5 rounded flex items-center gap-1">
+                                                                        <ImageIcon size={10} />
+                                                                        <span>{p.images.length} photos</span>
+                                                                    </div>
+                                                                )}
                                                             </div>
                                                         )}
+                                                        <h4 className="font-orbitron text-sm font-bold text-white mb-1">
+                                                            {p.name}
+                                                        </h4>
+                                                        <p className="text-xs text-slate-300 line-clamp-2 mb-3">
+                                                            {p.problem}
+                                                        </p>
                                                     </div>
-                                                )}
-                                                <h4 className="font-orbitron text-sm font-bold text-white mb-1">
-                                                    {p.name}
-                                                </h4>
-                                                <p className="text-xs text-slate-300 line-clamp-2 mb-3">
-                                                    {p.problem}
-                                                </p>
-                                            </div>
 
-                                            <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between">
-                                                <span className="text-[10px] font-mono text-slate-500 truncate max-w-[180px]">
-                                                    {Array.isArray(p.techStack) ? p.techStack.join(", ") : p.techStack}
-                                                </span>
-                                                <button
-                                                    onClick={() => handleDeleteProject(p.id)}
-                                                    className="text-slate-400 hover:text-rose-400 p-1.5 rounded transition-colors"
-                                                    title="Remove project"
-                                                >
-                                                    <Trash2 size={13} />
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
+                                                    <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
+                                                        <span className="text-[10px] font-mono text-slate-500 truncate max-w-[130px]">
+                                                            {Array.isArray(p.techStack) ? p.techStack.join(", ") : p.techStack}
+                                                        </span>
+                                                        <button
+                                                            onClick={() => handleDeleteProject(p.id, p.name)}
+                                                            disabled={deletingProjectId === p.id}
+                                                            className="text-xs font-mono text-rose-300 hover:text-white px-2.5 py-1.5 rounded-lg border border-rose-500/40 hover:border-rose-400 bg-rose-950/70 hover:bg-rose-900 flex items-center gap-1.5 transition-all shadow-sm cursor-pointer disabled:opacity-50"
+                                                            title={`Permanently delete "${p.name}" from live portfolio`}
+                                                        >
+                                                            <Trash2 size={12} className="text-rose-400" />
+                                                            <span>{deletingProjectId === p.id ? "DELETING..." : "DELETE PROJECT"}</span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     )}

@@ -62,38 +62,71 @@ function saveFileStorage(data: PublishedStorage) {
 }
 
 // -------------------------------------------------------------
-// PROJECTS (Prisma DB Primary + Fallback)
+// PROJECTS (Prisma DB Primary + Fallback + Permanent Deletion)
 // -------------------------------------------------------------
 export async function getAllProjects(): Promise<EngineeringProject[]> {
     try {
+        // Fetch deleted tombstone IDs
+        const deletedRecord = await prisma.publishedItem.findUnique({
+            where: { id: "__deleted_projects__" },
+        }).catch(() => null);
+        const deletedIds = new Set<string>(deletedRecord ? (deletedRecord.data as any).ids || [] : []);
+
         const rows = await prisma.publishedItem.findMany({
             where: { type: "project" },
             orderBy: { createdAt: "desc" },
         });
 
         if (rows.length > 0) {
-            return rows.map((r) => r.data as unknown as EngineeringProject);
+            return rows
+                .filter((r) => !deletedIds.has(r.id))
+                .map((r) => r.data as unknown as EngineeringProject);
         }
 
-        // First run: Seed default projects into database so they persist alongside user-added ones
-        try {
-            for (let i = 0; i < selectedEngineeringProjects.length; i++) {
-                const p = selectedEngineeringProjects[i];
-                await prisma.publishedItem.upsert({
-                    where: { id: p.id },
-                    create: {
-                        id: p.id,
-                        type: "project",
-                        data: p as any,
-                        createdAt: new Date(Date.now() - (i + 1) * 60000),
+        // First run: Check if initial projects were seeded
+        const seedMarker = await prisma.publishedItem.findUnique({
+            where: { id: "__projects_seeded__" },
+        }).catch(() => null);
+
+        if (!seedMarker) {
+            try {
+                for (let i = 0; i < selectedEngineeringProjects.length; i++) {
+                    const p = selectedEngineeringProjects[i];
+                    await prisma.publishedItem.upsert({
+                        where: { id: p.id },
+                        create: {
+                            id: p.id,
+                            type: "project",
+                            data: p as any,
+                            createdAt: new Date(Date.now() - (i + 1) * 60000),
+                        },
+                        update: {},
+                    });
+                }
+                await prisma.publishedItem.create({
+                    data: {
+                        id: "__projects_seeded__",
+                        type: "system",
+                        data: { seededAt: new Date().toISOString() },
                     },
-                    update: {},
                 });
+            } catch (seedErr) {
+                console.warn("Could not seed initial projects to DB:", seedErr);
             }
-        } catch (seedErr) {
-            console.warn("Could not seed initial projects to DB:", seedErr);
         }
-        return selectedEngineeringProjects;
+
+        const recheckRows = await prisma.publishedItem.findMany({
+            where: { type: "project" },
+            orderBy: { createdAt: "desc" },
+        }).catch(() => []);
+
+        if (recheckRows.length > 0) {
+            return recheckRows
+                .filter((r) => !deletedIds.has(r.id))
+                .map((r) => r.data as unknown as EngineeringProject);
+        }
+
+        return selectedEngineeringProjects.filter((p) => !deletedIds.has(p.id));
     } catch (err) {
         console.warn("Database lookup failed for projects, using file fallback:", err);
         return ensureFileStorage().projects || selectedEngineeringProjects;
@@ -102,6 +135,21 @@ export async function getAllProjects(): Promise<EngineeringProject[]> {
 
 export async function addProject(project: EngineeringProject): Promise<EngineeringProject[]> {
     try {
+        // If it was previously in tombstone, remove it from tombstone
+        const deletedRecord = await prisma.publishedItem.findUnique({
+            where: { id: "__deleted_projects__" },
+        }).catch(() => null);
+        if (deletedRecord) {
+            const currentDeleted: string[] = (deletedRecord.data as any).ids || [];
+            if (currentDeleted.includes(project.id)) {
+                const nextDeleted = currentDeleted.filter((id) => id !== project.id);
+                await prisma.publishedItem.update({
+                    where: { id: "__deleted_projects__" },
+                    data: { data: { ids: nextDeleted } },
+                });
+            }
+        }
+
         await prisma.publishedItem.upsert({
             where: { id: project.id },
             create: {
@@ -130,9 +178,30 @@ export async function addProject(project: EngineeringProject): Promise<Engineeri
 
 export async function deleteProject(id: string): Promise<EngineeringProject[]> {
     try {
+        // Delete from database rows
         await prisma.publishedItem.deleteMany({
             where: { id, type: "project" },
         });
+
+        // Record in permanent tombstone so it won't be resurrected
+        const deletedRecord = await prisma.publishedItem.findUnique({
+            where: { id: "__deleted_projects__" },
+        }).catch(() => null);
+        const currentDeleted: string[] = deletedRecord ? (deletedRecord.data as any).ids || [] : [];
+        if (!currentDeleted.includes(id)) {
+            currentDeleted.push(id);
+            await prisma.publishedItem.upsert({
+                where: { id: "__deleted_projects__" },
+                create: {
+                    id: "__deleted_projects__",
+                    type: "system",
+                    data: { ids: currentDeleted },
+                },
+                update: {
+                    data: { ids: currentDeleted },
+                },
+            });
+        }
     } catch (err) {
         console.warn("Database delete failed for project:", err);
     }
